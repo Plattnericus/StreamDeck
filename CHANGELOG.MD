@@ -6,7 +6,7 @@
 - Website "Journey" Erstellt wo Ich meinen Ablauf meiner Website Dokumentiere!
 ![Hours](6)
 
-![Screenshot](./src/lib/img/pcb-design.png)
+![Screenshot](./src/lib/assets/pcb-design.png)
 
 
 ## 03. Oktober 2025
