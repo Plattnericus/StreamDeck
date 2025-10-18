@@ -1,0 +1,37 @@
+{
+  "name": "websiten",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "nodemon server.cjs",
+    "frontend": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "busboy": "^1.6.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "expresss": "^0.0.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "sqlite3": "^5.1.7",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^6.1.0",
+    "@sveltejs/kit": "^2.43.8",
+    "@sveltejs/vite-plugin-svelte": "^6.2.0",
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10",
+    "svelte": "^5.39.8",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4"
+  }
+}
