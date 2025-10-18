@@ -24,8 +24,8 @@
 			if (!res.ok) throw new Error();
 			const data = await res.json();
 			user = data.user || {};
-			profileImage = user.profilePicture || profileImage;
-			backgroundImage = user.backgroundImage || backgroundImage;
+			profileImage = data.profilePicture || profileImage;
+			backgroundImage = data.backgroundImage || backgroundImage;
 			emailForm.currentEmail = user.email || '';
 			profileForm.username = user.username || '';
 			profileForm.bio = user.bio || '';
@@ -43,18 +43,26 @@
 		const file = e.target.files?.[0];
 		if (!file) return;
 		if (!file.type.startsWith('image/')) return showMessage(t.pleaseSelectImage || 'Bitte Bilddatei wählen', 'error');
-		if (file.size > 5 * 1024 * 1024) return showMessage(t.imageTooLarge || 'Bild zu groß (max. 5MB)', 'error');
+		if (file.size > 10 * 1024 * 1024) return showMessage(t.imageTooLarge || 'Bild zu groß (max. 10MB)', 'error');
 
 		isLoading = true;
 		try {
-			const form = new FormData();
-			form.append('profileImage', file);
-			const res = await fetch('/api/user/upload/profile-image', { method: 'POST', body: form });
+			const formData = new FormData();
+			formData.append('file', file); // WICHTIG: 'file' statt 'profileImage'
+			
+			const res = await fetch('/api/user/upload/profile-image', { 
+				method: 'POST', 
+				body: formData,
+				credentials: 'include' // WICHTIG: Cookies mitsenden
+			});
+			
 			const data = await res.json();
 			if (res.ok) {
 				profileImage = data.profilePictureUrl;
 				showMessage(t.profileImageUpdated || 'Profilbild aktualisiert');
-			} else showMessage(data.message || t.profileImageError || 'Fehler beim Hochladen', 'error');
+			} else {
+				showMessage(data.error || t.profileImageError || 'Fehler beim Hochladen', 'error');
+			}
 		} catch {
 			showMessage(t.profileImageError || 'Serverfehler', 'error');
 		} finally {
@@ -71,15 +79,23 @@
 
 		isLoading = true;
 		try {
-			const form = new FormData();
-			form.append('backgroundImage', file);
-			const res = await fetch('/api/user/upload/background-image', { method: 'POST', body: form });
+			const formData = new FormData();
+			formData.append('file', file); // WICHTIG: 'file' statt 'backgroundImage'
+			
+			const res = await fetch('/api/user/upload/background-image', { 
+				method: 'POST', 
+				body: formData,
+				credentials: 'include' // WICHTIG: Cookies mitsenden
+			});
+			
 			const data = await res.json();
 			if (res.ok) {
 				backgroundImage = data.backgroundImageUrl;
 				document.body.style.backgroundImage = `url(${backgroundImage})`;
 				showMessage(t.backgroundImageUpdated || 'Hintergrund aktualisiert');
-			} else showMessage(data.message || t.backgroundImageError || 'Fehler beim Hochladen', 'error');
+			} else {
+				showMessage(data.error || t.backgroundImageError || 'Fehler beim Hochladen', 'error');
+			}
 		} catch {
 			showMessage(t.backgroundImageError || 'Serverfehler', 'error');
 		} finally {
@@ -101,13 +117,14 @@
 				body: JSON.stringify({
 					newEmail: emailForm.newEmail,
 					password: emailForm.password
-				})
+				}),
+				credentials: 'include'
 			});
 			const data = await res.json();
 			if (res.ok) {
 				showMessage(t.emailUpdateSuccess || 'E-Mail aktualisiert');
 				emailForm.newEmail = emailForm.confirmEmail = emailForm.password = '';
-			} else showMessage(data.message || t.emailUpdateError || 'Fehler beim Aktualisieren', 'error');
+			} else showMessage(data.error || t.emailUpdateError || 'Fehler beim Aktualisieren', 'error');
 		} catch {
 			showMessage(t.emailUpdateError || 'Serverfehler', 'error');
 		} finally {
@@ -130,13 +147,14 @@
 				body: JSON.stringify({
 					currentPassword: passwordForm.currentPassword,
 					newPassword: passwordForm.newPassword
-				})
+				}),
+				credentials: 'include'
 			});
 			const data = await res.json();
 			if (res.ok) {
 				showMessage(t.passwordUpdateSuccess || 'Passwort geändert');
 				passwordForm.currentPassword = passwordForm.newPassword = passwordForm.confirmPassword = '';
-			} else showMessage(data.message || t.passwordUpdateError || 'Fehler beim Ändern', 'error');
+			} else showMessage(data.error || t.passwordUpdateError || 'Fehler beim Ändern', 'error');
 		} catch {
 			showMessage(t.passwordUpdateError || 'Serverfehler', 'error');
 		} finally {
@@ -154,13 +172,14 @@
 				body: JSON.stringify({
 					username: profileForm.username,
 					bio: profileForm.bio
-				})
+				}),
+				credentials: 'include'
 			});
 			const data = await res.json();
 			if (res.ok) {
 				user = { ...user, ...data.user };
 				showMessage(t.profileUpdateSuccess || 'Profil gespeichert');
-			} else showMessage(data.message || t.profileUpdateError || 'Fehler beim Speichern', 'error');
+			} else showMessage(data.error || t.profileUpdateError || 'Fehler beim Speichern', 'error');
 		} catch {
 			showMessage(t.profileUpdateError || 'Serverfehler', 'error');
 		} finally {
@@ -168,12 +187,26 @@
 		}
 	}
 
-	function resetBackground() {
-		backgroundImage = 'https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg';
-		document.body.style.backgroundImage = `url(${backgroundImage})`;
-		fetch('/api/user/reset-background', { method: 'POST' })
-			.then(() => showMessage(t.backgroundReset || 'Hintergrund zurückgesetzt'))
-			.catch(() => showMessage(t.backgroundResetError || 'Fehler beim Zurücksetzen', 'error'));
+	async function resetBackground() {
+		isLoading = true;
+		try {
+			const res = await fetch('/api/user/reset-background', { 
+				method: 'POST',
+				credentials: 'include'
+			});
+			const data = await res.json();
+			if (res.ok) {
+				backgroundImage = 'https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg';
+				document.body.style.backgroundImage = `url(${backgroundImage})`;
+				showMessage(t.backgroundReset || 'Hintergrund zurückgesetzt');
+			} else {
+				showMessage(data.error || t.backgroundResetError || 'Fehler beim Zurücksetzen', 'error');
+			}
+		} catch {
+			showMessage(t.backgroundResetError || 'Serverfehler', 'error');
+		} finally {
+			isLoading = false;
+		}
 	}
 </script>
 

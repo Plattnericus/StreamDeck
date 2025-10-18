@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "backend": "nodemon server.cjs",
+    "backend": "node server.js",
     "frontend": "vite dev",
     "build": "vite build",
     "preview": "vite preview"

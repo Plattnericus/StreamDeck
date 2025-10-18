@@ -31,3 +31,9 @@
 - Habe Profile geamcht mit Bilder hinaufladen usernaem ändern usw!! (nicht Fertig)
 - Habe CHANGELOG live gemacht, dass es Live angezeigt wird und sich Live verändert!! (nicht Fertig)
 ![Hours](2)
+
+# 18. Oktober 2025
+- habe server.cjs zu server.js umgewandelt
+- habe db.cjs zu db.js umgewandelt
+- Habe den kompletten code von cjs zu js umgewandelt
+![Hours](3)

@@ -3,6 +3,7 @@
     import { goto } from '$app/navigation';
     import { page } from '$app/stores';
     import { writable, derived } from 'svelte/store';
+    import { redirect } from '@sveltejs/kit';
     import favicon from '$lib/assets/favicon.svg';
     import { browser } from '$app/environment';
 
@@ -20,10 +21,10 @@
         document.documentElement.setAttribute('data-theme', initialTheme);
     }
 
-	function handleLoginClick() {
-		closePopup();
-		goto('/auth');
-	}
+    function handleLoginClick() {
+        closePopup();
+        goto('/auth');
+    }
 
     export const language = writable(initialLanguage);
     export const theme = writable(initialTheme);
@@ -105,10 +106,6 @@
         }
     }
 
-    function handlePopupClick(e: Event) {
-        e.stopPropagation();
-    }
-
     // ===== AUTH FUNCTIONS =====
     async function checkAuthStatus() {
         try {
@@ -122,6 +119,7 @@
                 profileImg = '/default-profile.png';
             }
         } catch (error) {
+            console.error('Auth check failed:', error);
             user = null;
         }
     }
@@ -134,20 +132,26 @@
                 profileImg = data.profilePictureUrl || '/default-profile.png';
             }
         } catch (error) {
+            console.error('Profile picture fetch failed:', error);
             profileImg = '/default-profile.png';
         }
     }
 
     async function logout() {
         try {
-            const response = await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+            const response = await fetch('/api/logout', { 
+                method: 'POST', 
+                credentials: 'include' 
+            });
+            
             if (response.ok) {
                 user = null;
                 profileImg = '/default-profile.png';
                 showPopup = false;
-                window.location.href = '/auth';
+                goto('/auth');
             }
         } catch (error) {
+            console.error('Logout failed:', error);
             document.cookie = 'auth=; Max-Age=0; path=/';
             user = null;
             profileImg = '/default-profile.png';
@@ -252,8 +256,7 @@
     <link rel="icon" href={favicon} />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji" rel="stylesheet">
 </svelte:head>
 
 <!-- SVG FILTER -->
@@ -320,9 +323,9 @@
                 <div class="desktop-controls {isMobile ? 'mobile-hidden' : ''}">
                     <div class="language-select-wrapper">
                         <select class="language-select" value={$language} onchange={handleLanguageChange}>
-							<option class="language-options" value="de">🇩🇪 DE</option>
-							<option class="language-options" value="en">🇬🇧 EN</option>
-							<option class="language-options" value="it">🇮🇹 IT</option>
+                            <option class="language-options" value="de">🇩🇪 DE</option>
+                            <option class="language-options" value="en">🇬🇧 EN</option>
+                            <option class="language-options" value="it">🇮🇹 IT</option>
                         </select>
                         <i class="fas fa-chevron-down language-arrow"></i>
                     </div>
@@ -353,100 +356,99 @@
         </div>
     </nav>
 
-	{#if showPopup}
-  <!-- 1. Overlay: nur neue Syntax -->
-  <div
-    class="popup-overlay"
-    onclick={handleClickOutside}
-    onkeydown={handleOverlayKeydown}
-    role="button"
-    tabindex="0"
-    aria-label="Close menu"
-  >
-    <!-- 2. Dialog: stopPropagation verhindert Selbst-Schließen -->
-    <div
-      class="glass-sidebar popup-menu {popupAnimation}"
-      onclick={(e) => e.stopPropagation()}
-      onmousemove={(e) => handleMouseMove(e, e.currentTarget)}
-      onmouseleave={(e) => handleMouseLeave(e.currentTarget)}
-      bind:this={popupElement}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div class="glass-filter"></div>
-      <div class="glass-overlay"></div>
-      <div class="glass-specular"></div>
+    {#if showPopup}
+        <!-- Overlay -->
+        <div
+            class="popup-overlay"
+            onclick={handleClickOutside}
+            onkeydown={handleOverlayKeydown}
+            role="button"
+            tabindex="0"
+            aria-label="Close menu"
+        >
+            <!-- Dialog -->
+            <div
+                class="glass-sidebar popup-menu {popupAnimation}"
+                onclick="{() => {}}"
+                onmousemove={(e) => handleMouseMove(e, e.currentTarget)}
+                onmouseleave={(e) => handleMouseLeave(e.currentTarget)}
+                bind:this={popupElement}
+                role="dialog"
+                aria-modal="true"
+            >
+                <div class="glass-filter"></div>
+                <div class="glass-overlay"></div>
+                <div class="glass-specular"></div>
 
-      <div class="glass-content">
-        <nav class="sidebar-nav">
-          <!-- Mobile Hauptnavigation -->
-          {#if isMobile}
-            {#each [
-              {href:'/',       icon:'fa-home',        label:$translations.home},
-              {href:'/about',  icon:'fa-info-circle', label:$translations.about},
-              {href:'/shop',icon:'fa-concierge-bell',label:$translations.shop},
-              {href:'/contact',icon:'fa-envelope',   label:$translations.contact}
-            ] as nav}
-              <a href={nav.href} class="nav-item {isActiveTab(nav.href)?'active':''}" onclick={closePopup}>
-                <i class="fas {nav.icon}"></i>
-                <span>{nav.label}</span>
-              </a>
-            {/each}
-            <div class="menu-divider"></div>
-          {/if}
+                <div class="glass-content">
+                    <nav class="sidebar-nav">
+                        <!-- Mobile Hauptnavigation -->
+                        {#if isMobile}
+                            {#each [
+                                {href:'/',       icon:'fa-home',        label:$translations.home},
+                                {href:'/about',  icon:'fa-info-circle', label:$translations.about},
+                                {href:'/shop',icon:'fa-concierge-bell',label:$translations.shop},
+                                {href:'/contact',icon:'fa-envelope',   label:$translations.contact}
+                            ] as nav}
+                                <a href={nav.href} class="nav-item {isActiveTab(nav.href)?'active':''}" onclick={closePopup}>
+                                    <i class="fas {nav.icon}"></i>
+                                    <span>{nav.label}</span>
+                                </a>
+                            {/each}
+                            <div class="menu-divider"></div>
+                        {/if}
 
-          <!-- Theme-Toggle -->
-          <button class="nav-item" onclick={toggleTheme} type="button">
-            <i class="fas fa-{$theme === 'light' ? 'moon' : 'sun'}"></i>
-            <span>{$theme === 'light' ? $translations.darkMode : $translations.lightMode}</span>
-          </button>
+                        <!-- Theme-Toggle -->
+                        <button class="nav-item" onclick={toggleTheme} type="button">
+                            <i class="fas fa-{$theme === 'light' ? 'moon' : 'sun'}"></i>
+                            <span>{$theme === 'light' ? $translations.darkMode : $translations.lightMode}</span>
+                        </button>
 
-          <!-- Sprachwahl -->
-          <div class="nav-item language-selector">
-            <i class="fas fa-globe"></i>
-            <span>{$translations.language}</span>
-                    <div class="language-select-wrapper">
-                        <select class="language-select" value={$language} onchange={handleLanguageChange}>
-							<option class="language-options" value="de">🇩🇪</option>
-							<option class="language-options" value="en">🇬🇧</option>
-							<option class="language-options" value="it">🇮🇹</option>
-                        </select>
-                        <i class="fas fa-chevron-down language-arrow"></i>
-                    </div>
-          </div>
+                        <!-- Sprachwahl -->
+                        <div class="nav-item language-selector">
+                            <i class="fas fa-globe"></i>
+                            <span>{$translations.language}</span>
+                            <div class="language-select-wrapper">
+                                <select class="language-select" value={$language} onchange={handleLanguageChange}>
+                                    <option class="language-options" value="de">🇩🇪</option>
+                                    <option class="language-options" value="en">🇬🇧</option>
+                                    <option class="language-options" value="it">🇮🇹</option>
+                                </select>
+                                <i class="fas fa-chevron-down language-arrow"></i>
+                            </div>
+                        </div>
 
-          <!-- Weitere Links -->
-          {#each [
-            {href:'/settings', icon:'fa-cog',      label:$translations.settings},
-            {href:'/profile',  icon:'fa-user',     label:$translations.profile},
-          ] as link}
-            <a href={link.href} class="nav-item {isActiveTab(link.href)?'active':''}" onclick={closePopup}>
-              <i class="fas {link.icon}"></i>
-              <span>{link.label}</span>
-            </a>
-          {/each}
+                        <!-- Weitere Links -->
+                        {#each [
+                            {href:'/settings', icon:'fa-cog',      label:$translations.settings},
+                            {href:'/profile',  icon:'fa-user',     label:$translations.profile},
+                        ] as link}
+                            <a href={link.href} class="nav-item {isActiveTab(link.href)?'active':''}" onclick={closePopup}>
+                                <i class="fas {link.icon}"></i>
+                                <span>{link.label}</span>
+                            </a>
+                        {/each}
 
-          <!-- Login / Logout -->
-          {#if user}
-            <div class="user-info">
-              <div class="user-welcome">Hallo, {user.username || 'User'}!</div>
-              <button class="nav-item logout-button" onclick={logout} type="button">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>{$translations.logout}</span>
-              </button>
+                        <!-- Login / Logout -->
+                        {#if user}
+                            <div class="user-info">
+                                <div class="user-welcome">Hallo, {user.username || 'User'}!</div>
+                                <button class="nav-item logout-button" onclick={logout} type="button">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>{$translations.logout}</span>
+                                </button>
+                            </div>
+                        {:else}
+                            <button class="nav-item login-button" onclick={handleLoginClick} type="button">
+                                <i class="fas fa-sign-in-alt"></i>
+                                <span>{$translations.login}</span>
+                            </button>
+                        {/if}
+                    </nav>
+                </div>
             </div>
-          {:else}
-            <button class="nav-item login-button" onclick={handleLoginClick} type="button">
-              <i class="fas fa-sign-in-alt"></i>
-              <span>{$translations.login}</span>
-            </button>
-          {/if}
-        </nav>
-      </div>
-    </div>
-  </div>
-{/if}
-
+        </div>
+    {/if}
 </div>
 
 <main class="main-content">
