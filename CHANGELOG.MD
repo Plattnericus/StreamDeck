@@ -37,3 +37,8 @@
 - habe db.cjs zu db.js umgewandelt
 - Habe den kompletten code von cjs zu js umgewandelt
 ![Hours](3)
+
+# 01 November 2025
+- bug fixes
+- Profile funktioniert jetzt
+- layout klappt mit profilbild + background img

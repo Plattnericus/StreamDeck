@@ -6,11 +6,12 @@
     import { redirect } from '@sveltejs/kit';
     import favicon from '$lib/assets/favicon.svg';
     import { browser } from '$app/environment';
+    import { theme } from '$lib/stores.js';
 
     // ===== STORES & LOCALSTORAGE =====
     let initialLanguage = 'de';
     let initialTheme = 'dark';
-    
+	
     if (browser) {
         const storedLang = localStorage.getItem('language');
         const storedTheme = localStorage.getItem('theme');
@@ -27,7 +28,6 @@
     }
 
     export const language = writable(initialLanguage);
-    export const theme = writable(initialTheme);
 
     if (browser) {
         language.subscribe((value) => {
@@ -71,6 +71,7 @@
     let { children } = $props();
     let user = $state<any>(null);
     let profileImg = $state('/default-profile.png');
+  	let backgroundImg = $state('/default-background.png');
     let showPopup = $state(false);
     let popupAnimation = $state('');
     let isMobile = $state(false);
@@ -90,6 +91,9 @@
         checkViewport();
         window.addEventListener('resize', checkViewport);
         currentPath = window.location.pathname;
+
+        // Theme aus localStorage holen
+        theme.set(localStorage.getItem('theme') || 'light');
     });
 
     function checkViewport() {
@@ -106,40 +110,63 @@
         }
     }
 
-    // ===== AUTH FUNCTIONS =====
-    async function checkAuthStatus() {
-        try {
-            const response = await fetch('/api/session');
-            const data = await response.json();
-            if (data.loggedIn && data.user) {
-                user = data.user;
-                await fetchProfilePicture(data.user.id);
-            } else {
-                user = null;
-                profileImg = '/default-profile.png';
-            }
-        } catch (error) {
-            console.error('Auth check failed:', error);
+// ===== AUTH FUNCTIONS =====
+async function checkAuthStatus() {
+    try {
+        const response = await fetch('http://localhost:3000/api/session', { credentials: 'include' });
+        const data = await response.json();
+        if (data.loggedIn && data.user) {
+            user = data.user;
+            await Promise.all([
+                fetchProfilePicture(data.user.id),
+                fetchBackgroundPicture(data.user.id)
+            ]);
+        } else {
             user = null;
+            profileImg = '/default-profile.png';
+            backgroundImg = '/default-background.png';
         }
+    } catch (error) {
+        console.error('Auth check failed:', error);
+        user = null;
+        profileImg = '/default-profile.png';
+        backgroundImg = '/default-background.png';
     }
+}
 
-    async function fetchProfilePicture(userId: string) {
-        try {
-            const response = await fetch(`/api/user/${userId}/profile-picture`);
-            if (response.ok) {
-                const data = await response.json();
-                profileImg = data.profilePictureUrl || '/default-profile.png';
-            }
-        } catch (error) {
-            console.error('Profile picture fetch failed:', error);
+async function fetchProfilePicture(userId: string) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/user/${userId}/profile-picture`);
+        if (response.ok) {
+            const data = await response.json();
+            profileImg = data.profilePictureUrl || '/default-profile.png';
+        } else {
             profileImg = '/default-profile.png';
         }
+    } catch (error) {
+        console.error('Profile picture fetch failed:', error);
+        profileImg = '/default-profile.png';
     }
+}
+
+async function fetchBackgroundPicture(userId: string) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/user/${userId}/background-picture`);
+        if (response.ok) {
+            const data = await response.json();
+            backgroundImg = data.backgroundPictureUrl || '/default-background.png';
+        } else {
+            backgroundImg = '/default-background.png';
+        }
+    } catch (error) {
+        console.error('Background picture fetch failed, using fallback:', error);
+        backgroundImg = '/default-background.png';
+    }
+}
 
     async function logout() {
         try {
-            const response = await fetch('/api/logout', { 
+            const response = await fetch('http://localhost:3000/api/logout', { 
                 method: 'POST', 
                 credentials: 'include' 
             });
@@ -250,6 +277,12 @@
     function setPopupRef(element: HTMLElement) {
         popupElement = element;
     }
+
+	$effect(() => {
+        if (browser) {
+            document.documentElement.style.setProperty('--background-image', `url('${backgroundImg}')`);
+        }
+    });
 </script>
 
 <svelte:head>
@@ -463,18 +496,31 @@
         box-sizing: border-box;
     }
 
-    :global(body) {
-        background-image: url('https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        padding-top: 80px;
-    }
+		:global(body) {
+			background-image: var(--background-image, url('/default-background.png')) !important;
+			background-size: cover !important;
+			background-position: center !important;
+			background-attachment: fixed !important;
+			background-repeat: no-repeat !important;
+			min-height: 100vh;
+			margin: 0;
+			padding: 0;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			padding-top: 80px;
+		}
+
+		/* Fallback direkt auf body */
+		:global(body) {
+			background-image: url('/default-background.png');
+			background-size: cover;
+			background-position: center;
+			background-attachment: fixed;
+			background-repeat: no-repeat;
+		}
+
+		:global(body) {
+			background-image: var(--background-image) !important;
+		}
 
     :global(html) {
         height: 100%;
@@ -489,6 +535,7 @@
         top: 0;
         left: 0;
         width: 100%;
+		height: auto;
         z-index: 1000;
         padding: 1rem;
         background: transparent;
@@ -1326,4 +1373,3 @@
         }
     }
 </style>
-

@@ -14,37 +14,48 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const FRONTEND = 'http://localhost:5173';
+const PORT = 3000;
+const FRONTEND_PORT = 5173;
+const FRONTEND = `http://localhost:${FRONTEND_PORT}`;
 
-// Middleware
-app.use(cors({ origin: FRONTEND, credentials: true }));
+// ===== MIDDLEWARE =====
+app.use(cors({ 
+  origin: FRONTEND, 
+  credentials: true 
+}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// WICHTIG: Statische Dateien zuerst definieren
-app.use('/user-data', express.static(path.join(__dirname, 'userDATA')));
-app.use('/default-profile.png', express.static(path.join(__dirname, 'default-profile.png')));
+// ===== UPLOADS ORDNER STRUKTUR IM ROOT =====
+const uploadsRootPath = path.join(__dirname, 'uploads');
+const profilePicsPath = path.join(uploadsRootPath, 'profile-pic');
+const backgroundPicsPath = path.join(uploadsRootPath, 'background-pic');
 
-// Pfade konfigurieren
+// Uploads-Ordnerstruktur erstellen
+[uploadsRootPath, profilePicsPath, backgroundPicsPath].forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+    console.log(`✅ Ordner erstellt: ${dir}`);
+  }
+});
+
+// ===== STATISCHE UPLOADS FREIGEBEN =====
+app.use('/uploads', express.static(uploadsRootPath));
+
+// ===== PATH CONFIGURATION =====
 const userDATAPath = path.join(__dirname, 'userDATA');
 if (!fs.existsSync(userDATAPath)) {
   fs.mkdirSync(userDATAPath, { recursive: true });
 }
 
-// Hilfsfunktionen
+// ===== HELPER FUNCTIONS =====
 const getUserDataPath = (userId) => path.join(userDATAPath, userId);
 const getUserJsonPath = (userId) => path.join(getUserDataPath(userId), 'user.json');
-const getUploadsPath = (userId) => path.join(getUserDataPath(userId), 'uploads');
 
 const ensureUserDirectory = (userId) => {
   const userFolder = getUserDataPath(userId);
-  const uploadsFolder = getUploadsPath(userId);
-  
   if (!fs.existsSync(userFolder)) {
     fs.mkdirSync(userFolder, { recursive: true });
-  }
-  if (!fs.existsSync(uploadsFolder)) {
-    fs.mkdirSync(uploadsFolder, { recursive: true });
   }
 };
 
@@ -58,7 +69,7 @@ const createUserJson = (userId, username, email) => {
     verified: false,
     bio: '',
     profilePicture: '/default-profile.png',
-    backgroundImage: 'https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg'
+    backgroundImage: '/default-background.png'
   };
   
   fs.writeFileSync(getUserJsonPath(userId), JSON.stringify(userJson, null, 2));
@@ -74,111 +85,31 @@ const setAuthCookie = (res, userId, remember = false) => {
   });
 };
 
-// Authentifizierungs-Endpoints (bleiben gleich)
-app.post('/api/register', async (req, res) => {
-  const { username, email, password, remember } = req.body;
-  
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: 'Alle Felder ausfüllen' });
-  }
+const getUserIdFromCookies = (req) => {
+  return req.cookies.auth;
+};
 
-  const userId = randomUUID();
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  db.run(
-    `INSERT INTO users (id, username, email, password, created_at) VALUES (?, ?, ?, ?, ?)`,
-    [userId, username, email, hashedPassword, new Date().toISOString()],
-    function (err) {
-      if (err) {
-        return res.status(500).json({ error: 'User existiert bereits' });
-      }
-
-      ensureUserDirectory(userId);
-      createUserJson(userId, username, email);
-      setAuthCookie(res, userId, remember);
-
-      res.json({ 
-        success: true, 
-        redirect: '/settings', 
-        userId 
-      });
-    }
-  );
-});
-
-app.post('/api/login', (req, res) => {
-  const { identifier, password, remember } = req.body;
-  
-  db.get(
-    `SELECT * FROM users WHERE username = ? OR email = ?`,
-    [identifier, identifier],
-    async (err, user) => {
-      if (err) {
-        return res.status(500).json({ error: 'Datenbankfehler' });
-      }
-      if (!user) {
-        return res.status(400).json({ error: 'User nicht gefunden' });
-      }
-
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (!validPassword) {
-        return res.status(400).json({ error: 'Falsches Passwort' });
-      }
-
-      setAuthCookie(res, user.id, remember);
-      res.json({ 
-        success: true, 
-        redirect: '/settings', 
-        userId: user.id 
-      });
-    }
-  );
-});
-
-app.post('/api/logout', (req, res) => {
-  res.clearCookie('auth');
-  res.json({ 
-    success: true, 
-    message: 'Erfolgreich ausgeloggt' 
-  });
-});
-
-app.get('/api/session', (req, res) => {
-  const userId = req.cookies.auth;
-  
+const requireAuth = (req, res, next) => {
+  const userId = getUserIdFromCookies(req);
   if (!userId) {
-    return res.json({ loggedIn: false });
+    return res.status(401).json({ error: 'Nicht eingeloggt' });
   }
+  req.userId = userId;
+  next();
+};
 
-  try {
-    const userJsonPath = getUserJsonPath(userId);
-    if (!fs.existsSync(userJsonPath)) {
-      return res.json({ loggedIn: false });
-    }
-
-    const user = JSON.parse(fs.readFileSync(userJsonPath));
-    res.json({ loggedIn: true, user });
-  } catch (error) {
-    res.json({ loggedIn: false });
-  }
-});
-
-// Datei-Upload-Hilfsfunktion
+// ===== FILE UPLOAD HANDLER (NEU MIT ROOT UPLOADS) =====
 const handleFileUpload = (req, res, options) => {
-  const { 
-    fileNamePrefix, 
-    maxFileSize, 
-    onSuccess 
-  } = options;
+  const { uploadType, maxFileSize, onSuccess } = options;
   
-  const userId = req.cookies.auth;
+  const userId = getUserIdFromCookies(req);
   if (!userId) {
     return res.status(401).json({ error: 'Nicht eingeloggt' });
   }
 
   const bb = busboy({ headers: req.headers });
   let fileBuffer = null;
-  let fileName = null;
+  let fileExtension = null;
 
   bb.on('file', (name, file, info) => {
     const { filename, mimeType } = info;
@@ -187,7 +118,7 @@ const handleFileUpload = (req, res, options) => {
       return res.status(400).json({ error: 'Nur Bilddateien erlaubt' });
     }
     
-    fileName = `${fileNamePrefix}${path.extname(filename)}`;
+    fileExtension = path.extname(filename);
     const chunks = [];
     
     file.on('data', (chunk) => chunks.push(chunk));
@@ -195,29 +126,34 @@ const handleFileUpload = (req, res, options) => {
   });
 
   bb.on('close', async () => {
-    if (!fileBuffer) {
-      return res.status(400).json({ error: 'Keine Datei hochgeladen' });
-    }
-    
-    if (fileBuffer.length > maxFileSize) {
-      return res.status(400).json({ 
-        error: `Datei zu groß (max. ${maxFileSize / 1024 / 1024}MB)` 
-      });
-    }
-
     try {
-      const uploadsDir = getUploadsPath(userId);
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
+      if (!fileBuffer) {
+        return res.status(400).json({ error: 'Keine Datei hochgeladen' });
+      }
+      
+      if (fileBuffer.length > maxFileSize) {
+        return res.status(400).json({ 
+          error: `Datei zu groß (max. ${maxFileSize / 1024 / 1024}MB)` 
+        });
       }
 
-      // Alte Dateien mit gleichem Präfix löschen
-      fs.readdirSync(uploadsDir)
-        .filter(file => file.startsWith(fileNamePrefix))
-        .forEach(file => fs.unlinkSync(path.join(uploadsDir, file)));
+      // Bestimme den Zielordner und Dateinamen
+      const targetDir = uploadType === 'profile' ? profilePicsPath : backgroundPicsPath;
+      const fileName = `${userId}${fileExtension}`;
+      const filePath = path.join(targetDir, fileName);
+
+      // Alte Dateien mit gleicher UUID löschen (alle Extensions)
+      if (uploadType === 'profile') {
+        fs.readdirSync(profilePicsPath)
+          .filter(file => file.startsWith(userId))
+          .forEach(file => fs.unlinkSync(path.join(profilePicsPath, file)));
+      } else {
+        fs.readdirSync(backgroundPicsPath)
+          .filter(file => file.startsWith(userId))
+          .forEach(file => fs.unlinkSync(path.join(backgroundPicsPath, file)));
+      }
 
       // Neue Datei speichern
-      const filePath = path.join(uploadsDir, fileName);
       fs.writeFileSync(filePath, fileBuffer);
 
       await onSuccess(userId, fileName, filePath);
@@ -230,16 +166,158 @@ const handleFileUpload = (req, res, options) => {
   req.pipe(bb);
 };
 
-// Upload-Endpoints
+// ===== BACKGROUND PICTURE ENDPOINT =====
+app.get('/api/user/:userId/background-picture', (req, res) => {
+    try {
+        const userId = req.params.userId;
+        let backgroundPictureUrl = '/default-background.png';
+        
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+        
+        for (const ext of imageExtensions) {
+            const imgPath = path.join(backgroundPicsPath, `${userId}${ext}`);
+            if (fs.existsSync(imgPath)) {
+                backgroundPictureUrl = `/uploads/background-pic/${userId}${ext}`;
+                break;
+            }
+        }
+        
+        if (backgroundPictureUrl === '/default-background.png') {
+            const userJsonPath = path.join(userDATAPath, userId, 'user.json');
+            if (fs.existsSync(userJsonPath)) {
+                const userData = JSON.parse(fs.readFileSync(userJsonPath));
+                if (userData.backgroundImage && userData.backgroundImage !== '/default-background.png') {
+                    backgroundPictureUrl = userData.backgroundImage;
+                }
+            }
+        }
+        
+        res.json({ 
+            backgroundPictureUrl
+        });
+    } catch (error) {
+        console.error('Background picture error:', error);
+        res.json({ backgroundPictureUrl: '/default-background.png' });
+    }
+});
+
+// ===== AUTHENTICATION ENDPOINTS =====
+app.post('/api/register', async (req, res) => {
+  try {
+    const { username, email, password, remember } = req.body;
+    
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: 'Alle Felder ausfüllen' });
+    }
+
+    const userId = randomUUID();
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    db.run(
+      `INSERT INTO users (id, username, email, password, created_at) VALUES (?, ?, ?, ?, ?)`,
+      [userId, username, email, hashedPassword, new Date().toISOString()],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: 'User existiert bereits' });
+        }
+
+        ensureUserDirectory(userId);
+        createUserJson(userId, username, email);
+        setAuthCookie(res, userId, remember);
+
+        res.json({ 
+          success: true, 
+          redirect: '/settings', 
+          userId 
+        });
+      }
+    );
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+app.post('/api/login', (req, res) => {
+  try {
+    const { identifier, password, remember } = req.body;
+    
+    db.get(
+      `SELECT * FROM users WHERE username = ? OR email = ?`,
+      [identifier, identifier],
+      async (err, user) => {
+        if (err) {
+          return res.status(500).json({ error: 'Datenbankfehler' });
+        }
+        if (!user) {
+          return res.status(400).json({ error: 'User nicht gefunden' });
+        }
+
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+          return res.status(400).json({ error: 'Falsches Passwort' });
+        }
+
+        setAuthCookie(res, user.id, remember);
+        res.json({ 
+          success: true, 
+          redirect: '/settings', 
+          userId: user.id 
+        });
+      }
+    );
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+app.post('/api/logout', (req, res) => {
+  res.clearCookie('auth');
+  res.json({ 
+    success: true, 
+    message: 'Erfolgreich ausgeloggt' 
+  });
+});
+
+app.get('/api/session', (req, res) => {
+  try {
+    const userId = getUserIdFromCookies(req);
+    
+    if (!userId) {
+      return res.json({ loggedIn: false });
+    }
+
+    const userJsonPath = getUserJsonPath(userId);
+    if (!fs.existsSync(userJsonPath)) {
+      return res.json({ loggedIn: false });
+    }
+
+    const user = JSON.parse(fs.readFileSync(userJsonPath));
+    res.json({ loggedIn: true, user });
+  } catch (error) {
+    console.error('Session error:', error);
+    res.json({ loggedIn: false });
+  }
+});
+
+// ===== STATISCHE UPLOADS FREIGEBEN MIT CORS =====
+app.use('/uploads', express.static(uploadsRootPath, {
+  setHeaders: (res, path) => {
+    res.set('Access-Control-Allow-Origin', FRONTEND);
+  }
+}));
+
+// ===== UPLOAD ENDPOINTS (AKTUALISIERT) =====
 app.post('/api/user/upload/profile-image', (req, res) => {
   handleFileUpload(req, res, {
-    fileNamePrefix: 'profile-picture',
-    maxFileSize: 5 * 1024 * 1024, // 5MB
+    uploadType: 'profile',
+    maxFileSize: 5 * 1024 * 1024,
     onSuccess: async (userId, fileName) => {
       const userJsonPath = getUserJsonPath(userId);
       const userData = JSON.parse(fs.readFileSync(userJsonPath));
       
-      userData.profilePicture = `/user-data/${userId}/uploads/${fileName}`;
+      userData.profilePicture = `/uploads/profile-pic/${fileName}`;
       fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
 
       res.json({ 
@@ -252,13 +330,13 @@ app.post('/api/user/upload/profile-image', (req, res) => {
 
 app.post('/api/user/upload/background-image', (req, res) => {
   handleFileUpload(req, res, {
-    fileNamePrefix: 'background-image',
-    maxFileSize: 10 * 1024 * 1024, // 10MB
+    uploadType: 'background',
+    maxFileSize: 10 * 1024 * 1024,
     onSuccess: async (userId, fileName) => {
       const userJsonPath = getUserJsonPath(userId);
       const userData = JSON.parse(fs.readFileSync(userJsonPath));
       
-      userData.backgroundImage = `/user-data/${userId}/uploads/${fileName}`;
+      userData.backgroundImage = `/uploads/background-pic/${fileName}`;
       fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
 
       res.json({ 
@@ -269,16 +347,12 @@ app.post('/api/user/upload/background-image', (req, res) => {
   });
 });
 
-// Profil-Endpoints
-app.get('/api/user/profile', (req, res) => {
-  const userId = req.cookies.auth;
-  
-  if (!userId) {
-    return res.status(401).json({ error: 'Nicht eingeloggt' });
-  }
-
+// ===== PROFILE ENDPOINTS =====
+app.get('/api/user/profile', requireAuth, (req, res) => {
   try {
+    const userId = req.userId;
     const userJsonPath = getUserJsonPath(userId);
+    
     if (!fs.existsSync(userJsonPath)) {
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
     }
@@ -307,28 +381,24 @@ app.get('/api/user/profile', (req, res) => {
       }
     );
   } catch (error) {
+    console.error('Profile error:', error);
     res.status(500).json({ error: 'Fehler beim Laden des Profils' });
   }
 });
 
-app.post('/api/user/update-profile', (req, res) => {
-  const userId = req.cookies.auth;
-  
-  if (!userId) {
-    return res.status(401).json({ error: 'Nicht eingeloggt' });
-  }
+app.post('/api/user/update-profile', requireAuth, (req, res) => {
+  try {
+    const userId = req.userId;
+    const { username, bio } = req.body;
+    
+    db.run(
+      'UPDATE users SET username = ? WHERE id = ?', 
+      [username, userId], 
+      function(err) {
+        if (err) {
+          return res.status(500).json({ error: 'Fehler beim Aktualisieren' });
+        }
 
-  const { username, bio } = req.body;
-  
-  db.run(
-    'UPDATE users SET username = ? WHERE id = ?', 
-    [username, userId], 
-    function(err) {
-      if (err) {
-        return res.status(500).json({ error: 'Fehler beim Aktualisieren' });
-      }
-
-      try {
         const userJsonPath = getUserJsonPath(userId);
         const userData = JSON.parse(fs.readFileSync(userJsonPath));
         
@@ -340,151 +410,163 @@ app.post('/api/user/update-profile', (req, res) => {
           success: true, 
           user: userData 
         });
-      } catch (error) {
-        res.status(500).json({ error: 'Fehler beim Speichern' });
       }
-    }
-  );
-});
-
-app.post('/api/user/update-email', (req, res) => {
-  const userId = req.cookies.auth;
-  
-  if (!userId) {
-    return res.status(401).json({ error: 'Nicht eingeloggt' });
-  }
-
-  const { newEmail, password } = req.body;
-  
-  db.get(
-    'SELECT password FROM users WHERE id = ?', 
-    [userId], 
-    async (err, row) => {
-      if (err) {
-        return res.status(500).json({ error: 'Datenbankfehler' });
-      }
-      
-      const validPassword = await bcrypt.compare(password, row.password);
-      if (!validPassword) {
-        return res.status(400).json({ error: 'Falsches Passwort' });
-      }
-
-      db.run(
-        'UPDATE users SET email = ? WHERE id = ?', 
-        [newEmail, userId], 
-        function(err) {
-          if (err) {
-            return res.status(500).json({ error: 'Email bereits vergeben' });
-          }
-          
-          res.json({ 
-            success: true, 
-            message: 'Email aktualisiert' 
-          });
-        }
-      );
-    }
-  );
-});
-
-app.post('/api/user/update-password', (req, res) => {
-  const userId = req.cookies.auth;
-  
-  if (!userId) {
-    return res.status(401).json({ error: 'Nicht eingeloggt' });
-  }
-
-  const { currentPassword, newPassword } = req.body;
-  
-  db.get(
-    'SELECT password FROM users WHERE id = ?', 
-    [userId], 
-    async (err, row) => {
-      if (err) {
-        return res.status(500).json({ error: 'Datenbankfehler' });
-      }
-      
-      const validPassword = await bcrypt.compare(currentPassword, row.password);
-      if (!validPassword) {
-        return res.status(400).json({ error: 'Falsches aktuelles Passwort' });
-      }
-
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      db.run(
-        'UPDATE users SET password = ? WHERE id = ?', 
-        [hashedPassword, userId], 
-        function(err) {
-          if (err) {
-            return res.status(500).json({ error: 'Fehler beim Ändern des Passworts' });
-          }
-          
-          res.json({ 
-            success: true, 
-            message: 'Passwort geändert' 
-          });
-        }
-      );
-    }
-  );
-});
-
-app.post('/api/user/reset-background', (req, res) => {
-  const userId = req.cookies.auth;
-  
-  if (!userId) {
-    return res.status(401).json({ error: 'Nicht eingeloggt' });
-  }
-
-  try {
-    const userJsonPath = getUserJsonPath(userId);
-    const userData = JSON.parse(fs.readFileSync(userJsonPath));
-    
-    userData.backgroundImage = 'https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg';
-    fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
-
-    res.json({ 
-      success: true, 
-      message: 'Hintergrund zurückgesetzt' 
-    });
+    );
   } catch (error) {
-    res.status(500).json({ error: 'Fehler beim Zurücksetzen' });
+    console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Fehler beim Speichern' });
   }
 });
 
-// Public Endpoints
-app.get('/api/user/:userId/profile-picture', (req, res) => {
-  const userId = req.params.userId;
-  const uploadsDir = getUploadsPath(userId);
-  
-  if (!fs.existsSync(uploadsDir)) {
-    return res.json({ profilePictureUrl: '/default-profile.png' });
-  }
-  
-  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-  let profilePicture = null;
-  
-  for (const ext of imageExtensions) {
-    const possiblePaths = [
-      path.join(uploadsDir, `profile-picture${ext}`),
-      path.join(uploadsDir, `profile${ext}`),
-      path.join(uploadsDir, `avatar${ext}`)
-    ];
+app.post('/api/user/update-email', requireAuth, (req, res) => {
+  try {
+    const userId = req.userId;
+    const { newEmail, password } = req.body;
     
-    for (const imgPath of possiblePaths) {
+    db.get(
+      'SELECT password FROM users WHERE id = ?', 
+      [userId], 
+      async (err, row) => {
+        if (err) {
+          return res.status(500).json({ error: 'Datenbankfehler' });
+        }
+        
+        const validPassword = await bcrypt.compare(password, row.password);
+        if (!validPassword) {
+          return res.status(400).json({ error: 'Falsches Passwort' });
+        }
+
+        db.run(
+          'UPDATE users SET email = ? WHERE id = ?', 
+          [newEmail, userId], 
+          function(err) {
+            if (err) {
+              return res.status(500).json({ error: 'Email bereits vergeben' });
+            }
+            
+            res.json({ 
+              success: true, 
+              message: 'Email aktualisiert' 
+            });
+          }
+        );
+      }
+    );
+  } catch (error) {
+    console.error('Update email error:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+app.post('/api/user/update-password', requireAuth, (req, res) => {
+  try {
+    const userId = req.userId;
+    const { currentPassword, newPassword } = req.body;
+    
+    db.get(
+      'SELECT password FROM users WHERE id = ?', 
+      [userId], 
+      async (err, row) => {
+        if (err) {
+          return res.status(500).json({ error: 'Datenbankfehler' });
+        }
+        
+        const validPassword = await bcrypt.compare(currentPassword, row.password);
+        if (!validPassword) {
+          return res.status(400).json({ error: 'Falsches aktuelles Passwort' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        db.run(
+          'UPDATE users SET password = ? WHERE id = ?', 
+          [hashedPassword, userId], 
+          function(err) {
+            if (err) {
+              return res.status(500).json({ error: 'Fehler beim Ändern des Passworts' });
+            }
+            
+            res.json({ 
+              success: true, 
+              message: 'Passwort geändert' 
+            });
+          }
+        );
+      }
+    );
+  } catch (error) {
+    console.error('Update password error:', error);
+    res.status(500).json({ error: 'Server Fehler' });
+  }
+});
+
+// ===== RESET BACKGROUND PICTURE ENDPOINT =====
+app.post('/api/user/reset-background', requireAuth, (req, res) => {
+    try {
+        const userId = req.userId;
+        const userJsonPath = getUserJsonPath(userId);
+        
+        if (!fs.existsSync(userJsonPath)) {
+            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+        }
+
+        const userData = JSON.parse(fs.readFileSync(userJsonPath));
+        
+        // Lösche die Background-Bild-Datei
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+        let deletedFile = false;
+        
+        for (const ext of imageExtensions) {
+            const imgPath = path.join(backgroundPicsPath, `${userId}${ext}`);
+            if (fs.existsSync(imgPath)) {
+                fs.unlinkSync(imgPath);
+                deletedFile = true;
+                console.log(`Deleted background image: ${imgPath}`);
+            }
+        }
+        
+        // Setze auf Default Background zurück
+        userData.backgroundImage = '/default-background.png';
+        fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
+
+        res.json({ 
+            success: true, 
+            message: 'Hintergrund zurückgesetzt',
+            backgroundImageUrl: '/default-background.png'
+        });
+        
+    } catch (error) {
+        console.error('Reset background error:', error);
+        res.status(500).json({ error: 'Fehler beim Zurücksetzen des Hintergrunds' });
+    }
+});
+
+// ===== PUBLIC ENDPOINTS =====
+app.get('/api/user/:userId/profile-picture', (req, res) => {
+  try {
+    const userId = req.params.userId;
+    let profilePictureUrl = '/default-profile.png';
+    
+    // Prüfe ob eine Profilbild-Datei für diese UUID existiert
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    
+    for (const ext of imageExtensions) {
+      const imgPath = path.join(profilePicsPath, `${userId}${ext}`);
       if (fs.existsSync(imgPath)) {
-        profilePicture = `/user-data/${userId}/uploads/${path.basename(imgPath)}`;
+        profilePictureUrl = `/uploads/profile-pic/${userId}${ext}`;
         break;
       }
     }
-    if (profilePicture) break;
+    
+    res.json({ 
+      profilePictureUrl
+    });
+  } catch (error) {
+    console.error('Profile picture error:', error);
+    res.json({ profilePictureUrl: '/default-profile.png' });
   }
-  
-  res.json({ 
-    profilePictureUrl: profilePicture || '/default-profile.png' 
-  });
 });
 
-// Changelog Endpoint
+// ===== MISC ENDPOINTS =====
 app.get('/api/changelog', (req, res) => {
   const changelogPath = path.join(__dirname, 'CHANGELOG.md');
   
@@ -495,7 +577,18 @@ app.get('/api/changelog', (req, res) => {
   res.sendFile(changelogPath);
 });
 
-// Server starten
-app.listen(3000, () => {
-  console.log('✅ Server läuft auf http://localhost:3000');
+app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+  res.json({});
+});
+
+// ===== ERROR HANDLING =====
+app.use('/api/', (req, res) => {
+  res.status(404).json({ error: 'API Endpoint nicht gefunden' });
+});
+
+// ===== SERVER START =====
+app.listen(PORT, () => {
+  console.log(`✅ Server läuft auf http://localhost:${PORT}`);
+  console.log(`✅ CORS aktiv für Frontend: ${FRONTEND}`);
+  console.log(`✅ Uploads-Ordner: ${uploadsRootPath}`);
 });

@@ -15,9 +15,17 @@ if (browser) {
 	document.documentElement.setAttribute('data-theme', initialTheme);
 }
 
+// Theme-Handling (dark/light) im localStorage
+const getInitialTheme = () => {
+  if (typeof localStorage !== 'undefined') {
+    return localStorage.getItem('theme') || 'light';
+  }
+  return 'light';
+};
+
 // ===== STORES =====
 export const language = writable(initialLanguage);
-export const theme = writable(initialTheme);
+export const theme = writable(getInitialTheme());
 
 // ===== SYNC LOCALSTORAGE =====
 if (browser) {

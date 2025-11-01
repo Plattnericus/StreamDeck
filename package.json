@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "backend": "node server.js",
+    "backend": "nodemon server.js",
     "frontend": "vite dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

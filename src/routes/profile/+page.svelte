@@ -6,7 +6,7 @@
 
 	let user = null;
 	let profileImage = '/default-profile.png';
-	let backgroundImage = 'https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg';
+	let backgroundImage = '/default-background.png';
 	let isLoading = false;
 	let message = { text: '', type: '' };
 
@@ -20,7 +20,9 @@
 
 	async function loadUserData() {
 		try {
-			const res = await fetch('/api/user/profile');
+			const res = await fetch('http://localhost:3000/api/user/profile', {
+				credentials: 'include'
+			});
 			if (!res.ok) throw new Error();
 			const data = await res.json();
 			user = data.user || {};
@@ -48,12 +50,12 @@
 		isLoading = true;
 		try {
 			const formData = new FormData();
-			formData.append('file', file); // WICHTIG: 'file' statt 'profileImage'
+			formData.append('file', file);
 			
-			const res = await fetch('/api/user/upload/profile-image', { 
+			const res = await fetch('http://localhost:3000/api/user/upload/profile-image', { 
 				method: 'POST', 
 				body: formData,
-				credentials: 'include' // WICHTIG: Cookies mitsenden
+				credentials: 'include'
 			});
 			
 			const data = await res.json();
@@ -80,12 +82,12 @@
 		isLoading = true;
 		try {
 			const formData = new FormData();
-			formData.append('file', file); // WICHTIG: 'file' statt 'backgroundImage'
+			formData.append('file', file);
 			
-			const res = await fetch('/api/user/upload/background-image', { 
+			const res = await fetch('http://localhost:3000/api/user/upload/background-image', { 
 				method: 'POST', 
 				body: formData,
-				credentials: 'include' // WICHTIG: Cookies mitsenden
+				credentials: 'include'
 			});
 			
 			const data = await res.json();
@@ -111,7 +113,7 @@
 
 		isLoading = true;
 		try {
-			const res = await fetch('/api/user/update-email', {
+			const res = await fetch('http://localhost:3000/api/user/update-email', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -141,7 +143,7 @@
 
 		isLoading = true;
 		try {
-			const res = await fetch('/api/user/update-password', {
+			const res = await fetch('http://localhost:3000/api/user/update-password', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -166,7 +168,7 @@
 		e.preventDefault();
 		isLoading = true;
 		try {
-			const res = await fetch('/api/user/update-profile', {
+			const res = await fetch('http://localhost:3000/api/user/update-profile', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -188,26 +190,40 @@
 	}
 
 	async function resetBackground() {
-		isLoading = true;
-		try {
-			const res = await fetch('/api/user/reset-background', { 
-				method: 'POST',
-				credentials: 'include'
-			});
-			const data = await res.json();
-			if (res.ok) {
-				backgroundImage = 'https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg';
-				document.body.style.backgroundImage = `url(${backgroundImage})`;
-				showMessage(t.backgroundReset || 'Hintergrund zurückgesetzt');
-			} else {
-				showMessage(data.error || t.backgroundResetError || 'Fehler beim Zurücksetzen', 'error');
-			}
-		} catch {
-			showMessage(t.backgroundResetError || 'Serverfehler', 'error');
-		} finally {
-			isLoading = false;
-		}
-	}
+    if (!confirm(t.confirmResetBackground || 'Möchten Sie den Hintergrund wirklich auf das Standardbild zurücksetzen?')) {
+        return;
+    }
+
+    isLoading = true;
+    try {
+        const res = await fetch('http://localhost:3000/api/user/reset-background', { 
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await res.json();
+        if (res.ok) {
+            // Verwende das zurückgegebene Default-Bild
+            backgroundImage = data.backgroundImageUrl || '/default-background.png';
+            
+            // Aktualisiere das Hintergrundbild auf der Seite
+            document.documentElement.style.setProperty('--background-image', `url('${backgroundImage}')`);
+            document.body.style.backgroundImage = `url('${backgroundImage}')`;
+            
+            showMessage(t.backgroundReset || 'Hintergrund zurückgesetzt');
+        } else {
+            showMessage(data.error || t.backgroundResetError || 'Fehler beim Zurücksetzen', 'error');
+        }
+    } catch (error) {
+        console.error('Reset background failed:', error);
+        showMessage(t.backgroundResetError || 'Serverfehler', 'error');
+    } finally {
+        isLoading = false;
+    }
+}
 </script>
 
 <div class="profile-container">
