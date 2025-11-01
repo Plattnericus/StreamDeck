@@ -42,3 +42,20 @@
 - bug fixes
 - Profile funktioniert jetzt
 - layout klappt mit profilbild + background img
+- habe einen cropper (background & profile picture) hinzugefügt
+![Hours](3)
+
+
+
+# TODO
+- Einstellugnen und Profil aufteilen (email + password --> einstellungen)
+- shop beginnen (shopping cart, produkte, usw)
+- back button machen (der immer zu letzten position geht wo man war)
+- bug fixes
+- about page
+- index page contact (mit  freee forum dass es in meine email kommt)
+- langauga auswählen bessser machen
+- alles user friendly machen
+- cleaner code machen und alles über haupt cleaner
+- animationen
+- apple inspired

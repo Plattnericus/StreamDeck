@@ -1,6 +1,9 @@
 import { writable, derived } from 'svelte/store';
 import { browser } from '$app/environment';
 
+// Exportiere User-Stores
+export * from './stores/user.js';
+
 // ===== HELPER =====
 function getLocalStorage(key, fallback) {
 	if (browser) return localStorage.getItem(key) || fallback;
