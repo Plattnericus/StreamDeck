@@ -59,3 +59,4 @@
 - cleaner code machen und alles über haupt cleaner
 - animationen
 - apple inspired
+- Journey (Changelog) doesnt work (so it isn't live updated)

@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte';
 
-  // Typdefinitionen
   /** @type {Array<{date: string, tasks: string[], hours: number, imgSrc: string}>} */
   let entries = [];
   let totalHours = 0;
