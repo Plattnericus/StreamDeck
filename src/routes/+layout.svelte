@@ -82,6 +82,7 @@
     $effect(() => {
         const unsubscribe = page.subscribe(($page) => {
             currentPath = $page.url?.pathname || '/';
+            checkAuthStatus(); // Profil- und Hintergrundbild bei Seitenwechsel neu laden
         });
         return unsubscribe;
     });
@@ -354,23 +355,6 @@ async function fetchBackgroundPicture(userId: string) {
             
             <div class="right-controls">
                 <div class="desktop-controls {isMobile ? 'mobile-hidden' : ''}">
-                    <div class="language-select-wrapper">
-                        <select class="language-select" value={$language} onchange={handleLanguageChange}>
-                            <option class="language-options" value="de">🇩🇪 DE</option>
-                            <option class="language-options" value="en">🇬🇧 EN</option>
-                            <option class="language-options" value="it">🇮🇹 IT</option>
-                        </select>
-                        <i class="fas fa-chevron-down language-arrow"></i>
-                    </div>
-
-                    <button class="theme-toggle" onclick={toggleTheme} aria-label="Toggle theme">
-                        {#if $theme === 'light'}
-                            <i class="fas fa-moon"></i>
-                        {:else}
-                            <i class="fas fa-sun"></i>
-                        {/if}
-                    </button>
-
                     <a href="/settings" class="settings-link {isActiveTab('/settings') ? 'active' : ''}">
                         <i class="fas fa-cog"></i>
                         {#if isActiveTab('/settings')}
@@ -415,29 +399,14 @@ async function fetchBackgroundPicture(userId: string) {
 
                 <div class="glass-content">
                     <nav class="sidebar-nav">
-                        <!-- Mobile Hauptnavigation -->
-                        {#if isMobile}
-                            {#each [
-                                {href:'/',       icon:'fa-home',        label:$translations.home},
-                                {href:'/about',  icon:'fa-info-circle', label:$translations.about},
-                                {href:'/shop',icon:'fa-concierge-bell',label:$translations.shop},
-                                {href:'/contact',icon:'fa-envelope',   label:$translations.contact}
-                            ] as nav}
-                                <a href={nav.href} class="nav-item {isActiveTab(nav.href)?'active':''}" onclick={closePopup}>
-                                    <i class="fas {nav.icon}"></i>
-                                    <span>{nav.label}</span>
-                                </a>
-                            {/each}
-                            <div class="menu-divider"></div>
-                        {/if}
 
-                        <!-- Theme-Toggle -->
+<!--
+
                         <button class="nav-item" onclick={toggleTheme} type="button">
                             <i class="fas fa-{$theme === 'light' ? 'moon' : 'sun'}"></i>
                             <span>{$theme === 'light' ? $translations.darkMode : $translations.lightMode}</span>
                         </button>
 
-                        <!-- Sprachwahl -->
                         <div class="nav-item language-selector">
                             <i class="fas fa-globe"></i>
                             <span>{$translations.language}</span>
@@ -450,8 +419,36 @@ async function fetchBackgroundPicture(userId: string) {
                                 <i class="fas fa-chevron-down language-arrow"></i>
                             </div>
                         </div>
+-->
 
-                        <!-- Weitere Links -->
+
+
+
+
+                        <!-- Login / Logout -->
+                        {#if user}
+                            <div class="user-info">
+                                <div class="user-welcome">
+                                    <img src={profileImg} alt="Profile" width="64" height="64" class="profile-image profile-image--large" />
+                                    <div class="greeting">Hallo, {user.username || 'User'}!</div>
+                                </div>
+
+                        <!-- Mobile Hauptnavigation -->
+                            {#if isMobile}
+                                {#each [
+                                    {href:'/',       icon:'fa-home',        label:$translations.home},
+                                    {href:'/about',  icon:'fa-info-circle', label:$translations.about},
+                                    {href:'/shop',icon:'fa-concierge-bell',label:$translations.shop},
+                                    {href:'/contact',icon:'fa-envelope',   label:$translations.contact}
+                                ] as nav}
+                                    <a href={nav.href} class="nav-item {isActiveTab(nav.href)?'active':''}" onclick={closePopup}>
+                                        <i class="fas {nav.icon}"></i>
+                                        <span>{nav.label}</span>
+                                    </a>
+                                {/each}
+                            <div class="menu-divider"></div>
+                            {/if}
+                            <!-- Weitere Links -->
                         {#each [
                             {href:'/settings', icon:'fa-cog',      label:$translations.settings},
                             {href:'/profile',  icon:'fa-user',     label:$translations.profile},
@@ -461,17 +458,14 @@ async function fetchBackgroundPicture(userId: string) {
                                 <span>{link.label}</span>
                             </a>
                         {/each}
-
-                        <!-- Login / Logout -->
-                        {#if user}
-                            <div class="user-info">
-                                <div class="user-welcome">Hallo, {user.username || 'User'}!</div>
+                       <div class="menu-divider"></div>
                                 <button class="nav-item logout-button" onclick={logout} type="button">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <span>{$translations.logout}</span>
                                 </button>
                             </div>
                         {:else}
+                        
                             <button class="nav-item login-button" onclick={handleLoginClick} type="button">
                                 <i class="fas fa-sign-in-alt"></i>
                                 <span>{$translations.login}</span>
@@ -825,7 +819,7 @@ async function fetchBackgroundPicture(userId: string) {
 	position: relative;
 	pointer-events: auto;
 	width: 280px;
-	max-height: 500px;
+	max-height: 700px;
 	border-radius: 20px;
 	overflow: hidden;
 	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
@@ -843,8 +837,8 @@ async function fetchBackgroundPicture(userId: string) {
     }
 
     .glass-sidebar[data-theme='light'] {
-        --bg-color: rgba(255,255,255,0.25);
-		--highlight: rgba(255,255,255,0.75);
+        --bg-color: rgba(255, 255, 255, 0.25);
+		--highlight: rgba(255, 255, 255, 0.75);
 		--text: #1d1d1f;
         background-repeat: no-repeat;
         min-height: 100vh;
@@ -1277,17 +1271,41 @@ async function fetchBackgroundPicture(userId: string) {
 
     .user-info {
         margin-top: 8px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
         padding-top: 16px;
     }
 
     .user-welcome {
-        padding: 0 20px 12px 20px;
+        padding: 8px 20px 16px 20px; 
         color: var(--text);
-        font-size: 14px;
-        opacity: 0.8;
         margin-bottom: 8px;
-        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .user-welcome .greeting {
+        font-size: 18px;
+        font-weight: 700;
+        opacity: 1;     
+    }
+
+    .profile-image--large {
+        width: 64px !important;
+        height: 64px !important;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        object-fit: cover;
+    }
+    /* Dark/Light Kontrast für Rahmen leicht anpassen */
+    [data-theme='light'] .profile-image--large {
+        border-color: rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 480px) {
+        .user-welcome .greeting { font-size: 16px; }
+        .profile-image--large { width: 56px !important; height: 56px !important; }
     }
 
     .logout-button, .login-button {
@@ -1372,4 +1390,5 @@ async function fetchBackgroundPicture(userId: string) {
             padding: 90px 4px 0 0;
         }
     }
+
 </style>

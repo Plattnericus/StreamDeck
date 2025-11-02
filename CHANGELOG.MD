@@ -45,6 +45,11 @@
 - habe einen cropper (background & profile picture) hinzugefügt
 ![Hours](3)
 
+# 02 November
+- habe das css in die login / register page eingefügt
+
+![Hours](3)
+
 
 
 # TODO
@@ -60,3 +65,4 @@
 - animationen
 - apple inspired
 - Journey (Changelog) doesnt work (so it isn't live updated)
+- settings (email - password change, toggle language, dark mode, cookies, agb, etc.)

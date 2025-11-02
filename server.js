@@ -227,7 +227,7 @@ app.post('/api/register', async (req, res) => {
 
         res.json({ 
           success: true, 
-          redirect: '/settings', 
+          redirect: '/profile', 
           userId 
         });
       }
@@ -261,7 +261,7 @@ app.post('/api/login', (req, res) => {
         setAuthCookie(res, user.id, remember);
         res.json({ 
           success: true, 
-          redirect: '/settings', 
+          redirect: '/profile', 
           userId: user.id 
         });
       }

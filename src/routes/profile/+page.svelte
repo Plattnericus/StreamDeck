@@ -109,17 +109,22 @@
 			if (currentImageType === 'profile') {
 				cropWidth = cropHeight = minDimension * 0.6;
 			} else {
-				cropHeight = minDimension * 0.6;
-				cropWidth = cropHeight * cropAspectRatio;
+				// Für Hintergrundbilder: Passe die Größe an das verfügbare Bild an
+				cropWidth = Math.min(displayWidth * 0.8, displayHeight * cropAspectRatio * 0.8);
+				cropHeight = cropWidth / cropAspectRatio;
 			}
 
 			// Stelle sicher, dass der Crop-Bereich nicht größer als das Bild ist
 			cropWidth = Math.min(cropWidth, displayWidth);
 			cropHeight = Math.min(cropHeight, displayHeight);
 
+			// Begrenze die Position auf den sichtbaren Bereich
+			const maxX = displayWidth - cropWidth;
+			const maxY = displayHeight - cropHeight;
+
 			cropArea = {
-				x: (displayWidth - cropWidth) / 2,
-				y: (displayHeight - cropHeight) / 2,
+				x: Math.max(0, Math.min(maxX, (displayWidth - cropWidth) / 2)),
+				y: Math.max(0, Math.min(maxY, (displayHeight - cropHeight) / 2)),
 				width: cropWidth,
 				height: cropHeight
 			};
@@ -199,26 +204,42 @@
 			switch (resizeCorner) {
 				case 'top-left':
 					newWidth = Math.max(minSize, cropArea.width - dx);
-					newHeight = currentImageType === 'profile' ? newWidth : Math.max(minSize, newWidth / cropAspectRatio);
+					if (currentImageType === 'profile') {
+						newHeight = newWidth;
+					} else {
+						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
+					}
 					newX = cropArea.x + dx;
 					newY = cropArea.y + dy;
 					break;
 					
 				case 'top-right':
 					newWidth = Math.max(minSize, cropArea.width + dx);
-					newHeight = currentImageType === 'profile' ? newWidth : Math.max(minSize, newWidth / cropAspectRatio);
+					if (currentImageType === 'profile') {
+						newHeight = newWidth;
+					} else {
+						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
+					}
 					newY = cropArea.y + dy;
 					break;
 					
 				case 'bottom-left':
 					newWidth = Math.max(minSize, cropArea.width - dx);
-					newHeight = currentImageType === 'profile' ? newWidth : Math.max(minSize, newWidth / cropAspectRatio);
+					if (currentImageType === 'profile') {
+						newHeight = newWidth;
+					} else {
+						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
+					}
 					newX = cropArea.x + dx;
 					break;
 					
 				case 'bottom-right':
 					newWidth = Math.max(minSize, cropArea.width + dx);
-					newHeight = currentImageType === 'profile' ? newWidth : Math.max(minSize, newWidth / cropAspectRatio);
+					if (currentImageType === 'profile') {
+						newHeight = newWidth;
+					} else {
+						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
+					}
 					break;
 			}
 
@@ -472,10 +493,6 @@
 </script>
 
 <div class="profile-container">
-	<div class="profile-header">
-		<h1>{t.profile || 'Profil'}</h1>
-		<p class="profile-subtitle">{t.manageAccountSettings || 'Verwalten Sie Ihre Kontoeinstellungen'}</p>
-	</div>
 
 	{#if message.text}
 		<div class="message {message.type}">{message.text}</div>
@@ -563,112 +580,6 @@
 					</button>
 				</form>
 			</div>
-
-			<!-- Email Update -->
-			<div class="profile-card">
-				<h3>{t.changeEmail || 'E-Mail ändern'}</h3>
-				<form onsubmit={updateEmail}>
-					<div class="form-group">
-						<label for="current-email">{t.currentEmail || 'Aktuelle E-Mail'}</label>
-						<input 
-							id="current-email"
-							type="email" 
-							value={emailForm.currentEmail}
-							disabled
-						/>
-					</div>
-					
-					<div class="form-group">
-						<label for="new-email">{t.newEmail || 'Neue E-Mail'}</label>
-						<input 
-							id="new-email"
-							type="email" 
-							bind:value={emailForm.newEmail}
-							placeholder={t.newEmailPlaceholder || 'neue.email@beispiel.de'}
-							required
-						/>
-					</div>
-					
-					<div class="form-group">
-						<label for="confirm-email">{t.confirmEmail || 'E-Mail bestätigen'}</label>
-						<input 
-							id="confirm-email"
-							type="email" 
-							bind:value={emailForm.confirmEmail}
-							placeholder={t.newEmailPlaceholder || 'neue.email@beispiel.de'}
-							required
-						/>
-					</div>
-					
-					<div class="form-group">
-						<label for="email-password">{t.currentPassword || 'Aktuelles Passwort'}</label>
-						<input 
-							id="email-password"
-							type="password" 
-							bind:value={emailForm.password}
-							placeholder={t.currentPasswordPlaceholder || 'Ihr aktuelles Passwort'}
-							required
-						/>
-					</div>
-					
-					<button type="submit" class="save-button" disabled={isLoading}>
-						{#if isLoading}
-							<i class="fas fa-spinner fa-spin"></i>
-						{:else}
-							<i class="fas fa-envelope"></i>
-						{/if}
-						{t.updateEmail || 'E-Mail aktualisieren'}
-					</button>
-				</form>
-			</div>
-
-			<!-- Password Update -->
-			<div class="profile-card">
-				<h3>{t.changePassword || 'Passwort ändern'}</h3>
-				<form onsubmit={updatePassword}>
-					<div class="form-group">
-						<label for="current-password">{t.currentPassword || 'Aktuelles Passwort'}</label>
-						<input 
-							id="current-password"
-							type="password" 
-							bind:value={passwordForm.currentPassword}
-							placeholder={t.currentPasswordPlaceholder || 'Ihr aktuelles Passwort'}
-							required
-						/>
-					</div>
-					
-					<div class="form-group">
-						<label for="new-password">{t.newPassword || 'Neues Passwort'}</label>
-						<input 
-							id="new-password"
-							type="password" 
-							bind:value={passwordForm.newPassword}
-							placeholder={t.newPasswordPlaceholder || 'Neues Passwort (min. 6 Zeichen)'}
-							required
-						/>
-					</div>
-					
-					<div class="form-group">
-						<label for="confirm-password">{t.confirmPassword || 'Passwort bestätigen'}</label>
-						<input 
-							id="confirm-password"
-							type="password" 
-							bind:value={passwordForm.confirmPassword}
-							placeholder={t.confirmPasswordPlaceholder || 'Passwort wiederholen'}
-							required
-						/>
-					</div>
-					
-					<button type="submit" class="save-button" disabled={isLoading}>
-						{#if isLoading}
-							<i class="fas fa-spinner fa-spin"></i>
-						{:else}
-							<i class="fas fa-key"></i>
-						{/if}
-						{t.updatePassword || 'Passwort aktualisieren'}
-					</button>
-				</form>
-			</div>
 		</div>
 	</div>
 </div>
@@ -725,6 +636,11 @@
 					{/if}
 				</div>
 				
+				<div class="editor-instructions">
+					<p><i class="fas fa-arrows-alt"></i> {t.dragToMove || 'Zum Bewegen ziehen'}</p>
+					<p><i class="fas fa-expand-alt"></i> {t.dragCornersToResize || 'Ecken zum Größe ändern ziehen'}</p>
+					<p class="hint">{t.cropInsideImage || 'Der Crop-Bereich bleibt immer innerhalb des Bildes'}</p>
+				</div>
 			</div>
 			
 			<div class="modal-actions">
@@ -1029,7 +945,7 @@
 		gap: 1.5rem;
 	}
 
-	/* Image Crop Container */
+	/* Image Crop Container - FIXED FOR ALL ASPECT RATIOS */
 	.image-crop-container {
 		position: relative;
 		background: rgba(255, 255, 255, 0.05);
@@ -1043,6 +959,7 @@
 		max-height: 60vh;
 		overflow: hidden;
 		cursor: default;
+		width: 100%;
 	}
 
 	.crop-image {
@@ -1050,9 +967,11 @@
 		max-height: 100%;
 		object-fit: contain;
 		border-radius: 8px;
+		display: block;
+		margin: 0 auto;
 	}
 
-	/* Crop Overlay */
+	/* Crop Overlay - FIXED FOR ALL IMAGE SIZES */
 	.crop-overlay {
 		position: absolute;
 		top: 20px;
@@ -1061,6 +980,7 @@
 		bottom: 20px;
 		background: rgba(0, 0, 0, 0.6);
 		border-radius: 8px;
+		pointer-events: none;
 	}
 
 	/* Crop Area (der auswählbare Bereich) */
@@ -1071,6 +991,7 @@
 		box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
 		cursor: move;
 		transition: border-color 0.2s ease;
+		pointer-events: auto;
 	}
 
 	.crop-area:hover {
@@ -1090,6 +1011,7 @@
 		transition: all 0.2s ease;
 		z-index: 10;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+		pointer-events: auto;
 	}
 
 	.resize-handle:hover {
