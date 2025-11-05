@@ -635,12 +635,6 @@
 						</div>
 					{/if}
 				</div>
-				
-				<div class="editor-instructions">
-					<p><i class="fas fa-arrows-alt"></i> {t.dragToMove || 'Zum Bewegen ziehen'}</p>
-					<p><i class="fas fa-expand-alt"></i> {t.dragCornersToResize || 'Ecken zum Größe ändern ziehen'}</p>
-					<p class="hint">{t.cropInsideImage || 'Der Crop-Bereich bleibt immer innerhalb des Bildes'}</p>
-				</div>
 			</div>
 			
 			<div class="modal-actions">
@@ -659,6 +653,7 @@
 		</div>
 	</div>
 {/if}
+
 
 <style>
 	.profile-container {

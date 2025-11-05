@@ -501,6 +501,7 @@ async function fetchBackgroundPicture(userId: string) {
 			padding: 0;
 			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 			padding-top: 80px;
+            color: white;
 		}
 
 		/* Fallback direkt auf body */
