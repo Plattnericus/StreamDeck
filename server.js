@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import fs from 'fs';
 import path from 'path';
 import { randomUUID } from 'crypto';
@@ -21,10 +22,22 @@ const FRONTEND = `http://localhost:${FRONTEND_PORT}`;
 // ===== MIDDLEWARE =====
 app.use(cors({ 
   origin: FRONTEND, 
-  credentials: true 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(session({
+  secret: 'your-secret-key-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // set true in production with HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24h
+  }
+}));
 
 // ===== UPLOADS ORDNER STRUKTUR IM ROOT =====
 const uploadsRootPath = path.join(__dirname, 'uploads');
@@ -69,9 +82,19 @@ const createUserJson = (userId, username, email) => {
     verified: false,
     bio: '',
     profilePicture: '/default-profile.png',
-    backgroundImage: '/default-background.png'
+    backgroundImage: '/default-background.png',
+    toggleStates: {
+      darkMode: false,
+      notifications: true,
+      autoSave: false,
+      analytics: true,
+      privacyMode: false,
+      emailUpdates: true,
+      liquidToggle: false,
+      cookies: true,
+      termsAccepted: false
+    }
   };
-  
   fs.writeFileSync(getUserJsonPath(userId), JSON.stringify(userJson, null, 2));
   return userJson;
 };
@@ -98,34 +121,110 @@ const requireAuth = (req, res, next) => {
   next();
 };
 
-// ===== FILE UPLOAD HANDLER (NEU MIT ROOT UPLOADS) =====
+// ===== VALIDATION FUNCTIONS =====
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const isStrongPassword = (password) => {
+  return password && password.length >= 8;
+};
+
+// ===== RESPONSE STANDARDIZATION =====
+const successResponse = (data = {}, message = '') => {
+  return { success: true, ...data, message };
+};
+
+const errorResponses = {
+  database: { error: 'Datenbankfehler' },
+  auth: { error: 'Nicht autorisiert' },
+  not_found: { error: 'Nicht gefunden' },
+  validation: { error: 'Ungültige Eingabe' },
+  server: { error: 'Server Fehler' }
+};
+
+// ===== SECURE FILE DELETE =====
+const safeDeleteFiles = (directory, pattern) => {
+  try {
+    if (!fs.existsSync(directory)) return;
+    
+    const files = fs.readdirSync(directory);
+    files.forEach(file => {
+      if (file.startsWith(pattern)) {
+        const filePath = path.join(directory, file);
+        try {
+          fs.unlinkSync(filePath);
+          console.log(`✅ Gelöscht: ${filePath}`);
+        } catch (err) {
+          console.warn(`⚠️ Konnte nicht löschen ${filePath}:`, err.message);
+        }
+      }
+    });
+  } catch (error) {
+    console.error('❌ Fehler in safeDeleteFiles:', error);
+  }
+};
+
+// ===== FILE UPLOAD HANDLER (SICHER) =====
 const handleFileUpload = (req, res, options) => {
   const { uploadType, maxFileSize, onSuccess } = options;
   
   const userId = getUserIdFromCookies(req);
   if (!userId) {
-    return res.status(401).json({ error: 'Nicht eingeloggt' });
+    return res.status(401).json(errorResponses.auth);
   }
 
-  const bb = busboy({ headers: req.headers });
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+
+  const bb = busboy({ 
+    headers: req.headers,
+    limits: {
+      fileSize: maxFileSize,
+      files: 1
+    }
+  });
+
   let fileBuffer = null;
   let fileExtension = null;
+  let mimeType = null;
+
+  // Upload Timeout
+  const uploadTimeout = setTimeout(() => {
+    bb.destroy();
+    res.status(408).json({ error: 'Upload timeout' });
+  }, 30000);
 
   bb.on('file', (name, file, info) => {
-    const { filename, mimeType } = info;
+    const { filename, mimeType: fileMimeType } = info;
+    mimeType = fileMimeType;
     
-    if (!mimeType.startsWith('image/')) {
-      return res.status(400).json({ error: 'Nur Bilddateien erlaubt' });
+    // MIME-Type validieren
+    if (!allowedMimeTypes.includes(mimeType)) {
+      bb.destroy();
+      return res.status(400).json({ error: 'Nur Bilddateien (JPEG, PNG, WebP, GIF) erlaubt' });
     }
     
-    fileExtension = path.extname(filename);
+    // Dateiendung validieren
+    fileExtension = path.extname(filename).toLowerCase();
+    if (!allowedExtensions.includes(fileExtension)) {
+      bb.destroy();
+      return res.status(400).json({ error: 'Ungültige Dateiendung' });
+    }
+    
     const chunks = [];
     
     file.on('data', (chunk) => chunks.push(chunk));
     file.on('end', () => fileBuffer = Buffer.concat(chunks));
+    file.on('error', (err) => {
+      console.error('File stream error:', err);
+      res.status(500).json({ error: 'Datei Upload Fehler' });
+    });
   });
 
   bb.on('close', async () => {
+    clearTimeout(uploadTimeout);
+    
     try {
       if (!fileBuffer) {
         return res.status(400).json({ error: 'Keine Datei hochgeladen' });
@@ -143,15 +242,7 @@ const handleFileUpload = (req, res, options) => {
       const filePath = path.join(targetDir, fileName);
 
       // Alte Dateien mit gleicher UUID löschen (alle Extensions)
-      if (uploadType === 'profile') {
-        fs.readdirSync(profilePicsPath)
-          .filter(file => file.startsWith(userId))
-          .forEach(file => fs.unlinkSync(path.join(profilePicsPath, file)));
-      } else {
-        fs.readdirSync(backgroundPicsPath)
-          .filter(file => file.startsWith(userId))
-          .forEach(file => fs.unlinkSync(path.join(backgroundPicsPath, file)));
-      }
+      safeDeleteFiles(targetDir, userId);
 
       // Neue Datei speichern
       fs.writeFileSync(filePath, fileBuffer);
@@ -163,7 +254,18 @@ const handleFileUpload = (req, res, options) => {
     }
   });
 
+  bb.on('error', (err) => {
+    clearTimeout(uploadTimeout);
+    console.error('Busboy error:', err);
+    res.status(500).json({ error: 'Upload Fehler' });
+  });
+
   req.pipe(bb);
+};
+
+// ===== USER ID GENERATION =====
+const generateUserId = () => {
+  return `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
 
 // ===== BACKGROUND PICTURE ENDPOINT =====
@@ -210,7 +312,15 @@ app.post('/api/register', async (req, res) => {
       return res.status(400).json({ error: 'Alle Felder ausfüllen' });
     }
 
-    const userId = randomUUID();
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ error: 'Ungültige Email-Adresse' });
+    }
+
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({ error: 'Passwort muss mindestens 8 Zeichen lang sein' });
+    }
+
+    const userId = generateUserId();
     const hashedPassword = await bcrypt.hash(password, 10);
 
     db.run(
@@ -225,16 +335,15 @@ app.post('/api/register', async (req, res) => {
         createUserJson(userId, username, email);
         setAuthCookie(res, userId, remember);
 
-        res.json({ 
-          success: true, 
+        res.json(successResponse({ 
           redirect: '/profile', 
           userId 
-        });
+        }, 'Erfolgreich registriert'));
       }
     );
   } catch (error) {
     console.error('Register error:', error);
-    res.status(500).json({ error: 'Server Fehler' });
+    res.status(500).json(errorResponses.server);
   }
 });
 
@@ -242,12 +351,16 @@ app.post('/api/login', (req, res) => {
   try {
     const { identifier, password, remember } = req.body;
     
+    if (!identifier || !password) {
+      return res.status(400).json({ error: 'Email/Username und Passwort benötigt' });
+    }
+
     db.get(
       `SELECT * FROM users WHERE username = ? OR email = ?`,
       [identifier, identifier],
       async (err, user) => {
         if (err) {
-          return res.status(500).json({ error: 'Datenbankfehler' });
+          return res.status(500).json(errorResponses.database);
         }
         if (!user) {
           return res.status(400).json({ error: 'User nicht gefunden' });
@@ -259,25 +372,21 @@ app.post('/api/login', (req, res) => {
         }
 
         setAuthCookie(res, user.id, remember);
-        res.json({ 
-          success: true, 
+        res.json(successResponse({ 
           redirect: '/profile', 
           userId: user.id 
-        });
+        }, 'Erfolgreich eingeloggt'));
       }
     );
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Server Fehler' });
+    res.status(500).json(errorResponses.server);
   }
 });
 
 app.post('/api/logout', (req, res) => {
   res.clearCookie('auth');
-  res.json({ 
-    success: true, 
-    message: 'Erfolgreich ausgeloggt' 
-  });
+  res.json(successResponse({}, 'Erfolgreich ausgeloggt'));
 });
 
 app.get('/api/session', (req, res) => {
@@ -301,18 +410,11 @@ app.get('/api/session', (req, res) => {
   }
 });
 
-// ===== STATISCHE UPLOADS FREIGEBEN MIT CORS =====
-app.use('/uploads', express.static(uploadsRootPath, {
-  setHeaders: (res, path) => {
-    res.set('Access-Control-Allow-Origin', FRONTEND);
-  }
-}));
-
 // ===== UPLOAD ENDPOINTS (AKTUALISIERT) =====
 app.post('/api/user/upload/profile-image', (req, res) => {
   handleFileUpload(req, res, {
     uploadType: 'profile',
-    maxFileSize: 5 * 1024 * 1024,
+    maxFileSize: 5 * 1024 * 1024, // 5MB
     onSuccess: async (userId, fileName) => {
       const userJsonPath = getUserJsonPath(userId);
       const userData = JSON.parse(fs.readFileSync(userJsonPath));
@@ -320,10 +422,9 @@ app.post('/api/user/upload/profile-image', (req, res) => {
       userData.profilePicture = `/uploads/profile-pic/${fileName}`;
       fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
 
-      res.json({ 
-        success: true, 
+      res.json(successResponse({ 
         profilePictureUrl: userData.profilePicture 
-      });
+      }, 'Profilbild aktualisiert'));
     }
   });
 });
@@ -331,7 +432,7 @@ app.post('/api/user/upload/profile-image', (req, res) => {
 app.post('/api/user/upload/background-image', (req, res) => {
   handleFileUpload(req, res, {
     uploadType: 'background',
-    maxFileSize: 10 * 1024 * 1024,
+    maxFileSize: 10 * 1024 * 1024, // 10MB
     onSuccess: async (userId, fileName) => {
       const userJsonPath = getUserJsonPath(userId);
       const userData = JSON.parse(fs.readFileSync(userJsonPath));
@@ -339,10 +440,9 @@ app.post('/api/user/upload/background-image', (req, res) => {
       userData.backgroundImage = `/uploads/background-pic/${fileName}`;
       fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
 
-      res.json({ 
-        success: true, 
+      res.json(successResponse({ 
         backgroundImageUrl: userData.backgroundImage 
-      });
+      }, 'Hintergrundbild aktualisiert'));
     }
   });
 });
@@ -354,7 +454,7 @@ app.get('/api/user/profile', requireAuth, (req, res) => {
     const userJsonPath = getUserJsonPath(userId);
     
     if (!fs.existsSync(userJsonPath)) {
-      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+      return res.status(404).json(errorResponses.not_found);
     }
 
     const userData = JSON.parse(fs.readFileSync(userJsonPath));
@@ -364,7 +464,7 @@ app.get('/api/user/profile', requireAuth, (req, res) => {
       [userId], 
       (err, row) => {
         if (err) {
-          return res.status(500).json({ error: 'Datenbankfehler' });
+          return res.status(500).json(errorResponses.database);
         }
 
         const profileData = {
@@ -377,12 +477,12 @@ app.get('/api/user/profile', requireAuth, (req, res) => {
           backgroundImage: userData.backgroundImage || 'https://images.pexels.com/photos/2563854/pexels-photo-2563854.jpeg'
         };
 
-        res.json(profileData);
+        res.json(successResponse(profileData));
       }
     );
   } catch (error) {
     console.error('Profile error:', error);
-    res.status(500).json({ error: 'Fehler beim Laden des Profils' });
+    res.status(500).json(errorResponses.server);
   }
 });
 
@@ -391,6 +491,10 @@ app.post('/api/user/update-profile', requireAuth, (req, res) => {
     const userId = req.userId;
     const { username, bio } = req.body;
     
+    if (!username) {
+      return res.status(400).json({ error: 'Username ist erforderlich' });
+    }
+
     db.run(
       'UPDATE users SET username = ? WHERE id = ?', 
       [username, userId], 
@@ -406,15 +510,14 @@ app.post('/api/user/update-profile', requireAuth, (req, res) => {
         userData.bio = bio || '';
         fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
 
-        res.json({ 
-          success: true, 
+        res.json(successResponse({ 
           user: userData 
-        });
+        }, 'Profil aktualisiert'));
       }
     );
   } catch (error) {
     console.error('Update profile error:', error);
-    res.status(500).json({ error: 'Fehler beim Speichern' });
+    res.status(500).json(errorResponses.server);
   }
 });
 
@@ -423,12 +526,20 @@ app.post('/api/user/update-email', requireAuth, (req, res) => {
     const userId = req.userId;
     const { newEmail, password } = req.body;
     
+    if (!newEmail || !password) {
+      return res.status(400).json({ error: 'Email und Passwort benötigt' });
+    }
+
+    if (!isValidEmail(newEmail)) {
+      return res.status(400).json({ error: 'Ungültige Email-Adresse' });
+    }
+
     db.get(
       'SELECT password FROM users WHERE id = ?', 
       [userId], 
       async (err, row) => {
         if (err) {
-          return res.status(500).json({ error: 'Datenbankfehler' });
+          return res.status(500).json(errorResponses.database);
         }
         
         const validPassword = await bcrypt.compare(password, row.password);
@@ -444,17 +555,14 @@ app.post('/api/user/update-email', requireAuth, (req, res) => {
               return res.status(500).json({ error: 'Email bereits vergeben' });
             }
             
-            res.json({ 
-              success: true, 
-              message: 'Email aktualisiert' 
-            });
+            res.json(successResponse({}, 'Email aktualisiert'));
           }
         );
       }
     );
   } catch (error) {
     console.error('Update email error:', error);
-    res.status(500).json({ error: 'Server Fehler' });
+    res.status(500).json(errorResponses.server);
   }
 });
 
@@ -463,12 +571,20 @@ app.post('/api/user/update-password', requireAuth, (req, res) => {
     const userId = req.userId;
     const { currentPassword, newPassword } = req.body;
     
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Aktuelles und neues Passwort benötigt' });
+    }
+
+    if (!isStrongPassword(newPassword)) {
+      return res.status(400).json({ error: 'Neues Passwort muss mindestens 8 Zeichen lang sein' });
+    }
+
     db.get(
       'SELECT password FROM users WHERE id = ?', 
       [userId], 
       async (err, row) => {
         if (err) {
-          return res.status(500).json({ error: 'Datenbankfehler' });
+          return res.status(500).json(errorResponses.database);
         }
         
         const validPassword = await bcrypt.compare(currentPassword, row.password);
@@ -485,17 +601,14 @@ app.post('/api/user/update-password', requireAuth, (req, res) => {
               return res.status(500).json({ error: 'Fehler beim Ändern des Passworts' });
             }
             
-            res.json({ 
-              success: true, 
-              message: 'Passwort geändert' 
-            });
+            res.json(successResponse({}, 'Passwort geändert'));
           }
         );
       }
     );
   } catch (error) {
     console.error('Update password error:', error);
-    res.status(500).json({ error: 'Server Fehler' });
+    res.status(500).json(errorResponses.server);
   }
 });
 
@@ -506,33 +619,21 @@ app.post('/api/user/reset-background', requireAuth, (req, res) => {
         const userJsonPath = getUserJsonPath(userId);
         
         if (!fs.existsSync(userJsonPath)) {
-            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+            return res.status(404).json(errorResponses.not_found);
         }
 
         const userData = JSON.parse(fs.readFileSync(userJsonPath));
         
         // Lösche die Background-Bild-Datei
-        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-        let deletedFile = false;
-        
-        for (const ext of imageExtensions) {
-            const imgPath = path.join(backgroundPicsPath, `${userId}${ext}`);
-            if (fs.existsSync(imgPath)) {
-                fs.unlinkSync(imgPath);
-                deletedFile = true;
-                console.log(`Deleted background image: ${imgPath}`);
-            }
-        }
+        safeDeleteFiles(backgroundPicsPath, userId);
         
         // Setze auf Default Background zurück
         userData.backgroundImage = '/default-background.png';
         fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
 
-        res.json({ 
-            success: true, 
-            message: 'Hintergrund zurückgesetzt',
+        res.json(successResponse({ 
             backgroundImageUrl: '/default-background.png'
-        });
+        }, 'Hintergrund zurückgesetzt'));
         
     } catch (error) {
         console.error('Reset background error:', error);
@@ -581,6 +682,66 @@ app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
   res.json({});
 });
 
+// ===== MULTI TOGGLE STATES ENDPOINTS =====
+app.get('/api/user/toggle-states', requireAuth, (req, res) => {
+  try {
+    const userId = req.userId;
+    const userJsonPath = getUserJsonPath(userId);
+    if (!fs.existsSync(userJsonPath)) return res.status(404).json(errorResponses.not_found);
+    
+    const userData = JSON.parse(fs.readFileSync(userJsonPath));
+    const defaults = {
+      darkMode: false,
+      notifications: true,
+      autoSave: false,
+      analytics: true,
+      privacyMode: false,
+      emailUpdates: true,
+      liquidToggle: false,
+      cookies: true,
+      termsAccepted: false
+    };
+    
+    const toggleStates = { ...defaults, ...(userData.toggleStates || {}) };
+    // persist merged
+    userData.toggleStates = toggleStates;
+    fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
+    
+    res.json(successResponse({ toggleStates }));
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Fehler beim Laden der Toggle-Status' });
+  }
+});
+
+app.post('/api/user/update-toggle-states', requireAuth, (req, res) => {
+  try {
+    const userId = req.userId;
+    const incoming = req.body.toggleStates || {};
+    const userJsonPath = getUserJsonPath(userId);
+    
+    if (!fs.existsSync(userJsonPath)) return res.status(404).json(errorResponses.not_found);
+    
+    const userData = JSON.parse(fs.readFileSync(userJsonPath));
+    const allowedKeys = [
+      'darkMode','notifications','autoSave','analytics',
+      'privacyMode','emailUpdates','liquidToggle','cookies','termsAccepted'
+    ];
+    
+    const sanitized = {};
+    for (const k of allowedKeys) sanitized[k] = !!incoming[k];
+    userData.toggleStates = { ...userData.toggleStates, ...sanitized };
+    fs.writeFileSync(userJsonPath, JSON.stringify(userData, null, 2));
+    
+    res.json(successResponse({ 
+      toggleStates: userData.toggleStates 
+    }, 'Toggle-Status aktualisiert'));
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Fehler beim Speichern der Toggle-Status' });
+  }
+});
+
 // ===== ERROR HANDLING =====
 app.use('/api/', (req, res) => {
   res.status(404).json({ error: 'API Endpoint nicht gefunden' });
@@ -591,4 +752,6 @@ app.listen(PORT, () => {
   console.log(`✅ Server läuft auf http://localhost:${PORT}`);
   console.log(`✅ CORS aktiv für Frontend: ${FRONTEND}`);
   console.log(`✅ Uploads-Ordner: ${uploadsRootPath}`);
+  console.log(`✅ Session Management aktiviert`);
+  console.log(`✅ Sichere Datei-Uploads aktiviert`);
 });

@@ -1,0 +1,22 @@
+{
+  "id": "1115fe87-aef8-4539-90c2-1def49d14d5f",
+  "username": "niggidy",
+  "email": "niggidy@niggidy.niggidy",
+  "role": "user",
+  "created_at": "2025-11-07T20:57:02.941Z",
+  "verified": false,
+  "bio": "",
+  "profilePicture": "/uploads/profile-pic/1115fe87-aef8-4539-90c2-1def49d14d5f.jpg",
+  "backgroundImage": "/default-background.png",
+  "toggleStates": {
+    "darkMode": true,
+    "notifications": true,
+    "autoSave": true,
+    "analytics": true,
+    "privacyMode": true,
+    "emailUpdates": true,
+    "liquidToggle": false,
+    "cookies": true,
+    "termsAccepted": true
+  }
+}

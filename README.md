@@ -44,5 +44,5 @@ You can preview the production build with `npm run preview`.
 
 Install all required dependencies:
 ```sh
-npm install express bcrypt body-parser cors cookie-parser busboy cropperjs @sveltejs/kit svelte @fortawesome/fontawesome-free gsap gsap@3.13.0 tweakpane@4.0.4 
+npm install express bcrypt body-parser cors cookie-parser busboy cropperjs @sveltejs/kit svelte @fortawesome/fontawesome-free gsap gsap@3.13.0 tweakpane@4.0.4 lucide-svelte url express-session
 ```

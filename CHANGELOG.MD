@@ -47,8 +47,16 @@
 
 # 02 November
 - habe das css in die login / register page eingefügt
-
 ![Hours](3)
+
+# 07.11.2025
+- Toggle Button erstellt
+- Settings Page gemacht
+- Design überarbeitet!!
+![Hours](5)
+
+
+
 
 
 
@@ -65,4 +73,5 @@
 - animationen
 - apple inspired
 - Journey (Changelog) doesnt work (so it isn't live updated)
-- settings (email - password change, toggle language, dark mode, cookies, agb, etc.)
+- settings (email - password change, toggle language, dark mode, cookies, agb, etc.) JUST SETTINGS (LANGUAGE CHANGER)
+- Change Language
