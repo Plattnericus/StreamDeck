@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { get } from 'svelte/store';
+	// Wichtig: Importiere den theme store
 	import { language, theme, translations } from '$lib/stores.js';
 
 	// User data
@@ -37,7 +38,6 @@
 	const t = get(translations);
 
 	onMount(() => loadUserData());
-
 	async function loadUserData() {
 		try {
 			const res = await fetch('http://localhost:3000/api/user/profile', {
@@ -65,7 +65,7 @@
 	function openImageEditor(e, type) {
 		const file = e.target.files?.[0];
 		if (!file) return;
-		
+
 		if (!file.type.startsWith('image/')) {
 			return showMessage(t.pleaseSelectImage || 'Bitte Bilddatei wählen', 'error');
 		}
@@ -92,7 +92,7 @@
 
 		const img = imageRef;
 		const container = containerRef;
-		
+
 		// Warte bis Bild komplett geladen ist
 		setTimeout(() => {
 			const containerRect = container.getBoundingClientRect();
@@ -121,7 +121,6 @@
 			// Begrenze die Position auf den sichtbaren Bereich
 			const maxX = displayWidth - cropWidth;
 			const maxY = displayHeight - cropHeight;
-
 			cropArea = {
 				x: Math.max(0, Math.min(maxX, (displayWidth - cropWidth) / 2)),
 				y: Math.max(0, Math.min(maxY, (displayHeight - cropHeight) / 2)),
@@ -145,7 +144,12 @@
 	}
 
 	function handleOverlayClick(e) {
-		if (e.target === e.currentTarget) {
+		// Stellt sicher, dass das Modal nur beim Klick auf das Overlay schließt
+		if (e.target === e.currentTarget && e.type === 'click') {
+			closeImageEditor();
+		}
+		// Optional: Schließen mit Escape-Taste
+		if (e.type === 'keydown' && e.key === 'Escape') {
 			closeImageEditor();
 		}
 	}
@@ -200,58 +204,66 @@
 			let newHeight = cropArea.height;
 			let newX = cropArea.x;
 			let newY = cropArea.y;
+			
+			// Berechne die Größenänderung basierend auf der Ecke und behalte das Seitenverhältnis
+			const calculateResize = (currentWidth, currentHeight, dx, dy, corner, ratio) => {
+				let tempW = currentWidth;
+				let tempH = currentHeight;
+				let tempX = cropArea.x;
+				let tempY = cropArea.y;
 
-			switch (resizeCorner) {
-				case 'top-left':
-					newWidth = Math.max(minSize, cropArea.width - dx);
-					if (currentImageType === 'profile') {
-						newHeight = newWidth;
-					} else {
-						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
+				if (corner.includes('left')) {
+					tempW = Math.max(minSize, currentWidth - dx);
+					tempX = cropArea.x + (currentWidth - tempW);
+				} else if (corner.includes('right')) {
+					tempW = Math.max(minSize, currentWidth + dx);
+				}
+
+				// Wenn es ein quadratisches Profilbild ist, wird die Höhe angepasst
+				if (ratio === 1) {
+					tempH = tempW;
+					if (corner.includes('top')) {
+						tempY = cropArea.y + (currentHeight - tempH);
 					}
-					newX = cropArea.x + dx;
-					newY = cropArea.y + dy;
-					break;
-					
-				case 'top-right':
-					newWidth = Math.max(minSize, cropArea.width + dx);
-					if (currentImageType === 'profile') {
-						newHeight = newWidth;
-					} else {
-						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
+				} else {
+					// Für andere Verhältnisse (z.B. 16/9)
+					tempH = tempW / ratio;
+					if (corner.includes('top')) {
+						tempY = cropArea.y + (currentHeight - tempH);
 					}
-					newY = cropArea.y + dy;
-					break;
-					
-				case 'bottom-left':
-					newWidth = Math.max(minSize, cropArea.width - dx);
-					if (currentImageType === 'profile') {
-						newHeight = newWidth;
-					} else {
-						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
-					}
-					newX = cropArea.x + dx;
-					break;
-					
-				case 'bottom-right':
-					newWidth = Math.max(minSize, cropArea.width + dx);
-					if (currentImageType === 'profile') {
-						newHeight = newWidth;
-					} else {
-						newHeight = Math.max(minSize, newWidth / cropAspectRatio);
-					}
-					break;
+				}
+				
+				// Post-Correction, um im Bild zu bleiben
+				tempW = Math.min(tempW, maxWidth - tempX);
+				tempH = Math.min(tempH, maxHeight - tempY);
+				
+				// Re-Adjustiere die Position, wenn die Größe korrigiert wurde (nur für Top/Left)
+				if (corner.includes('left') && tempW !== Math.max(minSize, currentWidth - dx)) {
+					tempX = cropArea.x + (currentWidth - tempW);
+				}
+				if (corner.includes('top') && tempH !== Math.max(minSize, currentHeight - dy) && ratio === 1) {
+					tempY = cropArea.y + (currentHeight - tempH);
+				}
+
+				return { width: tempW, height: tempH, x: tempX, y: tempY };
 			}
 
-			// Stelle sicher, dass der Bereich im Bild bleibt
-			const constrainedWidth = Math.min(newWidth, maxWidth - newX);
-			const constrainedHeight = Math.min(newHeight, maxHeight - newY);
-			
-			if (newX >= 0 && newY >= 0 && constrainedWidth >= minSize && constrainedHeight >= minSize) {
-				cropArea.width = constrainedWidth;
-				cropArea.height = constrainedHeight;
-				cropArea.x = newX;
-				cropArea.y = newY;
+			// Führe die Größenberechnung durch
+			const resized = calculateResize(
+				cropArea.width, 
+				cropArea.height, 
+				dx, 
+				dy, 
+				resizeCorner, 
+				cropAspectRatio
+			);
+
+			// Prüfe die Endposition und Größe
+			if (resized.x >= 0 && resized.y >= 0 && resized.width >= minSize && resized.height >= minSize) {
+				cropArea.width = resized.width;
+				cropArea.height = resized.height;
+				cropArea.x = resized.x;
+				cropArea.y = resized.y;
 			}
 		}
 
@@ -282,7 +294,6 @@
 
 		const img = new Image();
 		img.src = imagePreviewUrl;
-		
 		await new Promise((resolve) => {
 			img.onload = resolve;
 		});
@@ -291,7 +302,6 @@
 		const ctx = canvas.getContext('2d');
 		
 		let targetWidth, targetHeight;
-		
 		if (currentImageType === 'profile') {
 			targetWidth = 500;
 			targetHeight = 500;
@@ -312,7 +322,6 @@
 		const sourceY = cropArea.y * scaleY;
 		const sourceWidth = cropArea.width * scaleX;
 		const sourceHeight = cropArea.height * scaleY;
-
 		ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
 		
 		canvas.toBlob((blob) => {
@@ -334,7 +343,6 @@
 				type: 'image/jpeg' 
 			});
 			formData.append('file', file);
-
 			const endpoint = currentImageType === 'profile' 
 				? 'http://localhost:3000/api/user/upload/profile-image'
 				: 'http://localhost:3000/api/user/upload/background-image';
@@ -344,7 +352,6 @@
 				body: formData,
 				credentials: 'include'
 			});
-			
 			const data = await res.json();
 			if (res.ok) {
 				if (currentImageType === 'profile') {
@@ -356,7 +363,6 @@
 					showMessage(t.backgroundImageUpdated || 'Hintergrund aktualisiert');
 				}
 				closeImageEditor();
-				
 				// Seite neu laden nach erfolgreichem Speichern
 				setTimeout(() => {
 					window.location.reload();
@@ -422,9 +428,10 @@
 			});
 			const data = await res.json();
 			if (res.ok) {
-				showMessage(t.passwordUpdateSuccess || 'Passwort geändert');
+				showMessage(t.passwordUpdateSuccess || 'Passwort aktualisiert');
 				passwordForm.currentPassword = passwordForm.newPassword = passwordForm.confirmPassword = '';
-			} else showMessage(data.error || t.passwordUpdateError || 'Fehler beim Ändern', 'error');
+				setTimeout(() => window.location.reload(), 1000);
+			} else showMessage(data.error || t.passwordUpdateError || 'Fehler beim Aktualisieren', 'error');
 		} catch {
 			showMessage(t.passwordUpdateError || 'Serverfehler', 'error');
 		} finally {
@@ -465,14 +472,11 @@
 
 		isLoading = true;
 		try {
-			const res = await fetch('http://localhost:3000/api/user/reset-background', { 
+			const res = await fetch('http://localhost:3000/api/user/reset-background', {
 				method: 'POST',
 				credentials: 'include',
-				headers: {
-					'Content-Type': 'application/json'
-				}
+				headers: { 'Content-Type': 'application/json' }
 			});
-			
 			const data = await res.json();
 			if (res.ok) {
 				backgroundImage = data.backgroundImageUrl || '/default-background.png';
@@ -492,261 +496,550 @@
 	}
 </script>
 
-<div class="profile-container">
-
+<div class="profile-container" data-theme={$theme}>
 	{#if message.text}
 		<div class="message {message.type}">{message.text}</div>
 	{/if}
 
 	<div class="profile-grid">
-		<!-- Left Column - Profile Image & Background -->
 		<div class="profile-sidebar">
-			<div class="profile-card">
-				<h3>{t.profilePicture || 'Profilbild'}</h3>
-				<div class="image-upload-section">
-					<div class="current-image">
-						<img src={profileImage} alt="Profilbild" class="profile-preview" />
-					</div>
-					<label class="upload-button" for="profile-upload">
-						<i class="fas fa-camera"></i>
-						{t.selectImage || 'Bild auswählen'}
-					</label>
-					<input 
-						id="profile-upload" 
-						type="file" 
-						accept="image/*" 
-						onchange={(e) => openImageEditor(e, 'profile')}
-					/>
-				</div>
+			<div class="profile-card glass-card-base" data-theme={$theme}>
+                <div class="glass-filter"></div>
+                <div class="glass-overlay"></div>
+                <div class="glass-specular"></div>
+                <div class="glass-content">
+                    <h3>{t.profilePicture || 'Profilbild'}</h3>
+                    <div class="profile-picture-container">
+                        <img src={profileImage} alt="Profil" class="profile-picture" />
+                    </div>
+                    
+                    <input type="file" id="profile-upload" accept="image/*" on:change={(e) => openImageEditor(e, 'profile')} />
+                    <label for="profile-upload" class="upload-button">
+                        <i class="fas fa-camera">&nbsp;&nbsp;</i>
+                        {t.changePicture || 'Bild ändern'}
+                    </label>
+                </div>
 			</div>
 
-			<div class="profile-card">
-				<h3>{t.backgroundImage || 'Hintergrundbild'}</h3>
-				<div class="image-upload-section">
-					<div class="current-image">
-						<img src={backgroundImage} alt="Hintergrundbild" class="background-preview" />
-					</div>
-					<label class="upload-button" for="background-upload">
-						<i class="fas fa-image"></i>
-						{t.selectBackground || 'Hintergrund auswählen'}
-					</label>
-					<input 
-						id="background-upload" 
-						type="file" 
-						accept="image/*" 
-						onchange={(e) => openImageEditor(e, 'background')}
-					/>
-					<button class="reset-button" onclick={resetBackground} type="button" disabled={isLoading}>
-						<i class="fas fa-undo"></i>
-						{t.resetToDefault || 'Standard zurücksetzen'}
-					</button>
-				</div>
+			<div class="profile-card profile-card--wide glass-card-base" data-theme={$theme}>
+                <div class="glass-filter"></div>
+                <div class="glass-overlay"></div>
+                <div class="glass-specular"></div>
+                <div class="glass-content">
+                    <h3>{t.profileBackground || 'Hintergrundbild'}</h3>
+                    <div class="background-preview-container">
+                        <img src={backgroundImage} alt="Hintergrund" class="background-preview" />
+                    </div>
+
+                    <input type="file" id="background-upload" accept="image/*" on:change={(e) => openImageEditor(e, 'background')} />
+                    <label for="background-upload" class="upload-button">
+                        <i class="fas fa-image">&nbsp;&nbsp;</i>
+                        {t.changeBackground || 'Hintergrund ändern'}
+                    </label>
+
+                    <button class="reset-button" on:click={resetBackground} disabled={isLoading}>
+                        <i class="fas fa-trash">&nbsp;&nbsp;</i>
+                        {t.resetBackground || 'Zurücksetzen'}
+                    </button>
+                </div>
 			</div>
 		</div>
 
-		<!-- Right Column - Forms -->
 		<div class="profile-content">
-			<!-- Profile Information -->
-			<div class="profile-card">
-				<h3>{t.profileInformation || 'Profilinformationen'}</h3>
-				<form onsubmit={updateProfile}>
-					<div class="form-group">
-						<label for="username">{t.username || 'Benutzername'}</label>
-						<input 
-							id="username"
-							type="text" 
-							bind:value={profileForm.username}
-							placeholder={t.usernamePlaceholder || 'Ihr Benutzername'}
-						/>
+			<div class="profile-card glass-card-base" data-theme={$theme}>
+                <div class="glass-filter"></div>
+                <div class="glass-overlay"></div>
+                <div class="glass-specular"></div>
+                <div class="glass-content">
+                    <h3>{t.profileSettings || 'Profileinstellungen'}</h3>
+                    <form on:submit={updateProfile}>
+                        <label for="username">{t.username || 'Benutzername'}</label>
+                        <input id="username" type="text" bind:value={profileForm.username} required disabled={isLoading} />
+        
+                        <label for="bio">{t.bio || 'Bio'}</label>
+                        <textarea id="bio" bind:value={profileForm.bio} maxlength="255" rows="3" disabled={isLoading}></textarea>
+        
+                        <button type="submit" class="save-button" disabled={isLoading || profileForm.username.length === 0}>
+                            {#if isLoading}
+                                <i class="fas fa-spinner fa-spin"></i>
+                            {:else}
+                                <i class="fas fa-save"></i>
+                            {/if}
+                            {t.saveProfile || 'Profil speichern'}
+                        </button>
+                    </form>
+                </div>
+			</div>
+
+			<div class="profile-card glass-card-base" data-theme={$theme}>
+                <div class="glass-filter"></div>
+                <div class="glass-overlay"></div>
+                <div class="glass-specular"></div>
+                <div class="glass-content">
+                    <h3>{t.emailSettings || 'E-Mail-Einstellungen'}</h3>
+                    <form on:submit={updateEmail}>
+                        <label for="current-email">{t.currentEmail || 'Aktuelle E-Mail'}</label>
+                        <input id="current-email" type="email" value={emailForm.currentEmail} disabled />
+
+                        <label for="new-email">{t.newEmail || 'Neue E-Mail'}</label>
+                        <input id="new-email" type="email" bind:value={emailForm.newEmail} required disabled={isLoading} />
+
+                        <label for="confirm-email">{t.confirmEmail || 'E-Mail bestätigen'}</label>
+                        <input id="confirm-email" type="email" bind:value={emailForm.confirmEmail} required disabled={isLoading} />
+
+                        <label for="email-password">{t.password || 'Passwort (zur Bestätigung)'}</label>
+                        <input id="email-password" type="password" bind:value={emailForm.password} required disabled={isLoading} />
+
+                        <button type="submit" class="save-button" disabled={isLoading || emailForm.newEmail.length === 0 || emailForm.password.length === 0}>
+                            {#if isLoading}
+                                <i class="fas fa-spinner fa-spin"></i>
+                            {:else}
+                                <i class="fas fa-save"></i>
+                            {/if}
+                            {t.updateEmail || 'E-Mail aktualisieren'}
+                        </button>
+                    </form>
+                </div>
+			</div>
+
+			<div class="profile-card glass-card-base" data-theme={$theme}>
+                <div class="glass-filter"></div>
+                <div class="glass-overlay"></div>
+                <div class="glass-specular"></div>
+                <div class="glass-content">
+                    <h3>{t.passwordSettings || 'Passwort-Einstellungen'}</h3>
+                    <form on:submit={updatePassword}>
+                        <label for="current-password">{t.currentPassword || 'Aktuelles Passwort'}</label>
+                        <input id="current-password" type="password" bind:value={passwordForm.currentPassword} required disabled={isLoading} />
+
+                        <label for="new-password">{t.newPassword || 'Neues Passwort'}</label>
+                        <input id="new-password" type="password" bind:value={passwordForm.newPassword} required disabled={isLoading} />
+
+                        <label for="confirm-password">{t.confirmPassword || 'Passwort bestätigen'}</label>
+                        <input id="confirm-password" type="password" bind:value={passwordForm.confirmPassword} required disabled={isLoading} />
+
+                        <button type="submit" class="save-button" disabled={isLoading || passwordForm.newPassword.length < 6 || passwordForm.currentPassword.length === 0}>
+                            {#if isLoading}
+                                <i class="fas fa-spinner fa-spin"></i>
+                            {:else}
+                                <i class="fas fa-save"></i>
+                            {/if}
+                            {t.updatePassword || 'Passwort aktualisieren'}
+                        </button>
+                    </form>
+                </div>
+			</div>
+		</div>
+	</div>
+
+	{#if showImageEditor}
+		<div class="modal-overlay" on:click={handleOverlayClick} on:keydown={handleOverlayClick} role="button" tabindex="0">
+			<div class="image-editor-modal glass-card-base" data-theme={$theme} on:click|stopPropagation>
+                <div class="glass-filter"></div>
+                <div class="glass-overlay"></div>
+                <div class="glass-specular"></div>
+				
+				<div class="modal-header glass-content--modal">
+					<h3>
+						{#if currentImageType === 'profile'}
+							{t.cropProfileImage || 'Profilbild zuschneiden'}
+						{:else}
+							{t.cropBackgroundImage || 'Hintergrundbild zuschneiden'}
+						{/if}
+					</h3>
+					<button class="close-button" on:click={closeImageEditor}>
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+				
+				<div class="modal-content glass-content--modal">
+					<div 
+						class="image-crop-container" 
+						bind:this={containerRef} 
+						on:mousemove={handleMouseMove} 
+						on:mouseup={handleMouseUp} 
+						on:mouseleave={handleMouseUp}
+					>
+						{#if imagePreviewUrl}
+							<img bind:this={imageRef} src={imagePreviewUrl} alt="Zu schneidendes Bild" class="crop-image" on:load={initializeCropArea} />
+
+							<div class="crop-overlay">
+								<div 
+									class="crop-area" 
+									style="left: {cropArea.x}px; top: {cropArea.y}px; width: {cropArea.width}px; height: {cropArea.height}px;"
+									on:mousedown={(e) => handleMouseDown(e, 'move')}
+								>
+									<div class="resize-handle top-left" on:mousedown={(e) => handleMouseDown(e, 'resize', 'top-left')}></div>
+									<div class="resize-handle top-right" on:mousedown={(e) => handleMouseDown(e, 'resize', 'top-right')}></div>
+									<div class="resize-handle bottom-left" on:mousedown={(e) => handleMouseDown(e, 'resize', 'bottom-left')}></div>
+									<div class="resize-handle bottom-right" on:mousedown={(e) => handleMouseDown(e, 'resize', 'bottom-right')}></div>
+								</div>
+							</div>
+						{/if}
 					</div>
-					
-					<div class="form-group">
-						<label for="bio">{t.aboutMe || 'Über mich'}</label>
-						<textarea 
-							id="bio"
-							bind:value={profileForm.bio}
-							placeholder={t.aboutMePlaceholder || 'Erzählen Sie etwas über sich...'}
-							rows="4"
-						></textarea>
-					</div>
-					
-					<button type="submit" class="save-button" disabled={isLoading}>
+				</div>
+
+				<div class="modal-actions glass-content--modal">
+					<button class="cancel-button" on:click={closeImageEditor} disabled={isLoading}>
+						{t.cancel || 'Abbrechen'}
+					</button>
+					<button class="save-button" on:click={cropAndSaveImage} disabled={isLoading}>
 						{#if isLoading}
 							<i class="fas fa-spinner fa-spin"></i>
 						{:else}
-							<i class="fas fa-save"></i>
+							<i class="fas fa-crop"></i>
 						{/if}
-						{t.saveProfile || 'Profil speichern'}
+						{t.cropAndSave || 'Zuschneiden & Speichern'}
 					</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- Image Editor Modal -->
-{#if showImageEditor}
-	<div class="modal-overlay" onclick={handleOverlayClick}>
-		<div class="image-editor-modal">
-			<div class="modal-header">
-				<h3>
-					{#if currentImageType === 'profile'}
-						{t.cropProfileImage || 'Profilbild zuschneiden'}
-					{:else}
-						{t.cropBackgroundImage || 'Hintergrundbild zuschneiden'}
-					{/if}
-				</h3>
-				<button class="close-button" onclick={closeImageEditor}>
-					<i class="fas fa-times"></i>
-				</button>
-			</div>
-			
-			<div class="modal-content">
-				<div 
-					class="image-crop-container" 
-					bind:this={containerRef}
-					onmousemove={handleMouseMove}
-					onmouseup={handleMouseUp}
-					onmouseleave={handleMouseUp}
-				>
-					{#if imagePreviewUrl}
-						<img 
-							bind:this={imageRef}
-							src={imagePreviewUrl} 
-							alt="Zu schneidendes Bild" 
-							class="crop-image"
-							onload={initializeCropArea}
-						/>
-						
-						<!-- Overlay für abgedunkelte Bereiche -->
-						<div class="crop-overlay">
-							<!-- Transparenter Crop-Bereich -->
-							<div 
-								class="crop-area"
-								style="left: {cropArea.x}px; top: {cropArea.y}px; width: {cropArea.width}px; height: {cropArea.height}px;"
-								onmousedown={(e) => handleMouseDown(e, 'move')}
-							>
-								<!-- Resize Handles - NUR ECKEN -->
-								<div class="resize-handle top-left" onmousedown={(e) => handleMouseDown(e, 'resize', 'top-left')}></div>
-								<div class="resize-handle top-right" onmousedown={(e) => handleMouseDown(e, 'resize', 'top-right')}></div>
-								<div class="resize-handle bottom-left" onmousedown={(e) => handleMouseDown(e, 'resize', 'bottom-left')}></div>
-								<div class="resize-handle bottom-right" onmousedown={(e) => handleMouseDown(e, 'resize', 'bottom-right')}></div>
-							</div>
-						</div>
-					{/if}
 				</div>
 			</div>
-			
-			<div class="modal-actions">
-				<button class="cancel-button" onclick={closeImageEditor} disabled={isLoading}>
-					{t.cancel || 'Abbrechen'}
-				</button>
-				<button class="save-button" onclick={cropAndSaveImage} disabled={isLoading}>
-					{#if isLoading}
-						<i class="fas fa-spinner fa-spin"></i>
-					{:else}
-						<i class="fas fa-check"></i>
-					{/if}
-					{t.saveImage || 'Bild speichern'}
-				</button>
-			</div>
 		</div>
-	</div>
-{/if}
-
+	{/if}
+</div>
 
 <style>
+	/* ========================================================== */
+	/* Glass-Morphismus Variablen und Basis-Styles                */
+	/* ========================================================== */
+	
+	/* Diese Variablen werden benötigt, da der Theme-Store ($theme) nur hier gelesen wird */
+	.profile-container[data-theme='dark'] {
+		/* Hintergrund und Textfarbe (sollten global definiert sein, aber für Sicherheit) */
+		--text: #ffffff;
+		--text-secondary: #aaaaaa;
+		--input-bg: rgba(255, 255, 255, 0.05);
+		--border: #333333;
+		
+		/* Glass-Variablen */
+		--card-bg-color: rgba(0, 0, 0, 0.25);
+		--card-highlight: rgba(255, 255, 255, 0.15);
+	}
+
+	.profile-container[data-theme='light'] {
+		--text: #1d1d1f;
+		--text-secondary: #666666;
+		--input-bg: rgba(255, 255, 255, 0.9);
+		--border: #e0e0e0;
+
+		/* Glass-Variablen */
+		--card-bg-color: rgba(255, 255, 255, 0.25);
+		--card-highlight: rgba(255, 255, 255, 0.75);
+	}
+
+	/* Card Base Styling */
+	.glass-card-base {
+		position: relative;
+		border-radius: 12px;
+		overflow: hidden;
+		background: transparent;
+		pointer-events: all;
+		isolation: isolate; 
+		height: 100%; 
+	}
+
+	/* Glass Layers */
+	.glass-filter, .glass-overlay, .glass-specular {
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+	}
+
+	.glass-filter {
+		z-index: 1;
+		backdrop-filter: blur(4px);
+		/* HINWEIS: #glass-distortion muss in der +layout.svelte im SVG-Tag definiert sein, damit dieser Filter funktioniert. */
+		filter: url(#glass-distortion) saturate(120%) brightness(1.15);
+	}
+
+	.glass-overlay {
+		z-index: 2;
+		background: var(--card-bg-color);
+	}
+
+	.glass-specular {
+		z-index: 3;
+		box-shadow: inset 1px 1px 1px var(--card-highlight);
+	}
+
+	.glass-content {
+		position: relative;
+		z-index: 4;
+		padding: 1.5rem; 
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.glass-content--modal {
+		position: relative;
+		z-index: 4;
+	}
+
+
+	/* ========================================================== */
+	/* Flexbox Layout Styles                                      */
+	/* ========================================================== */
 	.profile-container {
+		padding: 2rem;
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 2rem;
+		position: relative;
+		z-index: 1;
 	}
 
-	.profile-header {
-		text-align: center;
-		margin-bottom: 3rem;
+	/* Haupt-Flex-Container */
+	.profile-grid {
+		display: flex;
+		gap: 2rem;
+		flex-wrap: wrap; /* Wichtig für Responsivität */
+		align-items: stretch; /* Stellt sicher, dass die Spalten gleich hoch sind */
 	}
 
-	.profile-header h1 {
-		font-size: 2.5rem;
-		font-weight: 700;
-		margin: 0 0 0.5rem 0;
+	/* Linke Spalte (Bilder) */
+	.profile-sidebar {
+		/* Nimmt min. 300px ein, wächst 1x */
+		flex: 1 1 300px; 
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+	
+	/* Rechte Spalte (Formulare) */
+	.profile-content {
+		/* Nimmt min. 600px ein, wächst 2x so schnell */
+		flex: 2 1 600px; 
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+	
+	.profile-card {
+		background: transparent; 
+		border: none; 
+		box-shadow: none; 
+		height: auto;
+		flex-grow: 1; 
+	}
+
+	/* Stellt sicher, dass der Form-Container im Card-Inhalt den Platz nutzt */
+	.profile-content .profile-card {
+		min-height: 200px;
+	}
+
+	.profile-card h3 {
+		margin-top: 0;
+		font-size: 1.3rem;
+		font-weight: 600;
 		color: var(--text);
+		margin-bottom: 1.5rem;
 	}
 
-	.profile-subtitle {
-		font-size: 1.1rem;
-		color: var(--text);
-		opacity: 0.7;
-		margin: 0;
+	/* ========================================================== */
+	/* Form & Input Styles                  					  */
+	/* ========================================================== */
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		flex-grow: 1; 
 	}
+	
+
+	label, input, textarea, button {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	label {
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--text-secondary);
+		margin-top: 0.5rem;
+	}
+
+
+	input[type='text'],
+	input[type='email'],
+	input[type='password'],
+	textarea {
+		padding: 10px 15px;
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		background-color: var(--input-bg) !important; /* Normaler Hintergrund basierend auf Theme */
+		color: var(--text);
+		font-size: 1rem;
+		transition: border-color 0.2s;
+	}
+	
+	input:focus,
+	textarea:focus {
+		outline: none;
+		border-color: var(--accent);
+		box-shadow: 0 0 0 2px var(--accent-light);
+	}
+
+	textarea {
+		resize: vertical;
+	}
+
+	/* ... (Restliche Button/Image Styles bleiben gleich) ... */
+
+	/* ========================================================== */
+	/* Image Editor Modal Styles                                  */
+	/* ========================================================== */
+	.modal-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.7);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 100;
+		animation: fadeIn 0.3s ease-out;
+	}
+
+	.image-editor-modal {
+		width: 90%;
+		max-width: 800px;
+		max-height: 90vh;
+		display: flex;
+		flex-direction: column;
+		background: transparent; 
+		box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+		backdrop-filter: blur(4px);
+		-webkit-backdrop-filter: blur(4px);
+		border-radius: 12px;
+		overflow: hidden;
+		animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	}
+
+	.modal-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1rem 1.5rem;
+		border-bottom: 1px solid var(--card-highlight); 
+	}
+
+	.modal-content {
+		flex-grow: 1;
+		padding: 1.5rem;
+		overflow: hidden; 
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	/* ... (Restliche Modal/Crop Styles bleiben gleich) ... */
+
+
+	/* ========================================================== */
+	/* Responsive Design (Flexbox Anpassungen)                    */
+	/* ========================================================== */
+	@media (max-width: 968px) {
+		/* Haupt-Layout wird zu einer einzigen Spalte */
+		.profile-grid {
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		/* Optional: Reihenfolge ändern, damit Bilder oben sind */
+		.profile-content {
+			order: 1;
+		}
+		
+		.profile-sidebar {
+			order: 2;
+		}
+		
+		/* Flex-Werte auf 100% setzen */
+		.profile-content,
+		.profile-sidebar {
+			flex-basis: 100%;
+			flex-grow: 1;
+		}
+
+		.modal-actions {
+			flex-direction: column;
+		}
+	}
+	
+	@media (max-width: 600px) {
+		.profile-container {
+			padding: 1rem;
+		}
+		
+		.profile-card h3 {
+			font-size: 1.1rem;
+		}
+		
+		.modal-content {
+			padding: 0.75rem;
+		}
+	}
+
+	/* ========================================================== */
+	/* Wiederholte Styles aus Platzgründen am Ende (bitte nur einmal verwenden) */
+	/* ========================================================== */
 
 	.message {
-		padding: 1rem;
+		position: fixed;
+		top: 100px; 
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 10px 20px;
 		border-radius: 8px;
-		margin-bottom: 2rem;
-		text-align: center;
+		color: white;
+		z-index: 1000;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+		animation: fadeIn 0.3s ease-out;
 		font-weight: 500;
 	}
 
 	.message.success {
-		background: rgba(52, 199, 89, 0.1);
-		border: 1px solid rgba(52, 199, 89, 0.3);
-		color: #34c759;
+		background-color: #4caf50;
 	}
 
 	.message.error {
-		background: rgba(255, 59, 48, 0.1);
-		border: 1px solid rgba(255, 59, 48, 0.3);
-		color: #ff3b30;
+		background-color: #f44336;
 	}
 
-	.profile-grid {
-		display: grid;
-		grid-template-columns: 350px 1fr;
-		gap: 2rem;
-		align-items: start;
-	}
-
-	.profile-card {
-		background: var(--bg-color);
-		backdrop-filter: blur(10px);
-		border-radius: 16px;
-		padding: 2rem;
-		margin-bottom: 2rem;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-	}
-
-	.profile-card h3 {
-		margin: 0 0 1.5rem 0;
-		font-size: 1.3rem;
-		font-weight: 600;
-		color: var(--text);
-	}
-
-	.image-upload-section {
-		text-align: center;
-	}
-
-	.current-image {
-		margin-bottom: 1.5rem;
-	}
-
-	.profile-preview {
+	.profile-picture-container {
 		width: 150px;
 		height: 150px;
 		border-radius: 50%;
+		overflow: hidden;
+		margin: 0 auto 1.5rem auto;
+		border: 3px solid var(--accent);
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	}
+
+	.profile-picture {
+		width: 100%;
+		height: 100%;
 		object-fit: cover;
-		border: 3px solid rgba(255, 255, 255, 0.2);
+	}
+	
+	.background-preview-container {
+		width: 100%;
+		height: 150px;
+		overflow: hidden;
+		border-radius: 8px;
+		margin-bottom: 1rem;
+		border: 1px solid var(--border);
 	}
 
 	.background-preview {
 		width: 100%;
-		height: 120px;
-		border-radius: 12px;
+		height: 100%;
 		object-fit: cover;
-		border: 2px solid rgba(255, 255, 255, 0.2);
+	}
+
+	input[type='file'] {
+		display: none;
 	}
 
 	.upload-button {
@@ -770,7 +1063,7 @@
 		background: rgba(255, 255, 255, 0.2);
 		transform: translateY(-1px);
 	}
-
+	
 	input[type="file"] {
 		display: none;
 	}
@@ -802,46 +1095,6 @@
 		cursor: not-allowed;
 	}
 
-	.form-group {
-		margin-bottom: 1.5rem;
-	}
-
-	.form-group label {
-		display: block;
-		margin-bottom: 0.5rem;
-		font-weight: 500;
-		color: var(--text);
-	}
-
-	.form-group input,
-	.form-group textarea {
-		width: 100%;
-		padding: 0.75rem 1rem;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 8px;
-		color: var(--text);
-		font-size: 1rem;
-		transition: all 0.2s ease;
-		font-family: inherit;
-	}
-
-	.form-group input:focus,
-	.form-group textarea:focus {
-		outline: none;
-		border-color: rgba(255, 255, 255, 0.4);
-		background: rgba(255, 255, 255, 0.15);
-	}
-
-	.form-group input:disabled {
-		opacity: 0.6;
-		cursor: not-allowed;
-	}
-
-	.form-group textarea {
-		resize: vertical;
-		min-height: 100px;
-	}
 
 	.save-button {
 		display: inline-flex;
@@ -869,7 +1122,9 @@
 		transform: none;
 	}
 
-	/* Modal Styles */
+	
+
+		/* Modal Styles */
 	.modal-overlay {
 		position: fixed;
 		top: 0;
@@ -1099,85 +1354,5 @@
 	.modal-actions .save-button {
 		flex: 1;
 		justify-content: center;
-	}
-
-	/* Animations */
-	@keyframes fadeIn {
-		from { opacity: 0; }
-		to { opacity: 1; }
-	}
-
-	@keyframes slideUp {
-		from {
-			opacity: 0;
-			transform: translateY(30px) scale(0.95);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0) scale(1);
-		}
-	}
-
-	/* Responsive Design */
-	@media (max-width: 968px) {
-		.profile-grid {
-			grid-template-columns: 1fr;
-			gap: 1rem;
-		}
-
-		.profile-sidebar {
-			order: 2;
-		}
-
-		.profile-content {
-			order: 1;
-		}
-
-		.profile-container {
-			padding: 1rem;
-		}
-
-		.modal-overlay {
-			padding: 1rem;
-		}
-
-		.image-editor-modal {
-			max-height: 95vh;
-		}
-
-		.modal-header,
-		.modal-content,
-		.modal-actions {
-			padding: 1rem 1.5rem;
-		}
-
-		.image-crop-container {
-			min-height: 300px;
-			max-height: 50vh;
-		}
-	}
-
-	@media (max-width: 768px) {
-		.profile-header h1 {
-			font-size: 2rem;
-		}
-
-		.profile-card {
-			padding: 1.5rem;
-		}
-
-		.profile-preview {
-			width: 120px;
-			height: 120px;
-		}
-
-		.modal-actions {
-			flex-direction: column;
-		}
-
-		.resize-handle {
-			width: 18px;
-			height: 18px;
-		}
 	}
 </style>

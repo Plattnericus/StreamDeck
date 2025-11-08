@@ -55,6 +55,11 @@
 - Design überarbeitet!!
 ![Hours](5)
 
+# 08.11.2025
+- Profile Design überarbeitet und Überstetz feature eingebaut
+- Settings Page übersetzungsfeature eingebaut
+![Hours](3)
+
 
 
 

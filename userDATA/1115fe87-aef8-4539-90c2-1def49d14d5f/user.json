@@ -15,7 +15,7 @@
     "analytics": true,
     "privacyMode": true,
     "emailUpdates": true,
-    "liquidToggle": false,
+    "liquidToggle": true,
     "cookies": true,
     "termsAccepted": true
   }

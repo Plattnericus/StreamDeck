@@ -59,6 +59,135 @@
         if (!browser) return;
 
         gsap.registerPlugin(Draggable);
+
+        // ===== TRANSLATIONS =====
+const translationsData = {
+    de: {
+        settings: 'Einstellungen',
+        accountSettings: 'Account Einstellungen',
+        changeEmail: 'E-Mail Adresse ändern',
+        currentEmail: 'Aktuelle E-Mail',
+        newEmail: 'Neue E-Mail',
+        confirmEmail: 'E-Mail bestätigen',
+        emailPassword: 'Passwort zur Bestätigung',
+        changeEmailButton: 'E-Mail ändern',
+        changePassword: 'Passwort ändern',
+        currentPassword: 'Aktuelles Passwort',
+        newPassword: 'Neues Passwort',
+        confirmPassword: 'Passwort bestätigen',
+        changePasswordButton: 'Passwort ändern',
+        preferences: 'Präferenzen',
+        language: 'Sprache',
+        languageDescription: 'Wähle deine bevorzugte Sprache',
+        darkMode: 'Dark Mode',
+        darkModeDescription: 'Aktiviert den Dunkelmodus für die gesamte Anwendung',
+        notifications: 'Benachrichtigungen',
+        notificationsDescription: 'Erhalte Benachrichtigungen über wichtige Aktivitäten',
+        autoSave: 'Auto-Save',
+        autoSaveDescription: 'Automatisches Speichern von Änderungen',
+        analytics: 'Analytics',
+        analyticsDescription: 'Sammlung anonymisierter Nutzungsdaten zur Verbesserung',
+        privacyMode: 'Privatsphäre-Modus',
+        privacyModeDescription: 'Beschränkt sichtbare Informationen für andere Nutzer',
+        emailUpdates: 'E-Mail Updates',
+        emailUpdatesDescription: 'Erhalte regelmäßige Updates per E-Mail',
+        cookies: 'Cookies akzeptieren',
+        cookiesDescription: 'Cookies für eine bessere Nutzererfahrung',
+        termsAccepted: 'AGB akzeptiert',
+        termsAcceptedDescription: 'Akzeptiere die Allgemeinen Geschäftsbedingungen',
+        loadingSettings: 'Lade Einstellungen...',
+        emailMismatch: 'E-Mails stimmen nicht überein',
+        passwordMismatch: 'Passwörter stimmen nicht überein',
+        passwordTooShort: 'Passwort zu kurz (min. 6 Zeichen)',
+        emailUpdated: 'E-Mail erfolgreich aktualisiert',
+        passwordUpdated: 'Passwort erfolgreich geändert',
+        languageChanged: 'Sprache geändert zu'
+    },
+    en: {
+        settings: 'Settings',
+        accountSettings: 'Account Settings',
+        changeEmail: 'Change Email Address',
+        currentEmail: 'Current Email',
+        newEmail: 'New Email',
+        confirmEmail: 'Confirm Email',
+        emailPassword: 'Password for Confirmation',
+        changeEmailButton: 'Change Email',
+        changePassword: 'Change Password',
+        currentPassword: 'Current Password',
+        newPassword: 'New Password',
+        confirmPassword: 'Confirm Password',
+        changePasswordButton: 'Change Password',
+        preferences: 'Preferences',
+        language: 'Language',
+        languageDescription: 'Choose your preferred language',
+        darkMode: 'Dark Mode',
+        darkModeDescription: 'Activates dark mode for the entire application',
+        notifications: 'Notifications',
+        notificationsDescription: 'Receive notifications about important activities',
+        autoSave: 'Auto-Save',
+        autoSaveDescription: 'Automatic saving of changes',
+        analytics: 'Analytics',
+        analyticsDescription: 'Collection of anonymized usage data for improvement',
+        privacyMode: 'Privacy Mode',
+        privacyModeDescription: 'Restricts visible information for other users',
+        emailUpdates: 'Email Updates',
+        emailUpdatesDescription: 'Receive regular updates via email',
+        cookies: 'Accept Cookies',
+        cookiesDescription: 'Cookies for a better user experience',
+        termsAccepted: 'Accept Terms',
+        termsAcceptedDescription: 'Accept the General Terms and Conditions',
+        loadingSettings: 'Loading settings...',
+        emailMismatch: 'Emails do not match',
+        passwordMismatch: 'Passwords do not match',
+        passwordTooShort: 'Password too short (min. 6 characters)',
+        emailUpdated: 'Email successfully updated',
+        passwordUpdated: 'Password successfully changed',
+        languageChanged: 'Language changed to'
+    },
+    it: {
+        settings: 'Impostazioni',
+        accountSettings: 'Impostazioni Account',
+        changeEmail: 'Cambia Indirizzo Email',
+        currentEmail: 'Email Attuale',
+        newEmail: 'Nuova Email',
+        confirmEmail: 'Conferma Email',
+        emailPassword: 'Password per Conferma',
+        changeEmailButton: 'Cambia Email',
+        changePassword: 'Cambia Password',
+        currentPassword: 'Password Attuale',
+        newPassword: 'Nuova Password',
+        confirmPassword: 'Conferma Password',
+        changePasswordButton: 'Cambia Password',
+        preferences: 'Preferenze',
+        language: 'Lingua',
+        languageDescription: 'Scegli la tua lingua preferita',
+        darkMode: 'Modalità Scura',
+        darkModeDescription: 'Attiva la modalità scura per tutta l\'applicazione',
+        notifications: 'Notifiche',
+        notificationsDescription: 'Ricevi notifiche su attività importanti',
+        autoSave: 'Salvataggio Automatico',
+        autoSaveDescription: 'Salvataggio automatico delle modifiche',
+        analytics: 'Analisi',
+        analyticsDescription: 'Raccolta di dati di utilizzo anonimi per il miglioramento',
+        privacyMode: 'Modalità Privacy',
+        privacyModeDescription: 'Limita le informazioni visibili per altri utenti',
+        emailUpdates: 'Aggiornamenti Email',
+        emailUpdatesDescription: 'Ricevi aggiornamenti regolari via email',
+        cookies: 'Accetta Cookie',
+        cookiesDescription: 'Cookie per una migliore esperienza utente',
+        termsAccepted: 'Accetta Termini',
+        termsAcceptedDescription: 'Accetta i Termini e Condizioni Generali',
+        loadingSettings: 'Caricamento impostazioni...',
+        emailMismatch: 'Le email non corrispondono',
+        passwordMismatch: 'Le password non corrispondono',
+        passwordTooShort: 'Password troppo corta (min. 6 caratteri)',
+        emailUpdated: 'Email aggiornata con successo',
+        passwordUpdated: 'Password cambiata con successo',
+        languageChanged: 'Lingua cambiata in'
+    }
+};
+
+let t = $derived(get(translations));
         
         currentLanguage = localStorage.getItem('language') || 'de';
         currentTheme = localStorage.getItem('theme') || 'dark';
@@ -298,145 +427,150 @@
     }
 
     // ===== EMAIL CHANGE =====
-    async function updateEmail(e) {
-        e.preventDefault();
-        
-        if (emailForm.newEmail !== emailForm.confirmEmail) {
-            return showMessage('E-Mails stimmen nicht überein', 'error');
-        }
-
-        isSaving = true;
-        try {
-            const res = await fetch('http://localhost:3000/api/user/update-email', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    newEmail: emailForm.newEmail,
-                    password: emailForm.password
-                })
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                showMessage('E-Mail erfolgreich aktualisiert', 'success');
-                emailForm = { newEmail: '', confirmEmail: '', password: '' };
-            } else {
-                showMessage(data.error || 'Fehler beim Aktualisieren', 'error');
-            }
-        } catch {
-            showMessage('Serverfehler', 'error');
-        } finally {
-            isSaving = false;
-        }
+async function updateEmail(e) {
+    e.preventDefault();
+    
+    if (emailForm.newEmail !== emailForm.confirmEmail) {
+        return showMessage(t.emailMismatch, 'error');
     }
 
-    // ===== PASSWORD CHANGE =====
-    async function updatePassword(e) {
-        e.preventDefault();
-        
-        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-            return showMessage('Passwörter stimmen nicht überein', 'error');
-        }
+    isSaving = true;
+    try {
+        const res = await fetch('http://localhost:3000/api/user/update-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                newEmail: emailForm.newEmail,
+                password: emailForm.password
+            })
+        });
 
-        if (passwordForm.newPassword.length < 6) {
-            return showMessage('Passwort zu kurz (min. 6 Zeichen)', 'error');
+        const data = await res.json();
+        if (res.ok) {
+            showMessage(t.emailUpdated, 'success');
+            emailForm = { newEmail: '', confirmEmail: '', password: '' };
+        } else {
+            showMessage(data.error || 'Fehler beim Aktualisieren', 'error');
         }
+    } catch {
+        showMessage('Serverfehler', 'error');
+    } finally {
+        isSaving = false;
+    }
+}
 
-        isSaving = true;
-        try {
-            const res = await fetch('http://localhost:3000/api/user/update-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    currentPassword: passwordForm.currentPassword,
-                    newPassword: passwordForm.newPassword
-                })
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                showMessage('Passwort erfolgreich geändert', 'success');
-                passwordForm = { currentPassword: '', newPassword: '', confirmPassword: '' };
-            } else {
-                showMessage(data.error || 'Fehler beim Ändern', 'error');
-            }
-        } catch {
-            showMessage('Serverfehler', 'error');
-        } finally {
-            isSaving = false;
-        }
+// ===== PASSWORD CHANGE =====
+async function updatePassword(e) {
+    e.preventDefault();
+    
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+        return showMessage(t.passwordMismatch, 'error');
     }
 
-    // ===== LANGUAGE CHANGE =====
-    function changeLanguage(newLang) {
-        if (!browser) return;
-
-        currentLanguage = newLang;
-        language.set(newLang);
-        localStorage.setItem('language', newLang);
-        languageDropdownOpen = false;
-        showMessage(`Sprache geändert zu ${languageOptions.find(l => l.value === newLang)?.label}`, 'success');
+    if (passwordForm.newPassword.length < 6) {
+        return showMessage(t.passwordTooShort, 'error');
     }
+
+    isSaving = true;
+    try {
+        const res = await fetch('http://localhost:3000/api/user/update-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                currentPassword: passwordForm.currentPassword,
+                newPassword: passwordForm.newPassword
+            })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            showMessage(t.passwordUpdated, 'success');
+            passwordForm = { currentPassword: '', newPassword: '', confirmPassword: '' };
+        } else {
+            showMessage(data.error || 'Fehler beim Ändern', 'error');
+        }
+    } catch {
+        showMessage('Serverfehler', 'error');
+    } finally {
+        isSaving = false;
+    }
+}
+
 
     function toggleLanguageDropdown() {
         languageDropdownOpen = !languageDropdownOpen;
     }
 
-    // ===== HELPER FUNCTIONS =====
-    function showMessage(text, type = 'success') {
-        message = { text, type };
-        setTimeout(() => {
-            message = { text: '', type: '' };
-        }, 5000);
-    }
+// ===== HELPER FUNCTIONS =====
+function showMessage(text, type = 'success') {
+    message = { text, type };
+    setTimeout(() => {
+        message = { text: '', type: '' };
+    }, 5000);
+}
 
-    function getToggleLabel(toggleName) {
-        const labels = {
-            darkMode: 'Dark Mode',
-            notifications: 'Benachrichtigungen',
-            autoSave: 'Auto-Save',
-            analytics: 'Analytics',
-            privacyMode: 'Privatsphäre-Modus',
-            emailUpdates: 'E-Mail Updates',
-            cookies: 'Cookies akzeptieren',
-            termsAccepted: 'AGB akzeptiert'
-        };
-        return labels[toggleName] || toggleName;
-    }
+function getToggleLabel(toggleName) {
+    const labels = {
+        darkMode: t.darkMode,
+        notifications: t.notifications,
+        autoSave: t.autoSave,
+        analytics: t.analytics,
+        privacyMode: t.privacyMode,
+        emailUpdates: t.emailUpdates,
+        cookies: t.cookies,
+        termsAccepted: t.termsAccepted
+    };
+    return labels[toggleName] || toggleName;
+}
 
-    function getToggleDescription(toggleName) {
-        const descriptions = {
-            darkMode: 'Aktiviert den Dunkelmodus für die gesamte Anwendung',
-            notifications: 'Erhalte Benachrichtigungen über wichtige Aktivitäten',
-            autoSave: 'Automatisches Speichern von Änderungen',
-            analytics: 'Sammlung anonymisierter Nutzungsdaten zur Verbesserung',
-            privacyMode: 'Beschränkt sichtbare Informationen für andere Nutzer',
-            emailUpdates: 'Erhalte regelmäßige Updates per E-Mail',
-            cookies: 'Cookies für eine bessere Nutzererfahrung',
-            termsAccepted: 'Akzeptiere die Allgemeinen Geschäftsbedingungen'
-        };
-        return descriptions[toggleName] || '';
-    }
+function getToggleDescription(toggleName) {
+    const descriptions = {
+        darkMode: t.darkModeDescription,
+        notifications: t.notificationsDescription,
+        autoSave: t.autoSaveDescription,
+        analytics: t.analyticsDescription,
+        privacyMode: t.privacyModeDescription,
+        emailUpdates: t.emailUpdatesDescription,
+        cookies: t.cookiesDescription,
+        termsAccepted: t.termsAcceptedDescription
+    };
+    return descriptions[toggleName] || '';
+}
 
-    function getToggleIcon(toggleName) {
-        const icons = {
-            darkMode: 'fa-moon',
-            notifications: 'fa-bell',
-            autoSave: 'fa-save',
-            analytics: 'fa-chart-bar',
-            privacyMode: 'fa-shield-alt',
-            emailUpdates: 'fa-envelope',
-            cookies: 'fa-cookie-bite',
-            termsAccepted: 'fa-file-contract'
-        };
-        return icons[toggleName] || 'fa-toggle-on';
-    }
+function getToggleIcon(toggleName) {
+    const icons = {
+        darkMode: 'fa-moon',
+        notifications: 'fa-bell',
+        autoSave: 'fa-save',
+        analytics: 'fa-chart-bar',
+        privacyMode: 'fa-shield-alt',
+        emailUpdates: 'fa-envelope',
+        cookies: 'fa-cookie-bite',
+        termsAccepted: 'fa-file-contract'
+    };
+    return icons[toggleName] || 'fa-toggle-on';
+}
+
+// ===== LANGUAGE CHANGE =====
+function changeLanguage(newLang) {
+    if (!browser) return;
+
+    currentLanguage = newLang;
+    language.set(newLang);
+    localStorage.setItem('language', newLang);
+    languageDropdownOpen = false;
+    showMessage(`${t.languageChanged} ${languageOptions.find(l => l.value === newLang)?.label}`, 'success');
+    
+    // Seite neu laden für sofortige Änderung
+    setTimeout(() => {
+        window.location.reload();
+    }, 800);
+}
 </script>
-
 <svelte:head>
-    <title>Einstellungen</title>
+    <title>{t.settings}</title>
 </svelte:head>
 
 <!-- SVG Filters -->
@@ -463,12 +597,12 @@
 {#if isLoading}
     <div class="loading-container">
         <i class="fas fa-spinner fa-spin"></i>
-        <p>Lade Einstellungen...</p>
+        <p>{t.loadingSettings}</p>
     </div>
 {:else}
     <div class="settings-container">
         <div class="settings-header">
-            <h1><i class="fas fa-cog"></i> Einstellungen</h1>
+            <h1><i class="fas fa-cog"></i> {t.settings}</h1>
         </div>
 
         {#if message.text}
@@ -482,13 +616,13 @@
                 <div class="glass-overlay"></div>
                 <div class="glass-specular"></div>
                 <div class="glass-content">
-                    <h3><i class="fas fa-user-cog"></i> Account Einstellungen</h3>
+                    <h3><i class="fas fa-user-cog"></i> {t.accountSettings}</h3>
 
                     <!-- Email Change -->
                     <form onsubmit={updateEmail} class="settings-form">
-                        <h4>E-Mail Adresse ändern</h4>
+                        <h4>{t.changeEmail}</h4>
                         <div class="form-group">
-                            <label for="current-email">Aktuelle E-Mail</label>
+                            <label for="current-email">{t.currentEmail}</label>
                             <input
                                 id="current-email"
                                 type="email"
@@ -498,7 +632,7 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label for="new-email">Neue E-Mail</label>
+                            <label for="new-email">{t.newEmail}</label>
                             <input
                                 id="new-email"
                                 type="email"
@@ -508,7 +642,7 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label for="confirm-email">E-Mail bestätigen</label>
+                            <label for="confirm-email">{t.confirmEmail}</label>
                             <input
                                 id="confirm-email"
                                 type="email"
@@ -518,7 +652,7 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label for="email-password">Passwort zur Bestätigung</label>
+                            <label for="email-password">{t.emailPassword}</label>
                             <input
                                 id="email-password"
                                 type="password"
@@ -533,7 +667,7 @@
                             {:else}
                                 <i class="fas fa-envelope"></i>
                             {/if}
-                            E-Mail ändern
+                            {t.changeEmailButton}
                         </button>
                     </form>
 
@@ -541,19 +675,19 @@
 
                     <!-- Password Change -->
                     <form onsubmit={updatePassword} class="settings-form">
-                        <h4>Passwort ändern</h4>
+                        <h4>{t.changePassword}</h4>
                         <div class="form-group">
-                            <label for="current-password">Aktuelles Passwort</label>
+                            <label for="current-password">{t.currentPassword}</label>
                             <input
                                 id="current-password"
                                 type="password"
                                 bind:value={passwordForm.currentPassword}
-                                placeholder="Aktuelles Passwort"
+                                placeholder={t.currentPassword}
                                 required
                             />
                         </div>
                         <div class="form-group">
-                            <label for="new-password">Neues Passwort</label>
+                            <label for="new-password">{t.newPassword}</label>
                             <input
                                 id="new-password"
                                 type="password"
@@ -563,12 +697,12 @@
                             />
                         </div>
                         <div class="form-group">
-                            <label for="confirm-password">Passwort bestätigen</label>
+                            <label for="confirm-password">{t.confirmPassword}</label>
                             <input
                                 id="confirm-password"
                                 type="password"
                                 bind:value={passwordForm.confirmPassword}
-                                placeholder="Passwort wiederholen"
+                                placeholder={t.confirmPassword}
                                 required
                             />
                         </div>
@@ -578,7 +712,7 @@
                             {:else}
                                 <i class="fas fa-key"></i>
                             {/if}
-                            Passwort ändern
+                            {t.changePasswordButton}
                         </button>
                     </form>
                 </div>
@@ -590,15 +724,15 @@
                 <div class="glass-overlay"></div>
                 <div class="glass-specular"></div>
                 <div class="glass-content">
-                    <h3><i class="fas fa-sliders-h"></i> Präferenzen</h3>
+                    <h3><i class="fas fa-sliders-h"></i> {t.preferences}</h3>
 
                     <!-- Custom Language Dropdown -->
                     <div class="preference-item">
                         <div class="preference-info">
                             <i class="fas fa-globe preference-icon"></i>
                             <div>
-                                <div class="preference-label">Sprache</div>
-                                <div class="preference-description">Wähle deine bevorzugte Sprache</div>
+                                <div class="preference-label">{t.language}</div>
+                                <div class="preference-description">{t.languageDescription}</div>
                             </div>
                         </div>
                         <div class="custom-select" class:open={languageDropdownOpen}>
@@ -672,40 +806,6 @@
                             </button>
                         </div>
                     {/each}
-                </div>
-            </div>
-
-            <!-- Legal -->
-            <div class="glass-card" data-theme={$theme}>
-                <div class="glass-filter"></div>
-                <div class="glass-overlay"></div>
-                <div class="glass-specular"></div>
-                <div class="glass-content">
-                    <h3><i class="fas fa-gavel"></i> Rechtliches</h3>
-
-                    <a href="/terms" class="legal-link">
-                        <i class="fas fa-file-contract"></i>
-                        <span>Allgemeine Geschäftsbedingungen</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-
-                    <a href="/privacy" class="legal-link">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Datenschutzerklärung</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-
-                    <a href="/cookies" class="legal-link">
-                        <i class="fas fa-cookie-bite"></i>
-                        <span>Cookie-Einstellungen</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-
-                    <a href="/imprint" class="legal-link">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Impressum</span>
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
                 </div>
             </div>
         </div>
