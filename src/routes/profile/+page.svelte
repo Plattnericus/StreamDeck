@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { get } from 'svelte/store';
-	// Wichtig: Importiere den theme store
 	import { language, theme, translations } from '$lib/stores.js';
+	import { invalidateAll } from '$app/navigation';
 
 	// User data
 	let user = null;

@@ -80,3 +80,4 @@
 - Journey (Changelog) doesnt work (so it isn't live updated)
 - settings (email - password change, toggle language, dark mode, cookies, agb, etc.) JUST SETTINGS (LANGUAGE CHANGER)
 - Change Language
+- Design ändert sich nach dem login (also das Falsche Design lädt)

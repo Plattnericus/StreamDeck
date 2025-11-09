@@ -1,6 +1,7 @@
 <script lang="js">
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { invalidateAll } from '$app/navigation';
 
   let username = '', email = '', password = '', confirmPassword = '';
   let identifier = '';
@@ -93,7 +94,9 @@
         body: JSON.stringify({ identifier, password })
       });
       const data = await res.json();
-      if (data.success) goto(data.redirect || '/profile');
+      if (data.success){
+          goto(data.redirect || '/profile', { reload: true });
+      }
       else showFeedback(data.error || 'Login fehlgeschlagen!', 'error');
     } catch (e) {
       showFeedback('Server nicht erreichbar!', 'error');
@@ -206,11 +209,9 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    overflow: hidden;
   }
 
   :global(html) {
-    overflow: hidden;
     height: 100%;
   }
 
