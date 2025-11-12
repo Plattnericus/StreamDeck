@@ -60,6 +60,9 @@
 - Settings Page übersetzungsfeature eingebaut
 ![Hours](3)
 
+# 12.11.2025
+- Komplett alles Neu angefangen, Neues Design alles
+- Anstatt Normale Website: Desktop like Windows XP + Liquid glass
 
 
 
