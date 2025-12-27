@@ -75,12 +75,34 @@
 :global(body) {
   padding: 0;
   margin: 0;
+  font-family: 'Inter', sans-serif;
   min-height: 100vh;
   background-image: url(/background.png);
   background-size: cover;
   display: flex;
   justify-content: center;  
   align-items: flex-end;    
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter/Inter-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter/Inter-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
 }
 
 /* Container */
@@ -103,7 +125,7 @@
   position:relative;
   width: auto;
   min-width: 150px;
-  height: 50px;
+  height: 60px;
   border-radius: 20px;
   overflow: visible;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);

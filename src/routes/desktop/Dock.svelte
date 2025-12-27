@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { scale, fade } from 'svelte/transition';
+  import { cubicOut } from 'svelte/easing';
   import Settings from '../apps/Settings.svelte';
   import Browser  from '../apps/Browser.svelte';
   import Terminal from '../apps/Terminal.svelte';
-  import Finder from '../apps/Finder.svelte';
+  import Finder   from '../apps/Finder.svelte';
   import Papierkorb from '../apps/Trash.svelte';
 
   type App = {
@@ -10,70 +12,103 @@
     name: string;
     icon: string;
     open: boolean;
+    minimized: boolean;
+    maximized: boolean;
     component: any;
     default: boolean;
     x: number;
     y: number;
+    width: number;
+    height: number;
     zIndex: number;
   };
 
   let nextZIndex = 100;
 
+  function getCenterPos(w: number, h: number) {
+    return {
+      x: (window.innerWidth / 2) - (w / 2),
+      y: (window.innerHeight / 2) - (h / 2)
+    };
+  }
+
   let apps: App[] = [
-    { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, component: Finder, default: true, x: 100, y: 100, zIndex: 100 },
-    { id: 2, name: 'Settings', icon: '/icons/settings.webp', open: false, component: Settings, default: true, x: 150, y: 150, zIndex: 101 },
-    { id: 3, name: 'Safari', icon: '/icons/safari.webp', open: false, component: Browser, default: true, x: 200, y: 200, zIndex: 102 },
-    { id: 4, name: 'Terminal', icon: '/icons/terminal.webp', open: false, component: Terminal, default: false, x: 250, y: 250, zIndex: 103 },
-    { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, component: Papierkorb, default: true, x: 300, y: 300, zIndex: 104 },
+    { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 600, height: 400, zIndex: 100 },
+    { id: 2, name: 'Settings', icon: '/icons/settings.webp', open: false, minimized: false, maximized: false, component: Settings, default: true, x: 0, y: 0, width: 600, height: 400, zIndex: 101 },
+    { id: 3, name: 'Safari', icon: '/icons/safari.webp', open: false, minimized: false, maximized: false, component: Browser, default: true, x: 0, y: 0, width: 800, height: 500, zIndex: 102 },
+    { id: 4, name: 'Terminal', icon: '/icons/terminal.webp', open: false, minimized: false, maximized: false, component: Terminal, default: false, x: 0, y: 0, width: 500, height: 350, zIndex: 103 },
+    { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 500, height: 350, zIndex: 104 },
   ];
 
-  // Svelte Action für das Verschieben (Draggable)
   function draggable(node: HTMLElement, app: App) {
     let moving = false;
-
     function handleMouseDown(e: MouseEvent) {
-      // Nur wenn auf die Title-Bar geklickt wird
-      if (!(e.target as HTMLElement).classList.contains('title-bar')) return;
-      
+      if (!(e.target as HTMLElement).classList.contains('title-bar') || app.maximized) return;
       moving = true;
-      focusApp(app.id); // Fenster in den Vordergrund bringen
-
+      focusApp(app.id);
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     }
-
     function handleMouseMove(e: MouseEvent) {
       if (!moving) return;
       app.x += e.movementX;
       app.y += e.movementY;
-      
-      // UI Update triggern
       apps = apps; 
     }
-
     function handleMouseUp() {
       moving = false;
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     }
-
     node.addEventListener('mousedown', handleMouseDown);
+    return { destroy() { node.removeEventListener('mousedown', handleMouseDown); } };
+  }
 
-    return {
-      destroy() {
-        node.removeEventListener('mousedown', handleMouseDown);
-      }
-    };
+  function resizable(node: HTMLElement, app: App) {
+    function handleMouseDown(e: MouseEvent) {
+      if (app.maximized) return;
+      e.preventDefault();
+      e.stopPropagation();
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+    function handleMouseMove(e: MouseEvent) {
+      app.width = Math.max(300, e.clientX - app.x);
+      app.height = Math.max(200, e.clientY - app.y);
+      apps = apps;
+    }
+    function handleMouseUp() {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+    node.addEventListener('mousedown', handleMouseDown);
+    return { destroy() { node.removeEventListener('mousedown', handleMouseDown); } };
   }
 
   function openApp(app: App) {
+    if (!app.open) {
+      const pos = getCenterPos(app.width, app.height);
+      app.x = pos.x;
+      app.y = pos.y;
+    }
     app.open = true;
+    app.minimized = false;
     focusApp(app.id);
     apps = apps;
   }
 
   function closeApp(app: App) {
     app.open = false;
+    apps = apps;
+  }
+
+  function toggleMinimize(app: App) {
+    app.minimized = true;
+    apps = apps;
+  }
+
+  function toggleMaximize(app: App) {
+    app.maximized = !app.maximized;
     apps = apps;
   }
 
@@ -95,6 +130,7 @@
            tabindex="0"
            on:click={() => openApp(app)}
            on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && openApp(app)}>
+        <span class="app-tooltip">{app.name}</span>
         <img src={app.icon} alt={app.name} />
         {#if app.open}
           <span class="dot"></span>
@@ -105,18 +141,24 @@
 </div>
 
 {#each apps as app (app.id)}
-  {#if app.open}
+  {#if app.open && !app.minimized}
     <div 
       class="app-window shadow-xl" 
+      class:maximized={app.maximized}
       use:draggable={app}
       on:mousedown={() => focusApp(app.id)}
-      style="left: {app.x}px; top: {app.y}px; z-index: {app.zIndex}"
+      transition:scale={{ duration: 300, start: 0.9, easing: cubicOut }}
+      style="left: {app.maximized ? 0 : app.x}px; 
+             top: {app.maximized ? 0 : app.y}px; 
+             width: {app.maximized ? '100vw' : app.width + 'px'}; 
+             height: {app.maximized ? '100vh' : app.height + 'px'}; 
+             z-index: {app.zIndex}"
     >
       <div class="title-bar">
         <div class="controls">
           <button class="ctrl close" on:click|stopPropagation={() => closeApp(app)}></button>
-          <button class="ctrl minimize"></button>
-          <button class="ctrl maximize"></button>
+          <button class="ctrl minimize" on:click|stopPropagation={() => toggleMinimize(app)}></button>
+          <button class="ctrl maximize" on:click|stopPropagation={() => toggleMaximize(app)}></button>
         </div>
         <span class="title-text">{app.name}</span>
       </div>
@@ -124,20 +166,22 @@
       <div class="window-content">
         <svelte:component this={app.component} />
       </div>
+
+      {#if !app.maximized}
+        <div class="resizer" use:resizable={app}></div>
+      {/if}
     </div>
   {/if}
 {/each}
 
 <style>
-  /* Container für Zentrierung des Docks */
-
-   .card-conatainer {
-     display: flex;
-     flex-direction: row;
-     gap: 10px; 
-     justify-content: center; 
-     align-items: flex-end; 
-   }
+  .card-conatainer {
+    display: flex;
+    flex-direction: row;
+    gap: 10px; 
+    justify-content: center; 
+    align-items: flex-end; 
+  }
 
   .dock-item {
     width: 90px;
@@ -149,6 +193,27 @@
     cursor: pointer;
     z-index: 10000000;
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Tooltip Style */
+  .app-tooltip {
+    position: absolute;
+    top: -20px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .dock-item:hover .app-tooltip {
+    opacity: 1;
   }
 
   .dock-item:hover {
@@ -163,18 +228,15 @@
 
   .dot {
     position: absolute;
-    bottom: -5px;
-    width: 4px;
-    height: 4px;
-    background: white;
+    bottom: 10px;
+    width: 5px;
+    height: 5px;
+    background: black;
     border-radius: 50%;
   }
 
-  /* Fenster-Styles */
   .app-window {
     position: fixed; 
-    width: 500px;
-    height: 350px;
     background: rgba(30, 30, 30, 0.85);
     backdrop-filter: blur(25px);
     border-radius: 12px;
@@ -183,6 +245,20 @@
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                top 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-radius 0.3s ease;
+    will-change: width, height, top, left;
+  }
+
+  .app-window:active {
+    transition: none;
+  }
+
+  .app-window.maximized {
+    border-radius: 0;
   }
 
   .title-bar {
@@ -191,8 +267,9 @@
     display: flex;
     align-items: center;
     padding: 0 12px;
-    cursor: default; /* Handle für Drag */
+    cursor: default;
     user-select: none;
+    flex-shrink: 0;
   }
 
   .controls {
@@ -227,5 +304,15 @@
     padding: 15px;
     color: white;
     overflow: auto;
+  }
+
+  .resizer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 15px;
+    height: 15px;
+    cursor: nwse-resize;
+    z-index: 20;
   }
 </style>
