@@ -84,6 +84,7 @@
   align-items: flex-end;    
 }
 
+/* Fonts */
 @font-face {
   font-family: 'Inter';
   src: url('/fonts/inter/Inter-Regular.woff2') format('woff2');
@@ -104,6 +105,9 @@
   font-weight: 700;
   font-style: normal;
 }
+
+
+
 
 /* Container */
 .page-container {
@@ -143,6 +147,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
+  z-index: 100000;
 }
 
 .glass-filter {
@@ -190,6 +195,7 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+  z-index: 1000;
 }
 
 .glass-content h3 {
@@ -202,6 +208,14 @@
   margin: 0;
   opacity: 0.8;
 }
+
+.glass-filter,
+.glass-overlay,
+.glass-specular,
+.glass-content {
+  z-index: 10000;
+}
+
 
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {

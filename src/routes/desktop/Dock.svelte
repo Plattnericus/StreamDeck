@@ -114,6 +114,7 @@
 
   function focusApp(id: number) {
     nextZIndex++;
+    if(nextZIndex > 9999) nextZIndex = 100;
     const app = apps.find(a => a.id === id);
     if (app) {
       app.zIndex = nextZIndex;
@@ -175,6 +176,7 @@
 {/each}
 
 <style>
+
   .card-conatainer {
     display: flex;
     flex-direction: row;
@@ -235,6 +237,7 @@
     border-radius: 50%;
   }
 
+  /* APPS */
   .app-window {
     position: fixed; 
     background: rgba(30, 30, 30, 0.85);
@@ -253,6 +256,52 @@
     will-change: width, height, top, left;
   }
 
+  .app-window {
+  position: fixed;
+  border-radius: 12px;
+  overflow: hidden;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+}
+
+  .app-window .glass-filter,
+  .app-window .glass-overlay,
+  .app-window .glass-specular {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .app-window .glass-filter {
+    z-index: 1;
+    backdrop-filter: blur(25px);
+    filter: saturate(120%) brightness(1.15);
+  }
+
+  .app-window .glass-overlay {
+    z-index: 2;
+    background: rgba(30,30,30,0.85);
+  }
+
+  .app-window .glass-specular {
+    z-index: 3;
+    box-shadow: inset 1px 1px 1px rgba(255,255,255,0.15);
+  }
+
+  .app-window .glass-distortion-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.05) 0%, transparent 80%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 80%);
+    background-size: 300% 300%;
+    animation: floatDistort 10s infinite ease-in-out;
+    mix-blend-mode: overlay;
+    z-index: 4;
+    pointer-events: none;
+  }
+
   .app-window:active {
     transition: none;
   }
@@ -263,9 +312,10 @@
 
   .title-bar {
     height: 32px;
-    background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
+    font-size: 4em;
+    font-weight: bold;
     padding: 0 12px;
     cursor: default;
     user-select: none;
