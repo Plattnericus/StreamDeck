@@ -7,9 +7,12 @@
 - started Desktop enviroment
 - open Apps
 
-## 31.11.2025
+## 31.12.2025
 - started doing the header
 
+# 14.01.2026
+- Reworked on the Booting sequence
+- added a Login screen (only Apple)
 
 ## TO DO
 - popup when you click on header
