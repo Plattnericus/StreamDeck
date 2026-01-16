@@ -14,11 +14,17 @@
 - Reworked on the Booting sequence
 - added a Login screen (only Apple)
 
-## TO DO
+# 16.01.2026
+- added the popup for control menu
+- made the musik player
 - popup when you click on header
     - layout: https://cdn.mos.cms.futurecdn.net/2L4hdz87QauxcXbXqJJx4H.jpg
-    - song: such a funny way
+    - song: such a funny way, and way more!
+- fixed some small bugs
+
+## TO DO
 - make every site work
 - add desktop icons
 - make it more interactive
 - animations
+- Design
