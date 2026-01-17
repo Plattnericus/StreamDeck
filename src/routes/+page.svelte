@@ -155,7 +155,6 @@
                         placeholder="Password"
                         bind:value={password}
                         on:keydown={handleKeydown}
-                        autofocus
                     />
                     <button class="go" on:click={handleSubmit} aria-label="Log in">
                         ↵

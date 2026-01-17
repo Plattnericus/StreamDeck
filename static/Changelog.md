@@ -22,6 +22,10 @@
     - song: such a funny way, and way more!
 - fixed some small bugs
 
+# 17.01.2026
+- added icons
+- finished Control Center
+
 ## TO DO
 - make every site work
 - add desktop icons
