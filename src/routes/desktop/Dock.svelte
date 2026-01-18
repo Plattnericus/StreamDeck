@@ -216,6 +216,9 @@
 <style>
   :global(::-webkit-scrollbar-button){ display:none !important; width:0 !important; height:0 !important; }
   :global(::-webkit-scrollbar-corner){ background: transparent !important; }
+  :global(html, body) { overflow: hidden; }
+  * { scrollbar-width: none; }
+  *::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
   .card-conatainer {
     display: flex;
@@ -325,65 +328,69 @@
     flex-shrink: 0;
   }
 
-.controls{
-  display:flex;
-  gap:8px;
-  z-index:10;
-}
+  .controls{
+    display:flex;
+    gap:8px;
+    z-index:10;
+  }
 
-.ctrl{
-  width:14px;
-  height:14px;
-  border-radius:999px;
-  border:none;
-  padding:0;
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  cursor:default;
-  box-shadow:
-    inset 0 0 0 0.5px rgba(0,0,0,.22),
-    0 0.5px 0 rgba(255,255,255,.18);
-}
+  .ctrl{
+    width:14px;
+    height:14px;
+    border-radius:999px;
+    border:none;
+    padding:0;
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:default;
+    box-shadow:
+      inset 0 0 0 0.5px rgba(0,0,0,.22),
+      0 0.5px 0 rgba(255,255,255,.18);
+  }
 
-.close{background:#ff5f57;}
-.minimize{background:#febc2e;}
-.maximize{background:#28c840;}
+  .close{background:#ff5f57;}
+  .minimize{background:#febc2e;}
+  .maximize{background:#28c840;}
 
-.ctrl::after{
-  content:"";
-  width:9px;
-  height:9px;
-  opacity:0;
-  transition:opacity 120ms ease;
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-  filter: drop-shadow(0 0.25px 0 rgba(255,255,255,.18));
-}
+  .ctrl::after{
+    content:"";
+    width:9px;
+    height:9px;
+    opacity:0;
+    transition:opacity 120ms ease;
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:contain;
+    filter: drop-shadow(0 0.25px 0 rgba(255,255,255,.18));
+  }
 
-.controls:hover .ctrl::after{opacity:1;}
+  .controls:hover .ctrl::after{opacity:1; }
+  .controls:hover .ctrl{
+    transform: scale(1.15);
+  }
 
-.close::after{
-  background-image:url("/icons/close.png");
-  width:10px;
-  height:10px;
-}
 
-.minimize::after{
-  background-image:url("/icons/minimize.png");
-  width:10px;
-  height:10px;
-}
+  .close::after{
+    background-image:url("/icons/close.png");
+    width:8px;
+    height:8px;
+  }
 
-.maximize::after{
-  background-image:url("/icons/maximize.png");
-  width:10px;
-  height:10px;
-}
+  .minimize::after{
+    background-image:url("/icons/minimize.png");
+    width:8px;
+    height:8px;
+  }
 
-.ctrl:hover{filter:brightness(.97);}
+  .maximize::after{
+    background-image:url("/icons/maximize.png");
+    width:8px;
+    height:8px;
+  }
+
+  .ctrl:hover{filter:brightness(.97);}
 
 
   .title-text {

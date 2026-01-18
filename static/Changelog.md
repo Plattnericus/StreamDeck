@@ -29,6 +29,7 @@
 # 18.01.2026
 - added App-Store so you can open apps by that launcher!
 - Logic for opening apps
+- icons upgrade
 
 ## TO DO
 - make every site work
