@@ -397,7 +397,7 @@
 </script>
 <header>
   <div class="left">
-    <button class="icon-container" onclick={toggleControlCenter}>
+    <button class="icon-container">
       <img class="icon-img" src="/logos/apple-logo.png" alt="Logo" />
     </button>
     <button class="finder-text finder-bold">Finder</button>

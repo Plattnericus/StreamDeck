@@ -9,3 +9,15 @@
 </svelte:head>
 
 {@render children()}
+
+<style>
+	:global(::-webkit-scrollbar-button) {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
+	:global(::-webkit-scrollbar-corner) {
+		background: transparent;
+	}
+</style>

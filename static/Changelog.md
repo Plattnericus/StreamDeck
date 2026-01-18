@@ -26,9 +26,14 @@
 - added icons
 - finished Control Center
 
+# 18.01.2026
+- added App-Store so you can open apps by that launcher!
+- Logic for opening apps
+
 ## TO DO
 - make every site work
 - add desktop icons
 - make it more interactive
 - animations
 - Design
+- Quality of life

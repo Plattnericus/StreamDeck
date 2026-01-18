@@ -1,11 +1,16 @@
 <script lang="ts">
   import { scale, fade } from 'svelte/transition';
   import { cubicOut } from 'svelte/easing';
+  import { onMount } from 'svelte';
+  import { openTab, getCenterPosition } from '../../lib/openTab';
+  import { appStore } from '../../lib/appStore';
+  import { loadLastOpened, trackOpenedApp } from '../../lib/lastOpened';
   import Settings from '../apps/Settings.svelte';
   import Browser  from '../apps/Browser.svelte';
   import Terminal from '../apps/Terminal.svelte';
   import Finder   from '../apps/Finder.svelte';
   import Papierkorb from '../apps/Trash.svelte';
+  import Apps from '../apps/Apps.svelte';
 
   type App = {
     id: number;
@@ -25,20 +30,18 @@
 
   let nextZIndex = 100;
 
-  function getCenterPos(w: number, h: number) {
-    return {
-      x: (window.innerWidth / 2) - (w / 2),
-      y: (window.innerHeight / 2) - (h / 2)
-    };
-  }
-
   let apps: App[] = [
-    { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 600, height: 400, zIndex: 100 },
-    { id: 2, name: 'Settings', icon: '/icons/settings.webp', open: false, minimized: false, maximized: false, component: Settings, default: true, x: 0, y: 0, width: 600, height: 400, zIndex: 101 },
-    { id: 3, name: 'Safari', icon: '/icons/safari.webp', open: false, minimized: false, maximized: false, component: Browser, default: true, x: 0, y: 0, width: 800, height: 500, zIndex: 102 },
-    { id: 4, name: 'Terminal', icon: '/icons/terminal.webp', open: false, minimized: false, maximized: false, component: Terminal, default: false, x: 0, y: 0, width: 500, height: 350, zIndex: 103 },
-    { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 500, height: 350, zIndex: 104 },
+    { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 800, height: 600, zIndex: 100 },
+    { id: 2, name: 'App Store', icon: '/icons/app-store.webp', open: false, minimized: false, maximized: false, component: Apps, default: true, x: 0, y: 0, width: 600, height: 400, zIndex: 101 },
+    { id: 3, name: 'Settings', icon: '/icons/settings.webp', open: false, minimized: false, maximized: false, component: Settings, default: true, x: 0, y: 0, width: 600, height: 400, zIndex: 102 },
+    { id: 4, name: 'Safari', icon: '/icons/safari.webp', open: false, minimized: false, maximized: false, component: Browser, default: true, x: 0, y: 0, width: 800, height: 500, zIndex: 103 },
+    { id: 5, name: 'Terminal', icon: '/icons/terminal.webp', open: false, minimized: false, maximized: false, component: Terminal, default: false, x: 0, y: 0, width: 500, height: 350, zIndex: 104 },
+    { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 500, height: 350, zIndex: 105 },
   ];
+
+  appStore.set(apps);
+
+  $: appStore.set(apps);
 
   function draggable(node: HTMLElement, app: App) {
     let moving = false;
@@ -86,20 +89,29 @@
   }
 
   function openApp(app: App) {
-    if (!app.open) {
-      const pos = getCenterPos(app.width, app.height);
-      app.x = pos.x;
-      app.y = pos.y;
+    if (app.open) {
+      if (app.minimized) {
+        app.minimized = false;
+      }
+      focusApp(app.id);
+    } else {
+      openTab(app);
+      focusApp(app.id);
+      trackOpenedApp({
+        id: app.id,
+        name: app.name,
+        icon: app.icon,
+        timestamp: Date.now(),
+        openCount: 1
+      });
+      apps = apps;
     }
-    app.open = true;
-    app.minimized = false;
-    focusApp(app.id);
-    apps = apps;
   }
 
   function closeApp(app: App) {
     app.open = false;
     apps = apps;
+    appStore.set(apps);
   }
 
   function toggleMinimize(app: App) {
@@ -121,11 +133,33 @@
       apps = apps;
     }
   }
+
+  function handleOpenApp(event: CustomEvent) {
+    const externalApp = event.detail.app;
+    if (externalApp) {
+      openTab(externalApp);
+      externalApp.zIndex = nextZIndex++;
+      apps = [...apps];
+    }
+  }
+
+  function subscribeToStore() {
+    appStore.subscribe(storeApps => {
+      if (storeApps && storeApps.length > 0) {
+        apps = storeApps;
+      }
+    });
+  }
+
+  onMount(() => {
+    loadLastOpened();
+    subscribeToStore();
+  });
 </script>
 
 <div class="page-container">
   <div class="card-conatainer">
-    {#each apps.filter(a => a.default) as app}
+    {#each [...apps.filter(a => a.open && !a.default), ...apps.filter(a => a.default && a.name !== 'Trash'), ...apps.filter(a => a.name === 'Trash')] as app}
       <div class="dock-item"
            role="button"
            tabindex="0"
@@ -146,8 +180,12 @@
     <div 
       class="app-window shadow-xl" 
       class:maximized={app.maximized}
+      role="button"
+      tabindex="0"
+      aria-label={app.name}
       use:draggable={app}
       on:mousedown={() => focusApp(app.id)}
+      on:keydown={(e) => e.key === 'Escape' && closeApp(app)}
       transition:scale={{ duration: 300, start: 0.9, easing: cubicOut }}
       style="left: {app.maximized ? 0 : app.x}px; 
              top: {app.maximized ? 0 : app.y}px; 
@@ -157,15 +195,15 @@
     >
       <div class="title-bar">
         <div class="controls">
-          <button class="ctrl close" on:click|stopPropagation={() => closeApp(app)}></button>
-          <button class="ctrl minimize" on:click|stopPropagation={() => toggleMinimize(app)}></button>
-          <button class="ctrl maximize" on:click|stopPropagation={() => toggleMaximize(app)}></button>
+          <button class="ctrl close" aria-label="Close window" title="Close window" on:click|stopPropagation={() => closeApp(app)}></button>
+          <button class="ctrl minimize" aria-label="Minimize window" title="Minimize window" on:click|stopPropagation={() => toggleMinimize(app)}></button>
+          <button class="ctrl maximize" aria-label="Maximize window" title="Maximize window" on:click|stopPropagation={() => toggleMaximize(app)}></button>
         </div>
         <span class="title-text">{app.name}</span>
       </div>
       
       <div class="window-content">
-        <svelte:component this={app.component} />
+        <svelte:component this={app.component} on:openapp={handleOpenApp} />
       </div>
 
       {#if !app.maximized}
@@ -176,6 +214,8 @@
 {/each}
 
 <style>
+  :global(::-webkit-scrollbar-button){ display:none !important; width:0 !important; height:0 !important; }
+  :global(::-webkit-scrollbar-corner){ background: transparent !important; }
 
   .card-conatainer {
     display: flex;
@@ -197,7 +237,6 @@
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Tooltip Style */
   .app-tooltip {
     position: absolute;
     top: -20px;
@@ -237,8 +276,8 @@
     border-radius: 50%;
   }
 
-  /* APPS */
   .app-window {
+    scrollbar-display: none;
     position: fixed; 
     background: rgba(30, 30, 30, 0.85);
     backdrop-filter: blur(25px);
@@ -266,42 +305,6 @@
   box-shadow: 0 30px 60px rgba(0,0,0,0.5);
 }
 
-  .app-window .glass-filter,
-  .app-window .glass-overlay,
-  .app-window .glass-specular {
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-  }
-
-  .app-window .glass-filter {
-    z-index: 1;
-    backdrop-filter: blur(25px);
-    filter: saturate(120%) brightness(1.15);
-  }
-
-  .app-window .glass-overlay {
-    z-index: 2;
-    background: rgba(30,30,30,0.85);
-  }
-
-  .app-window .glass-specular {
-    z-index: 3;
-    box-shadow: inset 1px 1px 1px rgba(255,255,255,0.15);
-  }
-
-  .app-window .glass-distortion-overlay {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.05) 0%, transparent 80%),
-                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 80%);
-    background-size: 300% 300%;
-    animation: floatDistort 10s infinite ease-in-out;
-    mix-blend-mode: overlay;
-    z-index: 4;
-    pointer-events: none;
-  }
-
   .app-window:active {
     transition: none;
   }
@@ -322,23 +325,66 @@
     flex-shrink: 0;
   }
 
-  .controls {
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-  }
+.controls{
+  display:flex;
+  gap:8px;
+  z-index:10;
+}
 
-  .ctrl {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-  }
+.ctrl{
+  width:14px;
+  height:14px;
+  border-radius:999px;
+  border:none;
+  padding:0;
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:default;
+  box-shadow:
+    inset 0 0 0 0.5px rgba(0,0,0,.22),
+    0 0.5px 0 rgba(255,255,255,.18);
+}
 
-  .close { background: #ff5f56; }
-  .minimize { background: #ffbd2e; }
-  .maximize { background: #27c93f; }
+.close{background:#ff5f57;}
+.minimize{background:#febc2e;}
+.maximize{background:#28c840;}
+
+.ctrl::after{
+  content:"";
+  width:9px;
+  height:9px;
+  opacity:0;
+  transition:opacity 120ms ease;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+  filter: drop-shadow(0 0.25px 0 rgba(255,255,255,.18));
+}
+
+.controls:hover .ctrl::after{opacity:1;}
+
+.close::after{
+  background-image:url("/icons/close.png");
+  width:10px;
+  height:10px;
+}
+
+.minimize::after{
+  background-image:url("/icons/minimize.png");
+  width:10px;
+  height:10px;
+}
+
+.maximize::after{
+  background-image:url("/icons/maximize.png");
+  width:10px;
+  height:10px;
+}
+
+.ctrl:hover{filter:brightness(.97);}
+
 
   .title-text {
     position: absolute;
