@@ -140,7 +140,7 @@
 
   display: flex;
   padding: 10px;
-  gap: 12px;
+  gap: 8px;
   pointer-events: auto;
 }
 

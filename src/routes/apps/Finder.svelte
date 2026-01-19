@@ -1,9 +1,19 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import { openTab } from "../../lib/openTab";
   import { addOrOpenApp } from "../../lib/appStore";
-  import { filterOutStandardApps } from "../../lib/appFilter";
+
+  import Browser from "./Browser.svelte";
+  import About from "./About.svelte";
+  import Apps from "./Apps.svelte";
+  import Changelog from "./Changelog.svelte";
+  import Galerie from "./Galerie.svelte";
+  import Impressum from "./Impressum.svelte";
+  import Agb from "./AGB.svelte";
+  import Info from "./Info.svelte";
+  import Settings from "./Settings.svelte";
+  import Terminal from "./Terminal.svelte";
+  import Datenschutz from "./Datenschutz.svelte";
 
   type App = {
     id: number;
@@ -34,22 +44,21 @@
     iconBase: "/icons/",
     fallbackIcon: "fallback.png",
     persistInstalled: true,
-    persistKey: "appstore_installed_v5",
-    cardMinWidth: 320,
-
-    icons: {
-      // "Browser": "safari.webp",
-      // "Settings": "settings.webp",
-      // "Galerie": "photos.webp",
-      // "Terminal": "/icons/terminal.webp"
-    } as Record<string, string>,
-
-    priority: {
-      // higher = higher in list
-      // "Settings": 1000,
-      // "Browser": 900
-    } as Record<string, number>
+    persistKey: "appstore_installed_manual_v1",
+    cardMinWidth: 320
   } as const;
+
+  const APP_LIST: Omit<App, "open" | "minimized" | "maximized" | "default" | "x" | "y" | "zIndex" | "priority">[] = [
+    { id: 101, name: "About", file: "About.svelte", icon: "about.webp", component: About, category: "System", subtitle: "Über das Projekt", description: "Allgemeine Informationen über das StreamDeck-Projekt.", developer: "System", version: "1.0.0", width: 740, height: 560 },
+    { id: 102, name: "Info", file: "Info.svelte", icon: "info.webp", component: Info, category: "System", subtitle: "Produktinformationen", description: "Informationen zum Produkt StreamDeck und dessen Funktionen.", developer: "System", version: "1.0.0", width: 320, height: 480 },
+    { id: 103, name: "Galerie", file: "Galerie.svelte", icon: "fotos.webp", component: Galerie, category: "System", subtitle: "Bilder", description: "Durchsuchen und Anzeigen von Bildern.", developer: "System", version: "1.0.0", width: 720, height: 560 },
+    { id: 104, name: "Terminal", file: "Terminal.svelte", icon: "terminal.webp", component: Terminal, category: "System", subtitle: "Kommandozeile", description: "Ausführen von Befehlen über eine integrierte Konsole.", developer: "System", version: "1.0.0", width: 720, height: 560 },
+    { id: 105, name: "Changelog", file: "Changelog.svelte", icon: "changelog.webp", component: Changelog, category: "System", subtitle: "Änderungen", description: "Versionsverlauf und Neuerungen des Projekts.", developer: "System", version: "1.0.0", width: 640, height: 480 },
+    { id: 106, name: "Datenschutz", file: "Datenschutz.svelte", icon: "datenschutz.webp", component: Datenschutz, category: "System", subtitle: "Datenschutzrichtlinie", description: "Informationen zur Verarbeitung und zum Schutz personenbezogener Daten.", developer: "System", version: "1.0.0", width: 720, height: 560 },
+    { id: 107, name: "Impressum", file: "Impressum.svelte", icon: "impressum.webp", component: Impressum, category: "System", subtitle: "Rechtliche Angaben", description: "Gesetzlich vorgeschriebene Angaben zum Anbieter.", developer: "System", version: "1.0.0", width: 720, height: 560 },
+    { id: 108, name: "AGB", file: "AGB.svelte", icon: "agb.webp", component: Agb, category: "System", subtitle: "Nutzungsbedingungen", description: "Allgemeine Geschäfts- und Nutzungsbedingungen.", developer: "System", version: "1.0.0", width: 720, height: 560 }
+  ];
+
 
   const dispatch = createEventDispatcher<{ openapp: { app: App } }>();
 
@@ -57,107 +66,35 @@
   const installed = new Set<number>();
   let installedTick = 0;
 
-  function stableId(s: string) {
-    let h = 0;
-    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
-    return h % 1000000;
+  function iconUrl(icon: string) {
+    const s = (icon || "").trim();
+    if (!s) return CFG.iconBase + CFG.fallbackIcon;
+    if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("data:")) return s;
+    if (s.startsWith("/")) return s;
+    return CFG.iconBase + s.replace(/^\.\//, "");
   }
 
-  function fileNameOnly(path: string) {
-    return (path.split("/").pop() || path).trim();
-  }
-
-  function fileBase(path: string) {
-    const f = fileNameOnly(path);
-    return f.toLowerCase().endsWith(".svelte") ? f.slice(0, -6) : f;
-  }
-
-  function normalizeIcon(icon?: string) {
-    const raw = (icon ?? "").trim();
-    if (!raw) return CFG.iconBase + CFG.fallbackIcon;
-    if (raw.startsWith("http://") || raw.startsWith("https://") || raw.startsWith("data:")) return raw;
-    if (raw.startsWith("/")) return raw;
-    return CFG.iconBase + raw.replace(/^\.\//, "");
-  }
-
-  function iconFor(name: string, file: string, metaIcon?: string) {
-    if (metaIcon?.trim()) return normalizeIcon(metaIcon);
-    const byName = CFG.icons[name] ?? CFG.icons[name.toLowerCase()];
-    if (byName) return normalizeIcon(byName);
-    const byFile = CFG.icons[file] ?? CFG.icons[file.toLowerCase()];
-    if (byFile) return normalizeIcon(byFile);
-    return CFG.iconBase + CFG.fallbackIcon;
-  }
-
-  function prioFor(name: string, file: string) {
-    const p =
-      CFG.priority[name] ??
-      CFG.priority[name.toLowerCase()] ??
-      CFG.priority[file] ??
-      CFG.priority[file.toLowerCase()] ??
-      0;
-    return typeof p === "number" ? p : 0;
-  }
-
-  function isImageLike(s: string) {
+  function isImg(s: string) {
     return s.startsWith("/") || s.startsWith("http") || s.startsWith("data:") || s.includes(".");
   }
 
-  const modules = import.meta.glob("./*.svelte", { eager: true }) as Record<
-    string,
-    {
-      default: any;
-      app?: {
-        id?: number;
-        name?: string;
-        icon?: string;
-        subtitle?: string;
-        description?: string;
-        category?: string;
-        developer?: string;
-        version?: string;
-        width?: number;
-        height?: number;
-        default?: boolean;
-      };
-    }
-  >;
+  function prioFromId(id: number) {
+    return 1000000 - id;
+  }
 
-  let apps: App[] = Object.entries(modules)
-    .filter(([p]) => filterOutStandardApps(fileNameOnly(p)))
-    .map(([path, mod]) => {
-      const meta = mod.app ?? {};
-      const file = fileNameOnly(path);
-      const base = fileBase(path);
-      const name = meta.name ?? base;
-      const category = meta.category ?? "Other";
-      const subtitle = meta.subtitle ?? category;
-
-      return {
-        id: meta.id ?? stableId(name),
-        name,
-        file,
-        icon: iconFor(name, file, meta.icon),
-        component: mod.default,
-        category,
-        subtitle,
-        description: meta.description,
-        developer: meta.developer ?? "Unknown Developer",
-        version: meta.version ?? "1.0.0",
-
-        open: false,
-        minimized: false,
-        maximized: false,
-        default: meta.default ?? true,
-        x: 0,
-        y: 0,
-        width: meta.width ?? 740,
-        height: meta.height ?? 560,
-        zIndex: nextZIndex++,
-
-        priority: prioFor(name, file)
-      };
-    })
+  let apps: App[] = APP_LIST
+    .map((a) => ({
+      ...a,
+      icon: iconUrl(a.icon),
+      priority: prioFromId(a.id),
+      open: false,
+      minimized: false,
+      maximized: false,
+      default: true,
+      x: 0,
+      y: 0,
+      zIndex: nextZIndex++
+    }))
     .sort((a, b) => b.priority - a.priority || a.name.localeCompare(b.name));
 
   function isInstalled(id: number) {
@@ -204,9 +141,15 @@
 <div class="glass">
   <div class="scroller" style={`--min:${CFG.cardMinWidth}px`}>
     {#each apps as app (app.id)}
-      <div class="card" role="button" tabindex="0" on:dblclick={() => open(app)} on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && open(app)}>
+      <div
+        class="card"
+        role="button"
+        tabindex="0"
+        on:dblclick={() => open(app)}
+        on:keydown={(e) => (e.key === "Enter" || e.key === " ") && open(app)}
+      >
         <div class="top">
-          {#if isImageLike(app.icon)}
+          {#if isImg(app.icon)}
             <img class="icon" src={app.icon} alt={app.name} loading="lazy" />
           {:else}
             <div class="iconEmoji">{app.icon}</div>
@@ -236,9 +179,6 @@
 <style>
   :global(::-webkit-scrollbar-button){ display:none !important; width:0 !important; height:0 !important; }
   :global(::-webkit-scrollbar-corner){ background: transparent !important; }
-::-webkit-scrollbar-button {
-  display: none;
-}
 
   .glass{
     border-radius: 18px;
@@ -265,24 +205,15 @@
     scrollbar-width: none;
   }
 
-  .scroller::-webkit-scrollbar{
-    width: 10px;
-    height: 10px;
-  }
+  .scroller::-webkit-scrollbar{ width: 10px; height: 10px; }
   .scroller::-webkit-scrollbar-thumb{
     background: rgba(255,255,255,0.18);
     border-radius: 999px;
     border: 3px solid rgba(0,0,0,0);
     background-clip: padding-box;
   }
-  .scroller::-webkit-scrollbar-track{
-    background: transparent;
-  }
-  .scroller::-webkit-scrollbar-button{
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-  }
+  .scroller::-webkit-scrollbar-track{ background: transparent; }
+  .scroller::-webkit-scrollbar-button{ display:none !important; width:0 !important; height:0 !important; }
 
   .card{
     flex: 1 1 var(--min);
@@ -296,12 +227,20 @@
     flex-direction: column;
     gap: 10px;
     cursor: pointer;
-    transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    transform: translateY(0) scale(1);
+    opacity: 0;
+    animation: pop .22s ease forwards;
+    transition: transform .14s ease, background .14s ease, border-color .14s ease;
   }
+
   .card:hover{
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.01);
     background: rgba(255,255,255,0.08);
     border-color: rgba(255,255,255,0.14);
+  }
+
+  .card:active{
+    transform: translateY(0px) scale(0.99);
   }
 
   .top{
@@ -317,7 +256,14 @@
     object-fit: cover;
     border: 1px solid rgba(255,255,255,0.10);
     background: rgba(255,255,255,0.08);
+    transition: transform .14s ease, filter .14s ease;
   }
+
+  .card:hover .icon{
+    transform: scale(1.04);
+    filter: saturate(1.05);
+  }
+
   .iconEmoji{
     width: 54px;
     height: 54px;
@@ -328,9 +274,15 @@
     border: 1px solid rgba(255,255,255,0.10);
     background: rgba(255,255,255,0.08);
     font-size: 24px;
+    transition: transform .14s ease;
   }
 
-  .meta{flex:1;min-width:0}
+  .card:hover .iconEmoji{
+    transform: scale(1.04);
+  }
+
+  .meta{ flex: 1; min-width: 0; }
+
   .name{
     color: rgba(255,255,255,0.92);
     font-weight: 950;
@@ -339,6 +291,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .sub{
     margin-top: 2px;
     font-size: 12px;
@@ -357,8 +310,17 @@
     font-size: 12px;
     font-weight: 950;
     cursor: pointer;
+    transition: transform .14s ease, background .14s ease, border-color .14s ease;
   }
-  .btn:hover{ background: rgba(0,122,255,0.30); }
+
+  .btn:hover{
+    background: rgba(0,122,255,0.30);
+    transform: translateY(-1px);
+  }
+
+  .btn:active{
+    transform: translateY(0px) scale(0.98);
+  }
 
   .desc{
     color: rgba(255,255,255,0.72);
@@ -378,6 +340,7 @@
     justify-content: space-between;
     gap: 10px;
   }
+
   .pill{
     font-size: 11px;
     padding: 6px 10px;
@@ -385,13 +348,30 @@
     border: 1px solid rgba(255,255,255,0.10);
     background: rgba(255,255,255,0.04);
     color: rgba(255,255,255,0.72);
+    transition: transform .14s ease, background .14s ease;
   }
+
+  .card:hover .pill{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,0.06);
+  }
+
   .ver{
     font-size: 11px;
     color: rgba(255,255,255,0.56);
   }
 
+  @keyframes pop{
+    from { opacity: 0; transform: translateY(6px) scale(0.99); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
   @media (max-width: 740px){
     .card{ max-width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card{ animation: none; opacity: 1; }
+    .card, .icon, .iconEmoji, .btn, .pill{ transition: none; }
   }
 </style>

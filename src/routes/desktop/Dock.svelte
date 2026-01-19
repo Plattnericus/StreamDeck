@@ -5,12 +5,31 @@
   import { openTab, getCenterPosition } from '../../lib/openTab';
   import { appStore } from '../../lib/appStore';
   import { loadLastOpened, trackOpenedApp } from '../../lib/lastOpened';
+  import DockItemMagnified from './DockItemMagnified.svelte';
+
   import Settings from '../apps/Settings.svelte';
   import Browser  from '../apps/Browser.svelte';
   import Terminal from '../apps/Terminal.svelte';
   import Finder   from '../apps/Finder.svelte';
   import Papierkorb from '../apps/Trash.svelte';
   import Apps from '../apps/Apps.svelte';
+
+  //APPS
+  /*
+  import Finder   from '../apps/Finder.svelte';
+  import Papierkorb from '../apps/Trash.svelte';
+  import Browser from "../apps/Browser.svelte";
+  import About from "../apps/About.svelte";
+  import Apps from "../apps/Apps.svelte";
+  import Changelog from "../apps/Changelog.svelte";
+  import Galerie from "../apps/Galerie.svelte";
+  import Impressum from "../apps/Impressum.svelte";
+  import AGB from "../apps/AGB.svelte";
+  import Info from "../apps/Info.svelte";
+  import Settings from "../apps/Settings.svelte";
+  import Terminal from "../apps/Terminal.svelte";
+  import Datenschutz from "../Datenschutz.svelte";
+*/
 
   type App = {
     id: number;
@@ -29,6 +48,92 @@
   };
 
   let nextZIndex = 100;
+
+  // --- Dock hover magnify (wie in DockItem.svelte) ---
+const baseSize = 90;                 // entspricht deiner .dock-item width/height
+const distanceLimit = baseSize * 6;
+
+const distanceInput = [
+  -distanceLimit,
+  -distanceLimit / 1.25,
+  -distanceLimit / 2,
+  0,
+  distanceLimit / 2,
+  distanceLimit / 1.25,
+  distanceLimit
+];
+
+const sizeOutput = [
+  baseSize,
+  baseSize * 1.1,
+  baseSize * 1.414,
+  baseSize * 1.9,
+  baseSize * 1.414,
+  baseSize * 1.1,
+  baseSize
+];
+
+  let dockMouseX: number | null = null;
+let dockEls = new Map<number, HTMLElement>();
+let dockSizes: Record<number, number> = {};
+
+function setDockEl(id: number) {
+  return (el: HTMLElement | null) => {
+    if (el) dockEls.set(id, el);
+    else dockEls.delete(id);
+  };
+}
+
+function clamp(n: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, n));
+}
+
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}
+
+// piecewise-linear interpolate (wie popmotion interpolate, nur ohne lib)
+function interpolatePiecewise(x: number, input: number[], output: number[]) {
+  if (x <= input[0]) return output[0];
+  if (x >= input[input.length - 1]) return output[output.length - 1];
+
+  for (let i = 0; i < input.length - 1; i++) {
+    const x0 = input[i], x1 = input[i + 1];
+    if (x >= x0 && x <= x1) {
+      const t = (x - x0) / (x1 - x0);
+      return lerp(output[i], output[i + 1], t);
+    }
+  }
+  return baseSize;
+}
+
+let raf = 0;
+function scheduleDockUpdate() {
+  cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => {
+    const next: Record<number, number> = {};
+
+    if (dockMouseX === null) {
+      for (const app of apps) next[app.id] = baseSize;
+      dockSizes = next;
+      return;
+    }
+
+    for (const app of apps) {
+      const el = dockEls.get(app.id);
+      if (!el) { next[app.id] = baseSize; continue; }
+
+      const r = el.getBoundingClientRect();
+      const centerX = r.left + r.width / 2;
+      const dist = dockMouseX - centerX;
+
+      next[app.id] = interpolatePiecewise(dist, distanceInput, sizeOutput);
+    }
+
+    dockSizes = next;
+  });
+}
+
 
   let apps: App[] = [
     { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 800, height: 600, zIndex: 100 },
@@ -158,19 +263,17 @@
 </script>
 
 <div class="page-container">
-  <div class="card-conatainer">
+  <div class="card-conatainer" on:mousemove={(e) => (dockMouseX = e.clientX)} on:mouseleave={() => (dockMouseX = null)}>
     {#each [...apps.filter(a => a.open && !a.default), ...apps.filter(a => a.default && a.name !== 'Trash'), ...apps.filter(a => a.name === 'Trash')] as app}
-      <div class="dock-item"
-           role="button"
-           tabindex="0"
-           on:click={() => openApp(app)}
-           on:keydown={(e) => (e.key === 'Enter' || e.key === ' ') && openApp(app)}>
-        <span class="app-tooltip">{app.name}</span>
-        <img src={app.icon} alt={app.name} />
-        {#if app.open}
-          <span class="dot"></span>
-        {/if}
-      </div>
+      <DockItemMagnified
+        app_id={app.id}
+        name={app.name}
+        icon={app.icon}
+        is_open={app.open}
+        mouse_x={dockMouseX}
+        is_hovering={dockMouseX !== null}
+        onclick={() => openApp(app)}
+      />
     {/each}
   </div>
 </div>
@@ -223,9 +326,11 @@
   .card-conatainer {
     display: flex;
     flex-direction: row;
-    gap: 10px; 
+    gap: 2px;
     justify-content: center; 
-    align-items: flex-end; 
+    align-items: flex-end;
+    height: 76px;
+    overflow: visible;
   }
 
   .dock-item {
@@ -368,7 +473,8 @@
 
   .controls:hover .ctrl::after{opacity:1; }
   .controls:hover .ctrl{
-    transform: scale(1.15);
+    transform: scale(1.2);
+    transition: smooth 150ms ease;
   }
 
 

@@ -2,7 +2,7 @@
   import { spring } from 'svelte/motion';
   import { interpolate } from 'popmotion';
 
-  const baseWidth = 96;
+  const baseWidth = 76;
   const distanceLimit = baseWidth * 6;
   const distanceInput = [
     -distanceLimit,
@@ -29,10 +29,11 @@
     icon: string;
     is_open: boolean;
     mouse_x: number | null;
+    is_hovering?: boolean;
     onclick?: () => void;
   }
 
-  let { app_id, name, icon, is_open, mouse_x, onclick }: Props = $props();
+  let { app_id, name, icon, is_open, mouse_x, is_hovering = false, onclick }: Props = $props();
 
   const width_store = spring(baseWidth, {
     damping: 0.45,
@@ -58,13 +59,14 @@
 </script>
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div
-  bind:this={dock_item}
-  class="dock-item"
-  data-app-id={app_id}
-  role="button"
-  tabindex="0"
-  onclick={onclick}
+  <div
+    bind:this={dock_item}
+    class="dock-item"
+    class:is-hovering={is_hovering}
+    data-app-id={app_id}
+    role="button"
+    tabindex="0"
+    onclick={onclick}
   onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.currentTarget as HTMLElement).click()}
   style="width: {$width_store}px; height: {$width_store}px;"
 >
@@ -89,6 +91,8 @@
       transform 0.2s ease,
       filter 0.2s ease;
     transform: translateZ(0);
+    transform-origin: center bottom;
+    align-self: flex-end;
   }
 
   .app-tooltip {
@@ -107,7 +111,7 @@
     pointer-events: none;
     transition: opacity 0.15s ease;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    z-index: 1000;
+    z-index: 1000000;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   }
 
@@ -116,15 +120,18 @@
   }
 
   .dock-item img {
-    width: 52%;
-    height: 52%;
+    width: 85%;
+    height: 85%;
     object-fit: contain;
     will-change: auto;
     transition: transform 0.2s ease;
   }
 
+  .dock-item.is-hovering {
+    transform: translateY(-8px);
+  }
+
   .dock-item:hover {
-    transform: translateY(-4px);
     filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.25));
   }
 
@@ -140,9 +147,11 @@
 
   .dot {
     position: absolute;
-    bottom: 8px;
-    width: 5px;
-    height: 5px;
+    bottom: 2px;
+    width: 7px;
+    height: 7px;
+    left: 50%;
+    transform: translateX(-50%);
     background: black;
     border-radius: 50%;
   }

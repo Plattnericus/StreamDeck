@@ -31,6 +31,11 @@
 - Logic for opening apps
 - icons upgrade
 
+# 19.01.2026
+- Fixed Finder bugs
+- added more icons
+- Changed Dock animation
+
 ## TO DO
 - make every site work
 - add desktop icons
