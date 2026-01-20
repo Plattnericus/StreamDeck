@@ -43,3 +43,5 @@
 - animations
 - Design
 - Quality of life
+- Finder
+    - Suchfunktion
