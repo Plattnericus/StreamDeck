@@ -280,12 +280,14 @@
     .clock {
         position: absolute;
         top: 60px;
+        height: 60px;
         text-align: center;
         letter-spacing: 0.6px;
         text-shadow: 0 12px 30px rgba(0,0,0,0.35);
     }
 
     .clock .date {
+        height: 80px;
         font-size: 16px;
         opacity: 0.9;
         font-weight: 700;
