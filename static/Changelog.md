@@ -36,6 +36,11 @@
 - added more icons
 - Changed Dock animation
 
+# 20.01.2026
+- added Terminal
+- made some small changes
+- added Github (Profilecard for Plattnericus)
+
 ## TO DO
 - make every site work
 - add desktop icons

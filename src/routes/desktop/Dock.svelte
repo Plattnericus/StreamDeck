@@ -13,6 +13,7 @@
   import Finder   from '../apps/Finder.svelte';
   import Papierkorb from '../apps/Trash.svelte';
   import Apps from '../apps/Apps.svelte';
+  import Github from '../apps/Github.svelte';
 
   //APPS
   /*
@@ -92,7 +93,6 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-// piecewise-linear interpolate (wie popmotion interpolate, nur ohne lib)
 function interpolatePiecewise(x: number, input: number[], output: number[]) {
   if (x <= input[0]) return output[0];
   if (x >= input[input.length - 1]) return output[output.length - 1];
@@ -141,7 +141,8 @@ function scheduleDockUpdate() {
     { id: 3, name: 'Settings', icon: '/icons/settings.webp', open: false, minimized: false, maximized: false, component: Settings, default: true, x: 0, y: 0, width: 600, height: 400, zIndex: 102 },
     { id: 4, name: 'Safari', icon: '/icons/safari.webp', open: false, minimized: false, maximized: false, component: Browser, default: true, x: 0, y: 0, width: 800, height: 500, zIndex: 103 },
     { id: 5, name: 'Terminal', icon: '/icons/terminal.webp', open: false, minimized: false, maximized: false, component: Terminal, default: false, x: 0, y: 0, width: 500, height: 350, zIndex: 104 },
-    { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 500, height: 350, zIndex: 105 },
+    { id: 6, name: 'Github', icon: '/icons/github.webp', open: false, minimized: false, maximized: false, component: Github, default: true, x: 0, y: 0, width: 820, height: 650, zIndex: 105 },
+    { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 500, height: 350, zIndex: 106 },
   ];
 
   appStore.set(apps);
