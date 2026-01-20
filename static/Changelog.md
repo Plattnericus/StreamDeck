@@ -40,6 +40,7 @@
 - added Terminal
 - made some small changes
 - added Github (Profilecard for Plattnericus)
+- added 404 Page
 
 ## TO DO
 - make every site work
