@@ -42,6 +42,10 @@
 - added Github (Profilecard for Plattnericus)
 - added 404 Page
 
+# 21.01.2026
+- added Browser
+. made some small changes
+
 ## TO DO
 - make every site work
 - add desktop icons
