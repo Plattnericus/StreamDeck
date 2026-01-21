@@ -1,27 +1,30 @@
-<main class="bsod" style="padding-top: 15%;">
-  <div class="container">
-    <h1 class="neg title"><span class="bg">Error - 404</span></h1>
-    <p>An error has occured, to continue:</p>
-    <p>
-      * Return to our homepage.<br />
-      * Send us an e-mail about this error and try later.
-    </p>
-    <nav class="nav">
-      <a href="/" class="link">index</a>&nbsp;|&nbsp;<a href="/desktop" class="link">desktop</a>
-    </nav>
-  </div>
-</main>
+<body>
+  <main class="bsod" style="padding-top: 15%;">
+    <div class="container">
+      <h1 class="neg title"><span class="bg">Error - 404</span></h1>
+      <p>An error has occured, to continue:</p>
+      <p>
+        * Return to our homepage.<br />
+        * Send us an e-mail about this error and try later.
+      </p>
+      <nav class="nav">
+        <a href="/" class="link">index</a>&nbsp;|&nbsp;<a href="/desktop" class="link">desktop</a>
+      </nav>
+    </div>
+  </main>
+</body>
+
 
 <style>
   @import url("https://fonts.googleapis.com/css?family=VT323");
 
-  :global(html, body) {
+  html, body {
     margin: 0;
     width: 100%;
     height: 100%;
   }
 
-  :global(:root) {
+  :root {
     --light-grey: #e0e2f4;
     --grey: #aaaaaa;
     --blue: #0414a7;
@@ -29,7 +32,7 @@
     --font-stack: "VT323", monospace;
   }
 
-  :global(body) {
+  body {
     background: var(--blue);
     font: normal var(--base-font-size) / 1.25rem var(--font-stack);
     color: var(--light-grey);
