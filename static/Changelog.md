@@ -55,3 +55,7 @@
 - Quality of life
 - Finder
     - Suchfunktion
+- Terminal
+    - neofetch
+    - apt install opsec -y
+    - shutdown: tab schließt sich
