@@ -55,6 +55,7 @@
 - Quality of life
 - Finder
     - Suchfunktion
+- add online 3D preview (.STL File)
 - Terminal
     - neofetch
     - apt install opsec -y
