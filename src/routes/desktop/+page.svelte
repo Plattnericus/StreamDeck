@@ -59,9 +59,9 @@ function onEnd(e: CustomEvent<{ rect: { x: number; y: number; w: number; h: numb
 
 <Header />
 
-<div style="width: 100%; height: 1080px;">
-<DesktopMarquee on:end={onEnd}>
-</DesktopMarquee>
+<div style="width: 100%; height: 100%; position: absolute; overflow: hidden;">
+  <DesktopMarquee on:end={onEnd}>
+  </DesktopMarquee>
 </div>
 
 <svg style="display: none">
