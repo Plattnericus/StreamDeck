@@ -42,9 +42,14 @@
 - added Github (Profilecard for Plattnericus)
 - added 404 Page
 
+<<<<<<< Updated upstream
 # 21.01.2026
 - added Browser
 . made some small changes
+=======
+# 28.01.2026
+- added drag (windwos Desktop feature)
+>>>>>>> Stashed changes
 
 ## TO DO
 - make every site work
