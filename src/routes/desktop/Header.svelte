@@ -146,7 +146,188 @@
     check: '<img src="/icons/search.png" style="width: 40px; height: 40px;" class="icon-img" alt="check"/>'
   };
 
+  type MenuItem = {
+    label: string;
+    disabled?: boolean;
+    divider?: boolean;
+  };
+
+  type MenuGroup = {
+    id: string;
+    label?: string;
+    icon?: string;
+    items: MenuItem[];
+  };
+
+  const menuGroups: MenuGroup[] = [
+    {
+      id: 'apple',
+      icon: '/logos/apple-logo.png',
+      items: [
+        { label: 'About This Mac' },
+        { divider: true, label: '' },
+        { label: 'System Settings...' },
+        { label: 'App Store...' },
+        { divider: true, label: '' },
+        { label: 'Recent Items', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Force Quit...' },
+        { divider: true, label: '' },
+        { label: 'Sleep' },
+        { label: 'Restart...' },
+        { label: 'Shut Down...' },
+        { divider: true, label: '' },
+        { label: 'Lock Screen' },
+        { label: 'Log Out...' }
+      ]
+    },
+    {
+      id: 'finder',
+      label: 'Finder',
+      items: [
+        { label: 'About Finder' },
+        { divider: true, label: '' },
+        { label: 'Preferences...' },
+        { divider: true, label: '' },
+        { label: 'Empty Trash' },
+        { divider: true, label: '' },
+        { label: 'Hide Finder' },
+        { label: 'Hide Others' },
+        { label: 'Show All', disabled: true }
+      ]
+    },
+    {
+      id: 'file',
+      label: 'Datei',
+      items: [
+        { label: 'Neues Finder Fenster' },
+        { label: 'Neuer Ordner' },
+        { label: 'Neuer Ordner mit Auswahl', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Neuer Smart Ordner' },
+        { divider: true, label: '' },
+        { label: 'Neuer Tab' },
+        { label: 'Oeffnen', disabled: true },
+        { label: 'Oeffnen mit', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Drucken', disabled: true },
+        { label: 'Fenster schliessen', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Informationen' },
+        { label: 'Umbenennen', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Komprimieren', disabled: true },
+        { label: 'Duplizieren', disabled: true },
+        { label: 'Alias erzeugen', disabled: true },
+        { label: 'Schnellansicht', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Zum Papierkorb', disabled: true },
+        { label: 'Auswerfen', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Suchen' },
+        { label: 'Tags...', disabled: true }
+      ]
+    },
+    {
+      id: 'edit',
+      label: 'Bearbeiten',
+      items: [
+        { label: 'Rueckgaengig', disabled: true },
+        { label: 'Wiederholen', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Ausschneiden', disabled: true },
+        { label: 'Kopieren', disabled: true },
+        { label: 'Einfuegen', disabled: true },
+        { label: 'Alles auswaehlen', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Zwischenablage anzeigen' },
+        { label: 'Diktat starten...' },
+        { label: 'Emoji & Symbole' }
+      ]
+    },
+    {
+      id: 'view',
+      label: 'Ansicht',
+      items: [
+        { label: 'Als Symbole', disabled: true },
+        { label: 'Als Liste', disabled: true },
+        { label: 'Als Spalten', disabled: true },
+        { label: 'Als Galerie', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Stapel verwenden' },
+        { label: 'Sortieren nach', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Seitenleiste ausblenden', disabled: true },
+        { label: 'Vorschau einblenden', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Vollbild starten' }
+      ]
+    },
+    {
+      id: 'go',
+      label: 'Gehe zu',
+      items: [
+        { label: 'Zurueck', disabled: true },
+        { label: 'Vor', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Aktueller Ordner' },
+        { divider: true, label: '' },
+        { label: 'Zuletzt benutzt' },
+        { label: 'Dokumente' },
+        { label: 'Schreibtisch' },
+        { label: 'Downloads' },
+        { label: 'Home' },
+        { label: 'Computer' },
+        { label: 'Netzwerk' },
+        { divider: true, label: '' },
+        { label: 'Zum Ordner...' },
+        { label: 'Mit Server verbinden...' }
+      ]
+    },
+    {
+      id: 'window',
+      label: 'Fenster',
+      items: [
+        { label: 'Minimieren', disabled: true },
+        { label: 'Zoomen', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Fenster nach links', disabled: true },
+        { label: 'Fenster nach rechts', disabled: true },
+        { divider: true, label: '' },
+        { label: 'Durch Fenster wechseln' },
+        { divider: true, label: '' },
+        { label: 'Alle nach vorne' }
+      ]
+    },
+    {
+      id: 'help',
+      label: 'Hilfe',
+      items: [
+        { label: 'Finder Feedback senden' },
+        { divider: true, label: '' },
+        { label: 'macOS Hilfe' }
+      ]
+    }
+  ];
+
   let controlOpen = false;
+  let menuOpen: string | null = null;
+  let contextOpen = false;
+  let contextX = 0;
+  let contextY = 0;
+
+  const contextItems = [
+    { label: 'New Folder' },
+    { label: 'Get Info' },
+    { label: 'Change Desktop Background' },
+    { divider: true },
+    { label: 'Use Stacks' },
+    { label: 'Sort By' },
+    { label: 'Clean Up' },
+    { label: 'Clean Up By' },
+    { divider: true },
+    { label: 'Show View Options' }
+  ];
   let time = '';
   let date = '';
 
@@ -216,7 +397,6 @@
       toggles = { ...toggles, ...(saved.toggles || {}) };
       shortcutStates = { ...shortcutStates, ...(saved.shortcutStates || {}) };
     } catch {
-      // ignore
     }
   };
 
@@ -285,14 +465,12 @@
 
   const toggleState = (key: keyof ToggleState) => {
     if (key === 'airplane') {
-      // Flugmodus toggle: deaktiviert WLAN und Bluetooth
       toggles = { ...toggles, airplane: !toggles.airplane };
       if (toggles.airplane) {
         toggles.wifi = false;
         toggles.bluetooth = false;
       }
     } else if (key === 'wifi' || key === 'bluetooth') {
-      // Wenn WLAN oder Bluetooth aktiviert werden, Flugmodus ausschalten
       toggles = { ...toggles, [key]: !toggles[key] };
       if (toggles[key] && toggles.airplane) {
         toggles.airplane = false;
@@ -362,6 +540,25 @@
   $: audioSrc = tracks[trackIndex]?.file || '';
   $: if (audioEl) audioEl.volume = volume / 100;
 
+  const toggleMenu = (id: string) => {
+    menuOpen = menuOpen === id ? null : id;
+  };
+
+  const closeMenus = () => {
+    menuOpen = null;
+  };
+
+  const openContextMenu = (event: MouseEvent) => {
+    event.preventDefault();
+    contextX = event.clientX;
+    contextY = event.clientY;
+    contextOpen = true;
+  };
+
+  const closeContextMenu = () => {
+    contextOpen = false;
+  };
+
   onMount(() => {
     updateTime();
     updateDate();
@@ -375,10 +572,19 @@
         if (controlOpen) {
           closeControlCenter();
         }
+        closeMenus();
+        closeContextMenu();
       }
     };
 
+    const handleDocClick = () => {
+      closeMenus();
+      closeContextMenu();
+    };
+
     window.addEventListener('keydown', handleKeydown);
+    document.addEventListener('click', handleDocClick);
+    document.addEventListener('contextmenu', openContextMenu);
 
     if (playing) {
       playing = false;
@@ -392,18 +598,52 @@
       clearInterval(timeInterval);
       clearInterval(dateInterval);
       window.removeEventListener('keydown', handleKeydown);
+      document.removeEventListener('click', handleDocClick);
+      document.removeEventListener('contextmenu', openContextMenu);
     };
   });
 </script>
 <header>
   <div class="left">
-    <button class="icon-container">
-      <img class="icon-img" src="/logos/apple-logo.png" alt="Logo" />
-    </button>
-    <button class="finder-text finder-bold">Finder</button>
-    <button class="finder-text">Datei</button>
-    <button class="finder-text">Bearbeiten</button>
-    <button class="finder-text">Hilfe</button>
+    <div class="menu-bar">
+      {#each menuGroups as group}
+        <div class="menu">
+          <button
+            class={`menu-btn ${menuOpen === group.id ? 'active' : ''} ${group.label === 'Finder' ? 'bold' : ''}`}
+            onclick={(event) => {
+              event.stopPropagation();
+              toggleMenu(group.id);
+            }}
+            onmouseenter={() => {
+              if (menuOpen) {
+                menuOpen = group.id;
+              }
+            }}
+            aria-haspopup="true"
+            aria-expanded={menuOpen === group.id}
+          >
+            {#if group.icon}
+              <img class="icon-img" src={group.icon} alt="Logo" />
+            {:else}
+              {group.label}
+            {/if}
+          </button>
+          {#if menuOpen === group.id}
+            <div class="menu-dropdown" role="menu">
+              {#each group.items as item}
+                {#if item.divider}
+                  <div class="menu-divider"></div>
+                {:else}
+                  <button class={`menu-item ${item.disabled ? 'disabled' : ''}`} disabled={item.disabled} role="menuitem">
+                    {item.label}
+                  </button>
+                {/if}
+              {/each}
+            </div>
+          {/if}
+        </div>
+      {/each}
+    </div>
   </div>
   <div class="right">
     <button class="icon-container" onclick={toggleControlCenter}>
@@ -419,6 +659,35 @@
     <button class="time" style="font-size: 1em;" onclick={toggleControlCenter}>{time}</button>
   </div>
 </header>
+
+{#if contextOpen}
+  <div
+    class="context-overlay"
+    onclick={closeContextMenu}
+    onkeydown={(event) => (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') && closeContextMenu()}
+    oncontextmenu={(event) => event.preventDefault()}
+    role="button"
+    tabindex="0"
+  >
+    <div
+      class="context-menu"
+      style={`left: ${contextX}px; top: ${contextY}px;`}
+      onclick={(event) => event.stopPropagation()}
+      oncontextmenu={(event) => event.preventDefault()}
+      onkeydown={(event) => event.key === 'Escape' && closeContextMenu()}
+      role="menu"
+      tabindex="-1"
+    >
+      {#each contextItems as item}
+        {#if item.divider}
+          <div class="context-divider"></div>
+        {:else}
+          <button class="context-item" role="menuitem">{item.label}</button>
+        {/if}
+      {/each}
+    </div>
+  </div>
+{/if}
 
 {#if controlOpen}
   <div class="control-overlay" onclick={closeControlCenter} onkeydown={(e) => e.key === 'Escape' && closeControlCenter()} role="button" tabindex="0">
@@ -627,6 +896,10 @@
   box-sizing: border-box;
 }
 
+:global(body) {
+  cursor: url('/cursors/normal-select.svg') 8 8, default;
+}
+
 button {
   all: unset;
   cursor: pointer;
@@ -649,6 +922,7 @@ header {
   color: black;
   position: relative;
   z-index: 20;
+  overflow: visible;
 }
 
 .left,
@@ -686,6 +960,165 @@ header {
 
 .finder-bold {
   font-weight: 700;
+}
+
+.menu-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  position: relative;
+  overflow: visible;
+}
+
+.menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+}
+
+.menu-btn {
+  padding: 4px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 450;
+  color: #111;
+  letter-spacing: 0.1px;
+}
+
+.menu-btn.bold {
+  font-weight: 700;
+}
+
+.menu-btn.active,
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.menu-btn .icon-img {
+  width: 18px;
+  height: 18px;
+}
+
+.menu-dropdown {
+  align-items: center;
+  overflow: visible;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+
+  min-width: 230px;
+  padding: 6px;
+
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.402);
+
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(80px);
+  -webkit-backdrop-filter: blur(80px);
+
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  overflow: hidden;
+  z-index: 50;
+
+  transition: all 0.4s ease;
+  animation: menuPop 160ms ease-out;
+}
+
+.menu-item {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgba(20, 20, 20, 0.95);
+  text-shadow: none;
+  cursor: url('/cursors/link-select.svg') 5 2, pointer;
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.menu-item:hover {
+  background: rgba(200, 200, 200, 0.4);
+  color: rgba(10, 10, 10, 0.99);
+  transform: translateX(1px);
+}
+
+.menu-item.disabled {
+  opacity: 0.55;
+  pointer-events: none;
+  cursor: url('/cursors/unavailable.svg') 5 5, not-allowed;
+}
+
+.menu-divider {
+  height: 1px;
+  margin: 6px 6px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.context-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+}
+
+.context-menu {
+  position: fixed;
+  min-width: 230px;
+  padding: 6px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(80px) saturate(180%);
+  color: rgba(20, 20, 20, 0.95);
+  z-index: 1201;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  animation: menuPop 160ms ease-out;
+}
+
+.context-item {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgba(20, 20, 20, 0.95);
+  transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.context-item:hover {
+  background: rgba(200, 200, 200, 0.4);
+  color: rgba(10, 10, 10, 0.99);
+  transform: translateX(1px);
+}
+
+.context-divider {
+  height: 1px;
+  margin: 6px 6px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+@keyframes menuPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .time,
@@ -796,23 +1229,6 @@ header {
   text-shadow: 0 2px 12px rgba(0,0,0,0.45);
 }
 
-.status .left {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  font-size: 18px;
-}
-
-.status .right {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font-weight: 750;
-  font-size: 16px;
-  opacity: 0.95;
-}
 
 .battery {
   width: 34px;
@@ -833,14 +1249,6 @@ header {
   background: rgba(255,255,255,0.85);
 }
 
-.battery .fill {
-  position: absolute;
-  left: 2px;
-  top: 2px;
-  bottom: 2px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 3px;
-}
 
 .cc {
   position: absolute;
@@ -908,11 +1316,6 @@ header {
   pointer-events: none;
 }
 
-.btn .icon {
-  width: 26px;
-  height: 26px;
-  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.34));
-}
 
 .btn[data-state="off"] {
   background: var(--btnOff);
@@ -1076,16 +1479,6 @@ header {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 3px rgba(255,255,255,0.12);
 }
 
-.np-btn svg {
-  width: 24px;
-  height: 24px;
-  opacity: 0.92;
-}
-
-.np-btn.play svg {
-  width: 32px;
-  height: 32px;
-}
 
 .pair {
   display: grid;
@@ -1121,11 +1514,6 @@ header {
   box-shadow: 0 10px 22px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 3px rgba(255,255,255,0.10);
 }
 
-.circleBtn svg {
-  width: 22px;
-  height: 22px;
-  opacity: 0.92;
-}
 
 .circleBtn[data-state="on"] {
   background: rgba(255,255,255,0.18);
@@ -1166,10 +1554,6 @@ header {
   background: rgba(25, 45, 100, 0.8);
 }
 
-.focus .moonactive {
-  transform: scale(0.985);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 3px rgba(255,255,255,0.10);
-}
 
 .focus .moon[data-state="on"] {
   background: rgba(255,255,255,0.16);
@@ -1193,11 +1577,6 @@ header {
   letter-spacing: 0.03px;
 }
 
-.focus .txt .chev {
-  opacity: 0.55;
-  font-weight: 800;
-  transform: translateY(-1px);
-}
 
 .focus .txt .current {
   font-size: 12px;
@@ -1273,29 +1652,12 @@ header {
   transition: transform 0.10s ease, box-shadow 0.12s ease;
 }
 
-.vslider .glyph svg {
-  width: 20px;
-  height: 20px;
-}
 
 .vslider .glyph:active {
   transform: scale(0.98);
   box-shadow: 0 12px 28px rgba(0,0,0,0.28), 0 0 0 3.5px rgba(255,255,255,0.14);
 }
 
-.vslider .label {
-  position: absolute;
-  top: 12px;
-  left: 10px;
-  right: 10px;
-  font-weight: 900;
-  font-size: 11px;
-  letter-spacing: 0.25em;
-  color: rgba(255,255,255,0.45);
-  user-select: none;
-  z-index: 2;
-  text-align: center;
-}
 
 .vslider:focus-visible {
   outline: 2px solid rgba(255,255,255,0.28);
@@ -1337,18 +1699,6 @@ header {
   box-shadow: 0 14px 28px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 3px rgba(255,255,255,0.10);
 }
 
-.sbtn svg {
-  width: 26px;
-  height: 26px;
-  opacity: 0.92;
-}
-
-.sbtn[data-state="on"] {
-  background: rgba(var(--onrgb, 255 255 255), 0.28);
-  border-color: rgba(255,255,255,0.16);
-  box-shadow: 0 18px 42px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.16), 0 0 0 2.5px rgba(255,255,255,0.16), 0 0 24px rgba(255,255,255,0.08);
-  filter: brightness(1.06);
-}
 
 @media (max-width: 360px) {
   .shortcuts {

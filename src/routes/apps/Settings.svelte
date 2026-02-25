@@ -32,7 +32,6 @@
     settings.update(s => ({ ...s, notifications: !s.notifications }));
   }
 
-  // Tab-Logik
   let activeTab: 'general' | 'sound' | 'notifications' = 'general';
   function selectTab(tab: 'general' | 'sound' | 'notifications') {
     activeTab = tab;
@@ -40,14 +39,12 @@
 </script>
 
 <div class="settings-window">
-  <!-- Tabs -->
   <div class="tabs">
     <button class:active={activeTab==='general'} on:click={() => selectTab('general')}>Allgemein</button>
     <button class:active={activeTab==='sound'} on:click={() => selectTab('sound')}>Sound</button>
     <button class:active={activeTab==='notifications'} on:click={() => selectTab('notifications')}>Benachrichtigungen</button>
   </div>
 
-  <!-- Tab Inhalte -->
   <div class="tab-content">
     {#if activeTab === 'general'}
       <div class="setting">
@@ -82,7 +79,8 @@
 .settings-window {
   width: 380px;
   padding: 16px;
-  background: rgba(240,240,240,0.95);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(40px) saturate(180%);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   color: #000;

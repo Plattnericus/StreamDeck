@@ -31,6 +31,7 @@
     mouse_x: number | null;
     is_hovering?: boolean;
     onclick?: () => void;
+    oncontextmenu?: (e: MouseEvent) => void;
   }
 
   let { app_id, name, icon, is_open, mouse_x, is_hovering = false, onclick }: Props = $props();
@@ -58,8 +59,7 @@
   });
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div
+<div
     bind:this={dock_item}
     class="dock-item"
     class:is-hovering={is_hovering}
@@ -67,8 +67,8 @@
     role="button"
     tabindex="0"
     onclick={onclick}
-  onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.currentTarget as HTMLElement).click()}
-  style="width: {$width_store}px; height: {$width_store}px;"
+    onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.currentTarget as HTMLElement).click()}
+    style="width: {$width_store}px; height: {$width_store}px;"
 >
   <span class="app-tooltip">{name}</span>
   <img src={icon} alt={name} />

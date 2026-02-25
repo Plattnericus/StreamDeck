@@ -15,23 +15,6 @@
   import Apps from '../apps/Apps.svelte';
   import Github from '../apps/Github.svelte';
 
-  //APPS
-  /*
-  import Finder   from '../apps/Finder.svelte';
-  import Papierkorb from '../apps/Trash.svelte';
-  import Browser from "../apps/Browser.svelte";
-  import About from "../apps/About.svelte";
-  import Apps from "../apps/Apps.svelte";
-  import Changelog from "../apps/Changelog.svelte";
-  import Galerie from "../apps/Galerie.svelte";
-  import Impressum from "../apps/Impressum.svelte";
-  import AGB from "../apps/AGB.svelte";
-  import Info from "../apps/Info.svelte";
-  import Settings from "../apps/Settings.svelte";
-  import Terminal from "../apps/Terminal.svelte";
-  import Datenschutz from "../Datenschutz.svelte";
-*/
-
   type App = {
     id: number;
     name: string;
@@ -49,9 +32,10 @@
   };
 
   let nextZIndex = 100;
+  let contextMenu: { appId: number; x: number; y: number } | null = null;
+  let headerHeight = 28;
 
-  // --- Dock hover magnify (wie in DockItem.svelte) ---
-const baseSize = 90;                 // entspricht deiner .dock-item width/height
+const baseSize = 90;
 const distanceLimit = baseSize * 6;
 
 const distanceInput = [
@@ -151,8 +135,16 @@ function scheduleDockUpdate() {
 
   function draggable(node: HTMLElement, app: App) {
     let moving = false;
+    const getHeaderHeight = () => {
+      const header = document.querySelector('header');
+      return header ? Math.ceil(header.getBoundingClientRect().height) : 28;
+    };
     function handleMouseDown(e: MouseEvent) {
-      if (!(e.target as HTMLElement).classList.contains('title-bar') || app.maximized) return;
+      if (!(e.target as HTMLElement).classList.contains('title-bar')) return;
+      if (app.maximized) {
+        app.maximized = false;
+        apps = apps;
+      }
       moving = true;
       focusApp(app.id);
       window.addEventListener('mousemove', handleMouseMove);
@@ -160,8 +152,13 @@ function scheduleDockUpdate() {
     }
     function handleMouseMove(e: MouseEvent) {
       if (!moving) return;
-      app.x += e.movementX;
-      app.y += e.movementY;
+      const headerHeight = getHeaderHeight();
+      const nextX = app.x + e.movementX;
+      const nextY = app.y + e.movementY;
+      const maxX = Math.max(0, window.innerWidth - app.width);
+      const maxY = Math.max(headerHeight, window.innerHeight - app.height);
+      app.x = clamp(nextX, 0, maxX);
+      app.y = clamp(nextY, headerHeight, maxY);
       apps = apps; 
     }
     function handleMouseUp() {
@@ -175,9 +172,13 @@ function scheduleDockUpdate() {
 
   function resizable(node: HTMLElement, app: App) {
     function handleMouseDown(e: MouseEvent) {
-      if (app.maximized) return;
       e.preventDefault();
       e.stopPropagation();
+      if (app.maximized) {
+        app.maximized = false;
+        apps = apps;
+        return;
+      }
       window.addEventListener('mousemove', handleMouseMove);
       window.addEventListener('mouseup', handleMouseUp);
     }
@@ -257,14 +258,49 @@ function scheduleDockUpdate() {
     });
   }
 
+  function handleDockContextMenu(event: MouseEvent, appId: number) {
+    event.preventDefault();
+    contextMenu = { appId, x: event.clientX, y: event.clientY };
+  }
+
+  function closeContextMenu() {
+    contextMenu = null;
+  }
+
+  function handleContextAction(action: 'open' | 'close') {
+    if (!contextMenu) return;
+    const app = apps.find(a => a.id === contextMenu!.appId);
+    if (!app) return;
+    if (action === 'open') {
+      openApp(app);
+    } else if (action === 'close') {
+      closeApp(app);
+    }
+    closeContextMenu();
+  }
+
   onMount(() => {
     loadLastOpened();
     subscribeToStore();
+    const handleClickOutside = () => closeContextMenu();
+    document.addEventListener('click', handleClickOutside);
+    
+    const updateHeaderHeight = () => {
+      const header = document.querySelector('header');
+      if (header) headerHeight = Math.ceil(header.getBoundingClientRect().height);
+    };
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+    
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('resize', updateHeaderHeight);
+    };
   });
 </script>
 
 <div class="page-container">
-  <div class="card-conatainer" on:mousemove={(e) => (dockMouseX = e.clientX)} on:mouseleave={() => (dockMouseX = null)}>
+  <div class="card-conatainer" role="none" onmousemove={(e) => (dockMouseX = e.clientX)} onmouseleave={() => (dockMouseX = null)}>
     {#each [...apps.filter(a => a.open && !a.default), ...apps.filter(a => a.default && a.name !== 'Trash'), ...apps.filter(a => a.name === 'Trash')] as app}
       <DockItemMagnified
         app_id={app.id}
@@ -274,10 +310,41 @@ function scheduleDockUpdate() {
         mouse_x={dockMouseX}
         is_hovering={dockMouseX !== null}
         onclick={() => openApp(app)}
+        oncontextmenu={(e: MouseEvent) => handleDockContextMenu(e, app.id)}
       />
     {/each}
   </div>
 </div>
+
+{#if contextMenu}
+  <div 
+    class="dock-context-overlay"
+    role="button"
+    tabindex="0"
+    onclick={closeContextMenu}
+    onkeydown={(e) => e.key === 'Escape' && closeContextMenu()}
+  >
+    <div 
+      class="dock-context-menu"
+      style={`left: ${contextMenu.x}px; top: ${contextMenu.y}px;`}
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.key === 'Escape' && closeContextMenu()}
+      role="menu"
+      tabindex="0"
+    >
+      {#if contextMenu !== null && apps.find(a => a.id === contextMenu!.appId)?.open}
+        <button class="context-item" role="menuitem" onclick={() => handleContextAction('close')}>
+          Close
+        </button>
+      {/if}
+      {#if contextMenu !== null && !apps.find(a => a.id === contextMenu!.appId)?.open}
+        <button class="context-item" role="menuitem" onclick={() => handleContextAction('open')}>
+          Open
+        </button>
+      {/if}
+    </div>
+  </div>
+{/if}
 
 {#each apps as app (app.id)}
   {#if app.open && !app.minimized}
@@ -288,20 +355,20 @@ function scheduleDockUpdate() {
       tabindex="0"
       aria-label={app.name}
       use:draggable={app}
-      on:mousedown={() => focusApp(app.id)}
-      on:keydown={(e) => e.key === 'Escape' && closeApp(app)}
+      onmousedown={() => focusApp(app.id)}
+      onkeydown={(e) => (e.key === 'Escape') && closeApp(app)}
       transition:scale={{ duration: 300, start: 0.9, easing: cubicOut }}
       style="left: {app.maximized ? 0 : app.x}px; 
-             top: {app.maximized ? 0 : app.y}px; 
+             top: {app.maximized ? headerHeight : app.y}px; 
              width: {app.maximized ? '100vw' : app.width + 'px'}; 
-             height: {app.maximized ? '100vh' : app.height + 'px'}; 
+             height: {app.maximized ? `calc(100vh - ${headerHeight}px)` : app.height + 'px'}; 
              z-index: {app.zIndex}"
     >
       <div class="title-bar">
         <div class="controls">
-          <button class="ctrl close" aria-label="Close window" title="Close window" on:click|stopPropagation={() => closeApp(app)}></button>
-          <button class="ctrl minimize" aria-label="Minimize window" title="Minimize window" on:click|stopPropagation={() => toggleMinimize(app)}></button>
-          <button class="ctrl maximize" aria-label="Maximize window" title="Maximize window" on:click|stopPropagation={() => toggleMaximize(app)}></button>
+          <button class="ctrl close" aria-label="Close window" title="Close window" onclick={(e) => {e.stopPropagation(); closeApp(app);}}></button>
+          <button class="ctrl minimize" aria-label="Minimize window" title="Minimize window" onclick={(e) => {e.stopPropagation(); toggleMinimize(app);}}></button>
+          <button class="ctrl maximize" aria-label="Maximize window" title="Maximize window" onclick={(e) => {e.stopPropagation(); toggleMaximize(app);}}></button>
         </div>
         <span class="title-text">{app.name}</span>
       </div>
@@ -310,15 +377,13 @@ function scheduleDockUpdate() {
         <svelte:component this={app.component} on:openapp={handleOpenApp} />
       </div>
 
-      {#if !app.maximized}
-        <div class="resizer" use:resizable={app}></div>
-      {/if}
+      <div class="resizer" use:resizable={app}></div>
     </div>
   {/if}
 {/each}
 
 <style>
-  :global(::-webkit-scrollbar-button){ display:none !important; width:0 !important; height:0 !important; }
+   :global(::-webkit-scrollbar-button){ display:none !important; width:0 !important; height:0 !important; }
   :global(::-webkit-scrollbar-corner){ background: transparent !important; }
   :global(html, body) { overflow: hidden; }
   * { scrollbar-width: none; }
@@ -334,59 +399,7 @@ function scheduleDockUpdate() {
     overflow: visible;
   }
 
-  .dock-item {
-    width: 90px;
-    height: 90px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    z-index: 10000000;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .app-tooltip {
-    position: absolute;
-    top: -20px;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
-    color: white;
-    padding: 5px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    border: 0.5px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .dock-item:hover .app-tooltip {
-    opacity: 1;
-  }
-
-  .dock-item:hover {
-    z-index: 10000000;
-    transform: scale(1.5) translateY(-10px);
-  }
-
-  .dock-item img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .dot {
-    position: absolute;
-    bottom: 10px;
-    width: 5px;
-    height: 5px;
-    background: black;
-    border-radius: 50%;
-  }
-
   .app-window {
-    scrollbar-display: none;
     position: fixed; 
     background: rgba(30, 30, 30, 0.85);
     backdrop-filter: blur(25px);
@@ -524,5 +537,61 @@ function scheduleDockUpdate() {
     height: 15px;
     cursor: nwse-resize;
     z-index: 20;
+  }
+
+  .dock-context-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+  }
+
+  .dock-context-menu {
+    position: fixed;
+    min-width: 230px;
+    padding: 6px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(80px) saturate(180%);
+    color: rgba(20, 20, 20, 0.95);
+    z-index: 1201;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+    animation: menuPop 160ms ease-out;
+    pointer-events: auto;
+  }
+
+  .context-item {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: rgba(20, 20, 20, 0.95);
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+  }
+
+  .context-item:hover {
+    background: rgba(200, 200, 200, 0.4);
+    color: rgba(10, 10, 10, 0.99);
+    transform: translateX(1px);
+  }
+
+  @keyframes menuPop {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
   }
 </style>

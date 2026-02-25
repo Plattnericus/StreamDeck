@@ -6,26 +6,54 @@
   let error: string | null = null;
   let loading = true;
 
-  async function load() {
+  function load() {
     loading = true;
     error = null;
 
-    try {
-      const u = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`);
-      if (!u.ok) throw new Error("User");
-      user = await u.json();
+    setTimeout(() => {
+      user = {
+        login: username,
+        name: "Felix Plattner",
+        avatar_url: "/logos/apple-logo.png",
+        bio: "Full Stack Developer | macOS Enthusiast",
+        html_url: `https://github.com/${username}`,
+        public_repos: 12,
+        followers: 150,
+        following: 42
+      };
 
-      const r = await fetch(
-        `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=100&sort=updated`
-      );
-      if (!r.ok) throw new Error("Repos");
-      const all = await r.json();
-      repos = (Array.isArray(all) ? all : []).filter((x: any) => !x.fork).slice(0, 12);
-    } catch {
-      error = "Fehler beim Laden";
-    } finally {
+      repos = [
+        {
+          name: "StreamDeck",
+          description: "macOS-style desktop environment in the browser",
+          html_url: `https://github.com/${username}/StreamDeck`,
+          language: "TypeScript",
+          stargazers_count: 45,
+          forks_count: 8,
+          updated_at: new Date().toISOString()
+        },
+        {
+          name: "Portfolio",
+          description: "Personal portfolio website",
+          html_url: `https://github.com/${username}/Portfolio`,
+          language: "Svelte",
+          stargazers_count: 23,
+          forks_count: 5,
+          updated_at: new Date(Date.now() - 86400000).toISOString()
+        },
+        {
+          name: "Desktop-UI",
+          description: "Modern desktop user interface components",
+          html_url: `https://github.com/${username}/Desktop-UI`,
+          language: "JavaScript",
+          stargazers_count: 67,
+          forks_count: 12,
+          updated_at: new Date(Date.now() - 172800000).toISOString()
+        }
+      ];
+
       loading = false;
-    }
+    }, 500);
   }
 
   load();
@@ -305,6 +333,7 @@
     overflow:hidden;
     display:-webkit-box;
     -webkit-line-clamp:2;
+    line-clamp: 2;
     -webkit-box-orient:vertical;
   }
 

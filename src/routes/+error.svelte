@@ -16,9 +16,7 @@
 
 
 <style>
-  @import url("https://fonts.googleapis.com/css?family=VT323");
-
-  html, body {
+  :global(html), :global(body) {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -29,7 +27,7 @@
     --grey: #aaaaaa;
     --blue: #0414a7;
     --base-font-size: 20px;
-    --font-stack: "VT323", monospace;
+    --font-stack: "Courier New", "Courier", monospace;
   }
 
   body {
@@ -39,9 +37,6 @@
   }
 
   h1,
-  h2,
-  h3,
-  h4,
   p,
   a {
     color: var(--light-grey);
@@ -52,20 +47,6 @@
   h1 {
     font-size: 2.75rem;
     line-height: 1.05em;
-  }
-  h2 {
-    font-size: 2.25rem;
-    line-height: 1.25em;
-  }
-  h3 {
-    font-size: 1.5rem;
-    line-height: 1.25em;
-    font-weight: lighter;
-  }
-  h4 {
-    font-size: 1.125rem;
-    line-height: 1.2222222em;
-    font-weight: lighter;
   }
 
   .bsod {

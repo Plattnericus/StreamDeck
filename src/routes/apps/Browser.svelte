@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   let tabs = [{ id: 1, title: "Neuer Tab", url: "" }];
   let activeTabId = 1;
   let nextId = 2;
@@ -11,8 +11,7 @@
     nextId += 1;
   };
 
-  /** @param {number} id */
-  const closeTab = (id) => {
+  const closeTab = (id: number) => {
     if (tabs.length === 1) return;
     tabs = tabs.filter((tab) => tab.id !== id);
     if (activeTabId === id) {
@@ -20,15 +19,13 @@
     }
   };
 
-  /** @param {number} id */
-  const setActive = (id) => {
+  const setActive = (id: number) => {
     activeTabId = id;
     const selected = tabs.find((tab) => tab.id === id);
     if (selected) query = selected.url;
   };
 
-  /** @param {{ url?: string, title?: string }} patch */
-  const updateActiveTab = (patch) => {
+  const updateActiveTab = (patch: Record<string, unknown>) => {
     tabs = tabs.map((tab) => (tab.id === activeTabId ? { ...tab, ...patch } : tab));
   };
 

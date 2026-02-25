@@ -5,18 +5,15 @@ export type LastOpenedApp = {
   name: string;
   icon: string;
   component: any;
-  timestamp: number; // Zeitstempel wann geöffnet
-  openCount: number; // Wie oft geöffnet
+  timestamp: number;
+  openCount: number;
 };
 
 const STORAGE_KEY = 'streamdeck_last_opened_v1';
-const MAX_ITEMS = 10; // Maximal 10 zuletzt geöffnete Apps
+const MAX_ITEMS = 10;
 
 export const lastOpenedStore = writable<LastOpenedApp[]>([]);
 
-/**
- * Lädt die zuletzt geöffneten Apps aus localStorage
- */
 export function loadLastOpened() {
   if (typeof localStorage === 'undefined') return;
   
@@ -26,7 +23,6 @@ export function loadLastOpened() {
     
     const data = JSON.parse(raw);
     if (Array.isArray(data)) {
-      // Entferne component da es nicht serialisierbar ist
       const cleanData = data.map(({ component, ...rest }: any) => rest);
       lastOpenedStore.set(cleanData);
     }
@@ -35,9 +31,6 @@ export function loadLastOpened() {
   }
 }
 
-/**
- * Speichert eine App als zuletzt geöffnet
- */
 export function trackOpenedApp(app: Omit<LastOpenedApp, 'component'>) {
   lastOpenedStore.update(items => {
     const existing = items.findIndex(
@@ -47,13 +40,11 @@ export function trackOpenedApp(app: Omit<LastOpenedApp, 'component'>) {
     let updated: LastOpenedApp[];
     
     if (existing !== -1) {
-      // App existiert - nach oben verschieben und openCount erhöhen
       const item = items[existing];
       item.timestamp = Date.now();
       item.openCount = (item.openCount || 1) + 1;
       updated = [item, ...items.slice(0, existing), ...items.slice(existing + 1)];
     } else {
-      // Neue App hinzufügen
       updated = [
         {
           ...app,
@@ -64,25 +55,19 @@ export function trackOpenedApp(app: Omit<LastOpenedApp, 'component'>) {
         ...items
       ];
     }
-    
-    // Begrenize auf MAX_ITEMS
+
     updated = updated.slice(0, MAX_ITEMS);
-    
-    // Speichere in localStorage (ohne component)
+
     saveToLocalStorage(updated);
-    
+
     return updated;
   });
 }
 
-/**
- * Speichert die Liste in localStorage
- */
 function saveToLocalStorage(items: LastOpenedApp[]) {
   if (typeof localStorage === 'undefined') return;
   
   try {
-    // Entferne component vor dem Speichern
     const cleanData = items.map(({ component, ...rest }: any) => rest);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanData));
   } catch (e) {
@@ -90,9 +75,6 @@ function saveToLocalStorage(items: LastOpenedApp[]) {
   }
 }
 
-/**
- * Löscht die Last Opened History
- */
 export function clearLastOpened() {
   lastOpenedStore.set([]);
   if (typeof localStorage !== 'undefined') {

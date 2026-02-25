@@ -1,4 +1,3 @@
-<!-- DesktopMarquee.svelte -->
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
 
@@ -16,7 +15,6 @@
   let startX = 0;
   let startY = 0;
 
-  // current rect in HOST coordinates
   let rect: Rect = { x: 0, y: 0, w: 0, h: 0 };
 
   function clamp(n: number, min: number, max: number) {
@@ -43,11 +41,7 @@
   }
 
   function onPointerDown(e: PointerEvent) {
-    // nur links-klick / primär (auf Touch auch ok)
     if (e.pointerType === "mouse" && e.button !== 0) return;
-
-    // nur starten, wenn du NICHT auf einem interaktiven Element anfängst (optional)
-    // if ((e.target as HTMLElement).closest("button,a,input,textarea,select,[contenteditable]")) return;
 
     host.setPointerCapture(e.pointerId);
 
@@ -74,7 +68,6 @@
     e.preventDefault();
   }
 
-  // falls PointerCapture verloren geht
   function onPointerCancel() {
     if (!dragging) return;
     dragging = false;
@@ -82,7 +75,6 @@
   }
 
   onMount(() => {
-    // verhindert Touch-Scroll während Drag
     host.style.touchAction = "none";
   });
 </script>
@@ -107,7 +99,7 @@
         width:{rect.w}px;
         height:{rect.h}px;
       "
-    />
+    ></div>
   {/if}
 </div>
 

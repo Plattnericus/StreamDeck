@@ -14,7 +14,6 @@
   let container: HTMLDivElement;
   let inputEl: HTMLInputElement;
 
-  // Eigene Commands hier hinzufügen
   const commands: Record<string, Cmd> = {
     help: () => [
       "help, clear, echo, date, whoami, pwd, cd",
@@ -131,7 +130,10 @@
 >
   <div
     bind:this={container}
-    on:click={focusInput}
+    role="button"
+    tabindex="0"
+    onclick={focusInput}
+    onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && focusInput()}
     style="
       display:flex;
       flex:1;
@@ -148,6 +150,7 @@
       min-width:0;
       min-height:0;
     "
+    aria-label="Terminal input area"
   >
     <div style="width:100%; display:flex; flex-direction:column; align-items:flex-start;">
       {#each lines as line}
@@ -159,7 +162,7 @@
         <input
           bind:this={inputEl}
           bind:value={input}
-          on:keydown={onKey}
+          onkeydown={onKey}
           autocomplete="off"
           autocapitalize="off"
           spellcheck="false"

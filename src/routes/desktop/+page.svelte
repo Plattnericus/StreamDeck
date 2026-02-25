@@ -102,7 +102,6 @@ function onEnd(e: CustomEvent<{ rect: { x: number; y: number; w: number; h: numb
 }
 ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
 
-/* Fonts */
 @font-face {
   font-family: 'Inter';
   src: url('/fonts/inter/Inter-Regular.woff2') format('woff2');
@@ -124,7 +123,6 @@ function onEnd(e: CustomEvent<{ rect: { x: number; y: number; w: number; h: numb
   font-style: normal;
 }
 
-/* Container */
 .page-container {
   margin-top: auto;
   margin-bottom: 20px;
@@ -221,7 +219,6 @@ function onEnd(e: CustomEvent<{ rect: { x: number; y: number; w: number; h: numb
   z-index: 100000;
 }
 
-/* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   .glass-card {
     --bg-color: rgba(0, 0, 0, 0.25);
