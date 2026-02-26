@@ -64,6 +64,7 @@
 - updated App Store
 - Downloading Animation in AppStore
 - Fixed stutter when Tab is moved
+- added about mac popup
 
 
 

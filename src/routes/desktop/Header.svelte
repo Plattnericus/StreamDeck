@@ -150,6 +150,7 @@
     label: string;
     disabled?: boolean;
     divider?: boolean;
+    action?: () => void;
   };
 
   type MenuGroup = {
@@ -159,12 +160,62 @@
     items: MenuItem[];
   };
 
+  const macInfo = {
+    model: 'MacBook Pro',
+    size: '15", 2023',
+    chip: 'Apple M3 Pro',
+    memory: '18 GB',
+    serial: 'XY0XX0Y0X0',
+    os: 'Tahoe 26.0.1',
+    storage: '512 GB SSD',
+    gpu: '19-core GPU',
+    battery: '100% (Gut)',
+    wifi: 'Wi-Fi 6E'
+  };
+
+  let showAboutMac = false;
+  let winX = 0;
+  let winY = 0;
+  let draggingWin = false;
+  let dragOX = 0;
+  let dragOY = 0;
+
+  function openAboutMac() {
+    winX = Math.round(window.innerWidth / 2 - 180);
+    winY = Math.round(window.innerHeight / 2 - 290);
+    showAboutMac = true;
+  }
+
+  function closeAboutMac() {
+    showAboutMac = false;
+  }
+
+  function startWinDrag(e: MouseEvent) {
+    draggingWin = true;
+    dragOX = e.clientX - winX;
+    dragOY = e.clientY - winY;
+    window.addEventListener('mousemove', onWinDrag);
+    window.addEventListener('mouseup', stopWinDrag);
+  }
+
+  function onWinDrag(e: MouseEvent) {
+    if (!draggingWin) return;
+    winX = e.clientX - dragOX;
+    winY = e.clientY - dragOY;
+  }
+
+  function stopWinDrag() {
+    draggingWin = false;
+    window.removeEventListener('mousemove', onWinDrag);
+    window.removeEventListener('mouseup', stopWinDrag);
+  }
+
   const menuGroups: MenuGroup[] = [
     {
       id: 'apple',
       icon: '/logos/apple-logo.png',
       items: [
-        { label: 'Über diesen Mac' },
+        { label: 'Über diesen Mac', action: openAboutMac },
         { divider: true, label: '' },
         { label: 'Systemeinstellungen...' },
         { label: 'App Store...' },
@@ -634,7 +685,12 @@
                 {#if item.divider}
                   <div class="menu-divider"></div>
                 {:else}
-                  <button class={`menu-item ${item.disabled ? 'disabled' : ''}`} disabled={item.disabled} role="menuitem">
+                  <button
+                    class={`menu-item ${item.disabled ? 'disabled' : ''}`}
+                    disabled={item.disabled}
+                    role="menuitem"
+                    onclick={(e) => { if (item.action) { e.stopPropagation(); closeMenus(); item.action(); } }}
+                  >
                     {item.label}
                   </button>
                 {/if}
@@ -659,6 +715,49 @@
     <button class="time" style="font-size: 1em;" onclick={toggleControlCenter}>{time}</button>
   </div>
 </header>
+
+{#if showAboutMac}
+  <div
+    class="am-overlay"
+    onclick={closeAboutMac}
+    onkeydown={(e) => e.key === 'Escape' && closeAboutMac()}
+    role="button"
+    tabindex="-1"
+  >
+    <div
+      class="am-win"
+      style="left:{winX}px;top:{winY}px"
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.key === 'Escape' && closeAboutMac()}
+      role="dialog"
+      tabindex="0"
+    >
+      <div class="am-titlebar" role="toolbar" tabindex="0" onmousedown={startWinDrag}>
+        <div class="am-controls">
+          <button class="am-ctrl am-close" aria-label="Schließen" onclick={closeAboutMac}></button>
+          <button class="am-ctrl am-minimize" aria-label="Minimieren"></button>
+          <button class="am-ctrl am-maximize" aria-label="Vollbild"></button>
+        </div>
+      </div>
+      <div class="am-body">
+        <img class="am-mac-img" src="/MAC.png" alt="MacBook Pro" />
+        <h1 class="am-title">{macInfo.model}</h1>
+        <p class="am-subtitle">{macInfo.size}</p>
+        <div class="am-specs">
+          <div class="am-row"><span class="am-key">Chip</span><span class="am-val">{macInfo.chip}</span></div>
+          <div class="am-row"><span class="am-key">Speicher</span><span class="am-val">{macInfo.memory}</span></div>
+          <div class="am-row"><span class="am-key">Seriennummer</span><span class="am-val">{macInfo.serial}</span></div>
+          <div class="am-row"><span class="am-key">macOS</span><span class="am-val">{macInfo.os}</span></div>
+        </div>
+        <button class="am-more-btn" onclick={() => window.open('https://www.apple.com/de/shop/buy-mac/macbook-pro', '_blank')}>Weitere Infos ...</button>
+        <div class="am-footer">
+          <span class="am-footer-link">Regulatorische Zertifizierung</span>
+          <p class="am-footer-copy">™ und © 1983–2025 Apple Inc.<br />Alle Rechte vorbehalten.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{/if}
 
 {#if contextOpen}
   <div
@@ -1722,6 +1821,229 @@ header {
   .cc {
     inset: 44px 12px 12px 12px;
   }
+}
+
+.am-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.28);
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: amOverlayIn 0.22s ease forwards;
+}
+
+@keyframes amOverlayIn {
+  from { background: rgba(0, 0, 0, 0); }
+  to   { background: rgba(0, 0, 0, 0.28); }
+}
+
+.am-win {
+  position: fixed;
+  width: 360px;
+  background: #f2f2f2;
+  border-radius: 14px;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  animation: amWinIn 0.25s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+@keyframes amWinIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.am-titlebar {
+  height: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  cursor: move;
+  background: #e8e8e8;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.am-controls {
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.am-ctrl {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  transition: filter 120ms ease, transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: inset 0 0 0 0.5px rgba(0,0,0,.22), 0 0.5px 0 rgba(255,255,255,.12);
+}
+
+.am-close { background: #ff5f57; }
+.am-minimize { background: #febc2e; }
+.am-maximize { background: #28c840; }
+
+.am-ctrl::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  opacity: 0;
+  transition: opacity 120ms ease;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 0.25px 0 rgba(0,0,0,.25));
+}
+
+.am-titlebar:hover .am-ctrl::after { opacity: 1; }
+.am-ctrl:focus-visible { outline: none; }
+
+.am-close::after {
+  background-image: url("/icons/close.png");
+  width: 8px;
+  height: 8px;
+}
+
+.am-minimize::after {
+  background-image: url("/icons/minimize.png");
+  width: 8px;
+  height: 8px;
+}
+
+.am-maximize::after {
+  background-image: url("/icons/maximize.png");
+  width: 8px;
+  height: 8px;
+}
+
+.am-controls:hover .am-ctrl { transform: scale(1.25); filter: brightness(0.92); }
+
+.am-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 32px 28px;
+  gap: 0;
+  background: #f2f2f2;
+}
+
+.am-mac-img {
+  width: 220px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.am-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0 0 4px;
+  color: #1d1d1f;
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+}
+
+.am-subtitle {
+  font-size: 13px;
+  color: #8e8e93;
+  margin: 0 0 20px;
+  font-weight: 400;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+.am-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  max-width: 280px;
+  margin-bottom: 20px;
+}
+
+.am-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0;
+}
+
+.am-key {
+  font-size: 13px;
+  color: #6e6e73;
+  font-weight: 400;
+  white-space: nowrap;
+  text-align: right;
+  flex: 1;
+  padding-right: 8px;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+.am-val {
+  font-size: 13px;
+  color: #1d1d1f;
+  font-weight: 400;
+  flex: 1;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+.am-more-btn {
+  all: unset;
+  padding: 7px 28px;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  transition: background 0.15s ease;
+  display: inline-block;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.am-more-btn:hover {
+  background: rgba(0, 0, 0, 0.10);
+}
+
+.am-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.am-footer-link {
+  font-size: 12px;
+  color: #8e8e93;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+.am-footer-copy {
+  font-size: 11px;
+  color: #aeaeb2;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
 }
 </style>
 
