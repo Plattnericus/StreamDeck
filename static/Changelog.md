@@ -56,6 +56,15 @@
 - added right click to close tab
 - fixed some bugs and issues
 
+# 26.02.2026
+- fixed bugs
+- added new tab design
+- added 3d viewer
+- updated github
+- updated App Store
+- Downloading Animation in AppStore
+- Fixed stutter when Tab is moved
+
 
 
 
@@ -68,7 +77,6 @@
 - Quality of life
 - Finder
     - Suchfunktion
-- add online 3D preview (.STL File)
 - Terminal
     - neofetch
     - apt install opsec -y

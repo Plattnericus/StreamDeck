@@ -96,7 +96,7 @@ function onEnd(e: CustomEvent<{ rect: { x: number; y: number; w: number; h: numb
   ::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
 }
   :global(::-webkit-scrollbar-button){ display:none !important; width:0 !important; height:0 !important; }
-  :global(::-webkit-scrollbar-corner){ background: transparent !important; }
+  :global(::-webkit-scrollbar-corner){ background: transparent !important; cursor: Url(/cursors/default-cursor.svg) !important; }
 ::-webkit-scrollbar-button {
   display: none;
 }

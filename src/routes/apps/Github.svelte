@@ -14,8 +14,8 @@
       user = {
         login: username,
         name: "Felix Plattner",
-        avatar_url: "/logos/apple-logo.png",
-        bio: "Full Stack Developer | macOS Enthusiast",
+        avatar_url: "/logo.jpg",
+        bio: "C#/Cybersecurity/Web Development",
         html_url: `https://github.com/${username}`,
         public_repos: 12,
         followers: 150,
@@ -24,7 +24,7 @@
 
       repos = [
         {
-          name: "StreamDeck",
+          name: "Plattnericus/StreamDeck",
           description: "macOS-style desktop environment in the browser",
           html_url: `https://github.com/${username}/StreamDeck`,
           language: "TypeScript",
@@ -33,18 +33,18 @@
           updated_at: new Date().toISOString()
         },
         {
-          name: "Portfolio",
-          description: "Personal portfolio website",
-          html_url: `https://github.com/${username}/Portfolio`,
+          name: "Ryhox/minesweeper.ryhox.dev",
+          description: "Minesweeper clone with a twist, built with nodejs and JavaScript",
+          html_url: `https://github.com/Ryhox/minesweeper.ryhox.dev`,
           language: "Svelte",
           stargazers_count: 23,
           forks_count: 5,
           updated_at: new Date(Date.now() - 86400000).toISOString()
         },
         {
-          name: "Desktop-UI",
-          description: "Modern desktop user interface components",
-          html_url: `https://github.com/${username}/Desktop-UI`,
+          name: "Ryhox/ProjectilePreview-Mod",
+          description: "Modern, customizable projectile preview mod for Minecraft: Java Edition",
+          html_url: `https://github.com/Ryhox/ProjectilePreview-Mod`,
           language: "JavaScript",
           stargazers_count: 67,
           forks_count: 12,
@@ -53,7 +53,7 @@
       ];
 
       loading = false;
-    }, 500);
+    }, 100);
   }
 
   load();

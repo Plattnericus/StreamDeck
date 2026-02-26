@@ -31,9 +31,13 @@
     zIndex: number;
   };
 
-  let nextZIndex = 100;
+  let nextZIndex = -100;
   let contextMenu: { appId: number; x: number; y: number } | null = null;
   let headerHeight = 28;
+
+  $: focusedId = [...apps]
+    .filter(a => a.open && !a.minimized)
+    .sort((a, b) => b.zIndex - a.zIndex)[0]?.id ?? -1;
 
 const baseSize = 90;
 const distanceLimit = baseSize * 6;
@@ -135,42 +139,68 @@ function scheduleDockUpdate() {
 
   function draggable(node: HTMLElement, app: App) {
     let moving = false;
-    const getHeaderHeight = () => {
-      const header = document.querySelector('header');
-      return header ? Math.ceil(header.getBoundingClientRect().height) : 28;
-    };
+    let liveX = app.x;
+    let liveY = app.y;
+    let cachedHH = 28;
+    let maxX = 0;
+    let maxY = 0;
+    let rafId = 0;
+
     function handleMouseDown(e: MouseEvent) {
-      if (!(e.target as HTMLElement).classList.contains('title-bar')) return;
+      if (!(e.target as HTMLElement).closest('.title-bar')) return;
       if (app.maximized) {
         app.maximized = false;
         apps = apps;
       }
+      liveX = app.x;
+      liveY = app.y;
+      const header = document.querySelector('header');
+      cachedHH = header ? Math.ceil(header.getBoundingClientRect().height) : 28;
+      maxX = Math.max(0, window.innerWidth - app.width);
+      maxY = Math.max(cachedHH, window.innerHeight - app.height);
       moving = true;
+      node.classList.add('is-dragging');
+      node.style.left = liveX + 'px';
+      node.style.top  = liveY + 'px';
       focusApp(app.id);
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
       window.addEventListener('mouseup', handleMouseUp);
     }
+
     function handleMouseMove(e: MouseEvent) {
       if (!moving) return;
-      const headerHeight = getHeaderHeight();
-      const nextX = app.x + e.movementX;
-      const nextY = app.y + e.movementY;
-      const maxX = Math.max(0, window.innerWidth - app.width);
-      const maxY = Math.max(headerHeight, window.innerHeight - app.height);
-      app.x = clamp(nextX, 0, maxX);
-      app.y = clamp(nextY, headerHeight, maxY);
-      apps = apps; 
+      liveX = clamp(liveX + e.movementX, 0, maxX);
+      liveY = clamp(liveY + e.movementY, cachedHH, maxY);
+      app.x = liveX;
+      app.y = liveY;
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        node.style.left = liveX + 'px';
+        node.style.top  = liveY + 'px';
+      });
     }
+
     function handleMouseUp() {
+      if (!moving) return;
       moving = false;
+      cancelAnimationFrame(rafId);
+      node.style.left = liveX + 'px';
+      node.style.top  = liveY + 'px';
+      app.x = liveX;
+      app.y = liveY;
+      requestAnimationFrame(() => node.classList.remove('is-dragging'));
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     }
+
     node.addEventListener('mousedown', handleMouseDown);
     return { destroy() { node.removeEventListener('mousedown', handleMouseDown); } };
   }
 
   function resizable(node: HTMLElement, app: App) {
+    let win: HTMLElement | null = null;
+    let liveW = app.width;
+    let liveH = app.height;
     function handleMouseDown(e: MouseEvent) {
       e.preventDefault();
       e.stopPropagation();
@@ -179,15 +209,30 @@ function scheduleDockUpdate() {
         apps = apps;
         return;
       }
-      window.addEventListener('mousemove', handleMouseMove);
+      liveW = app.width;
+      liveH = app.height;
+      win = node.closest('.app-window') as HTMLElement | null;
+      if (win) win.classList.add('is-resizing');
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
       window.addEventListener('mouseup', handleMouseUp);
     }
     function handleMouseMove(e: MouseEvent) {
-      app.width = Math.max(300, e.clientX - app.x);
-      app.height = Math.max(200, e.clientY - app.y);
-      apps = apps;
+      liveW = Math.max(300, e.clientX - app.x);
+      liveH = Math.max(200, e.clientY - app.y);
+      if (win) {
+        win.style.width  = liveW + 'px';
+        win.style.height = liveH + 'px';
+      }
     }
     function handleMouseUp() {
+      if (win) {
+        win.classList.remove('is-resizing');
+        win.style.width  = '';
+        win.style.height = '';
+      }
+      app.width  = liveW;
+      app.height = liveH;
+      apps = apps;
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
     }
@@ -233,7 +278,7 @@ function scheduleDockUpdate() {
 
   function focusApp(id: number) {
     nextZIndex++;
-    if(nextZIndex > 9999) nextZIndex = 100;
+    if(nextZIndex > 9999) nextZIndex = -100;
     const app = apps.find(a => a.id === id);
     if (app) {
       app.zIndex = nextZIndex;
@@ -349,22 +394,23 @@ function scheduleDockUpdate() {
 {#each apps as app (app.id)}
   {#if app.open && !app.minimized}
     <div 
-      class="app-window shadow-xl" 
+      class="app-window" 
       class:maximized={app.maximized}
+      class:focused={app.id === focusedId}
       role="button"
       tabindex="0"
       aria-label={app.name}
       use:draggable={app}
       onmousedown={() => focusApp(app.id)}
       onkeydown={(e) => (e.key === 'Escape') && closeApp(app)}
-      transition:scale={{ duration: 300, start: 0.9, easing: cubicOut }}
-      style="left: {app.maximized ? 0 : app.x}px; 
-             top: {app.maximized ? headerHeight : app.y}px; 
-             width: {app.maximized ? '100vw' : app.width + 'px'}; 
-             height: {app.maximized ? `calc(100vh - ${headerHeight}px)` : app.height + 'px'}; 
-             z-index: {app.zIndex}"
+      transition:fade={{ duration: 200 }}
+      style:left="{app.maximized ? 0 : app.x}px"
+      style:top="{app.maximized ? headerHeight : app.y}px"
+      style:width="{app.maximized ? '100vw' : app.width + 'px'}"
+      style:height="{app.maximized ? `calc(100vh - ${headerHeight}px)` : app.height + 'px'}"
+      style:z-index={app.zIndex}
     >
-      <div class="title-bar">
+      <div class="title-bar" ondblclick={(e) => { e.stopPropagation(); toggleMaximize(app); }}>
         <div class="controls">
           <button class="ctrl close" aria-label="Close window" title="Close window" onclick={(e) => {e.stopPropagation(); closeApp(app);}}></button>
           <button class="ctrl minimize" aria-label="Minimize window" title="Minimize window" onclick={(e) => {e.stopPropagation(); toggleMinimize(app);}}></button>
@@ -400,34 +446,43 @@ function scheduleDockUpdate() {
   }
 
   .app-window {
-    position: fixed; 
-    background: rgba(30, 30, 30, 0.85);
-    backdrop-filter: blur(25px);
+    position: fixed;
+    background: rgba(28, 28, 30, 0.82);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
     border-radius: 12px;
-    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    border: 0.5px solid rgba(255, 255, 255, 0.14);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                top 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), 
-                left 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-radius 0.3s ease;
-    will-change: width, height, top, left;
+    box-shadow:
+      0 0 0 0.5px rgba(0,0,0,0.28),
+      0 2px 6px rgba(0,0,0,0.18),
+      0 8px 24px rgba(0,0,0,0.22),
+      0 32px 64px rgba(0,0,0,0.3);
+    transition:
+      width  0.38s cubic-bezier(0.25, 1, 0.5, 1),
+      height 0.38s cubic-bezier(0.25, 1, 0.5, 1),
+      top    0.38s cubic-bezier(0.25, 1, 0.5, 1),
+      left   0.38s cubic-bezier(0.25, 1, 0.5, 1),
+      border-radius 0.38s ease,
+      box-shadow 0.2s ease,
+      opacity 0.2s ease;
+    will-change: transform;
+    opacity: 0.92;
   }
 
-  .app-window {
-  position: fixed;
-  border-radius: 12px;
-  overflow: hidden;
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-}
+  .app-window.focused {
+    opacity: 1;
+    box-shadow:
+      0 0 0 0.5px rgba(0,0,0,0.32),
+      0 2px 8px rgba(0,0,0,0.22),
+      0 12px 32px rgba(0,0,0,0.28),
+      0 40px 80px rgba(0,0,0,0.36);
+  }
 
-  .app-window:active {
+  .app-window.is-dragging,
+  .app-window.is-resizing {
     transition: none;
   }
 
@@ -436,21 +491,31 @@ function scheduleDockUpdate() {
   }
 
   .title-bar {
+    position: relative;
+    z-index: 10;
     height: 32px;
+    min-height: 32px;
     display: flex;
     align-items: center;
-    font-size: 4em;
-    font-weight: bold;
     padding: 0 12px;
-    cursor: default;
+    cursor: move;
     user-select: none;
     flex-shrink: 0;
+    background: rgba(58, 58, 60, 0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    transition: background 180ms ease;
+  }
+
+  .app-window:not(.focused) .title-bar {
+    background: rgba(44, 44, 46, 0.88);
   }
 
   .controls{
     display:flex;
     gap:8px;
     z-index:10;
+    flex-shrink: 0;
   }
 
   .ctrl{
@@ -464,14 +529,19 @@ function scheduleDockUpdate() {
     align-items:center;
     justify-content:center;
     cursor:default;
+    transition: filter 120ms ease, transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow:
       inset 0 0 0 0.5px rgba(0,0,0,.22),
-      0 0.5px 0 rgba(255,255,255,.18);
+      0 0.5px 0 rgba(255,255,255,.12);
   }
 
   .close{background:#ff5f57;}
   .minimize{background:#febc2e;}
   .maximize{background:#28c840;}
+
+  .app-window:not(.focused) .close,
+  .app-window:not(.focused) .minimize,
+  .app-window:not(.focused) .maximize { background: #5a5a5e; }
 
   .ctrl::after{
     content:"";
@@ -485,11 +555,8 @@ function scheduleDockUpdate() {
     filter: drop-shadow(0 0.25px 0 rgba(255,255,255,.18));
   }
 
-  .controls:hover .ctrl::after{opacity:1; }
-  .controls:hover .ctrl{
-    transform: scale(1.2);
-    transition: smooth 150ms ease;
-  }
+  .title-bar:hover .ctrl::after { opacity: 1; }
+  .ctrl:focus-visible { outline: none; }
 
 
   .close::after{
@@ -510,7 +577,7 @@ function scheduleDockUpdate() {
     height:8px;
   }
 
-  .ctrl:hover{filter:brightness(.97);}
+  .controls:hover .ctrl { transform: scale(1.25); filter: brightness(0.92); }
 
 
   .title-text {
@@ -518,11 +585,20 @@ function scheduleDockUpdate() {
     left: 50%;
     transform: translateX(-50%);
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.85);
     pointer-events: none;
+    transition: color 180ms ease;
+    white-space: nowrap;
+  }
+
+  .app-window:not(.focused) .title-text {
+    color: rgba(255,255,255,0.4);
   }
 
   .window-content {
+    position: relative;
     flex: 1;
     padding: 15px;
     color: white;

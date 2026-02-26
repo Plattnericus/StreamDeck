@@ -56,10 +56,10 @@
     { id: 'hearing', label: 'Hören', rgb: '40 214 122' },
     { id: 'eye', label: 'Anzeige', rgb: '255 159 10' },
     { id: 'record', label: 'Aufnahme', rgb: '255 59 48' },
-    { id: 'voice', label: 'Voice', rgb: '175 110 255' },
+    { id: 'voice', label: 'Sprachnotiz', rgb: '175 110 255' },
     { id: 'battery', label: 'Batterie', rgb: '0 200 180' },
     { id: 'shazam', label: 'Shazam', rgb: '175 110 255' },
-    { id: 'remote', label: 'Remote', rgb: '27 130 255' },
+    { id: 'remote', label: 'Fernbedienung', rgb: '27 130 255' },
     { id: 'noise', label: 'Geräusche', rgb: '255 159 10' },
     { id: 'globe', label: 'Internet', rgb: '40 214 122' }
   ];
@@ -164,36 +164,36 @@
       id: 'apple',
       icon: '/logos/apple-logo.png',
       items: [
-        { label: 'About This Mac' },
+        { label: 'Über diesen Mac' },
         { divider: true, label: '' },
-        { label: 'System Settings...' },
+        { label: 'Systemeinstellungen...' },
         { label: 'App Store...' },
         { divider: true, label: '' },
-        { label: 'Recent Items', disabled: true },
+        { label: 'Letzte Elemente', disabled: true },
         { divider: true, label: '' },
-        { label: 'Force Quit...' },
+        { label: 'Sofort beenden...' },
         { divider: true, label: '' },
-        { label: 'Sleep' },
-        { label: 'Restart...' },
-        { label: 'Shut Down...' },
+        { label: 'Ruhezustand' },
+        { label: 'Neu starten...' },
+        { label: 'Ausschalten...' },
         { divider: true, label: '' },
-        { label: 'Lock Screen' },
-        { label: 'Log Out...' }
+        { label: 'Bildschirm sperren' },
+        { label: 'Abmelden...' }
       ]
     },
     {
       id: 'finder',
       label: 'Finder',
       items: [
-        { label: 'About Finder' },
+        { label: 'Über den Finder' },
         { divider: true, label: '' },
-        { label: 'Preferences...' },
+        { label: 'Einstellungen...' },
         { divider: true, label: '' },
-        { label: 'Empty Trash' },
+        { label: 'Papierkorb leeren' },
         { divider: true, label: '' },
-        { label: 'Hide Finder' },
-        { label: 'Hide Others' },
-        { label: 'Show All', disabled: true }
+        { label: 'Finder ausblenden' },
+        { label: 'Andere ausblenden' },
+        { label: 'Alle anzeigen', disabled: true }
       ]
     },
     {
@@ -207,8 +207,8 @@
         { label: 'Neuer Smart Ordner' },
         { divider: true, label: '' },
         { label: 'Neuer Tab' },
-        { label: 'Oeffnen', disabled: true },
-        { label: 'Oeffnen mit', disabled: true },
+        { label: 'Öffnen', disabled: true },
+        { label: 'Öffnen mit', disabled: true },
         { divider: true, label: '' },
         { label: 'Drucken', disabled: true },
         { label: 'Fenster schliessen', disabled: true },
@@ -232,13 +232,13 @@
       id: 'edit',
       label: 'Bearbeiten',
       items: [
-        { label: 'Rueckgaengig', disabled: true },
+        { label: 'Rückgängig', disabled: true },
         { label: 'Wiederholen', disabled: true },
         { divider: true, label: '' },
         { label: 'Ausschneiden', disabled: true },
         { label: 'Kopieren', disabled: true },
-        { label: 'Einfuegen', disabled: true },
-        { label: 'Alles auswaehlen', disabled: true },
+        { label: 'Einfügen', disabled: true },
+        { label: 'Alles auswählen', disabled: true },
         { divider: true, label: '' },
         { label: 'Zwischenablage anzeigen' },
         { label: 'Diktat starten...' },
@@ -267,8 +267,8 @@
       id: 'go',
       label: 'Gehe zu',
       items: [
-        { label: 'Zurueck', disabled: true },
-        { label: 'Vor', disabled: true },
+        { label: 'Zurück', disabled: true },
+        { label: 'Vorwärts', disabled: true },
         { divider: true, label: '' },
         { label: 'Aktueller Ordner' },
         { divider: true, label: '' },
@@ -276,7 +276,7 @@
         { label: 'Dokumente' },
         { label: 'Schreibtisch' },
         { label: 'Downloads' },
-        { label: 'Home' },
+        { label: 'Benutzerordner' },
         { label: 'Computer' },
         { label: 'Netzwerk' },
         { divider: true, label: '' },
@@ -317,16 +317,16 @@
   let contextY = 0;
 
   const contextItems = [
-    { label: 'New Folder' },
-    { label: 'Get Info' },
-    { label: 'Change Desktop Background' },
+    { label: 'Neuer Ordner' },
+    { label: 'Informationen' },
+    { label: 'Schreibtischhintergrund ändern' },
     { divider: true },
-    { label: 'Use Stacks' },
-    { label: 'Sort By' },
-    { label: 'Clean Up' },
-    { label: 'Clean Up By' },
+    { label: 'Stapel verwenden' },
+    { label: 'Sortieren nach' },
+    { label: 'Aufräumen' },
+    { label: 'Aufräumen nach' },
     { divider: true },
-    { label: 'Show View Options' }
+    { label: 'Darstellungsoptionen anzeigen' }
   ];
   let time = '';
   let date = '';
@@ -647,13 +647,13 @@
   </div>
   <div class="right">
     <button class="icon-container" onclick={toggleControlCenter}>
-      <img class="icon-img icon-img-lg" src="/icons/battery.png" alt="BATTERY" />
+      <img class="icon-img icon-img-lg" src="/icons/battery.png" alt="Batterie" />
     </button>
     <button class="icon-container" onclick={toggleControlCenter}>
       <img class="icon-img icon-img-lg" src="/icons/wifi.png" alt="WLAN" />
     </button>
     <button class="icon-container" onclick={toggleControlCenter}>
-      <img class="icon-img icon-img-lg" src="/icons/control-menu.svg" alt="CONTROL MENU" />
+      <img class="icon-img icon-img-lg" src="/icons/control-menu.svg" alt="Kontrollzentrum" />
     </button>
     <button class="date" style="font-size: 1em;" onclick={toggleControlCenter}>{date}</button>
     <button class="time" style="font-size: 1em;" onclick={toggleControlCenter}>{time}</button>
@@ -698,7 +698,7 @@
       onkeydown={(e) => e.stopPropagation()}
       role="dialog"
       tabindex="0"
-      aria-label="Control Center"
+      aria-label="Kontrollzentrum"
     >
       <div class="frost"></div>
 
@@ -819,7 +819,7 @@
               onpointercancel={() => { dragging = null; }}
             ></div>
             <div class="fill" style={`height: ${brightness}%;`}></div>
-            <button class="glyph" title="BRIGHT" onclick={() => {
+            <button class="glyph" title="Helligkeit" onclick={() => {
               brightness = brightness > 0 ? 0 : 50;
               saveState();
             }}>
@@ -853,7 +853,7 @@
               onpointercancel={() => { dragging = null; }}
             ></div>
             <div class="fill" style={`height: ${volume}%;`}></div>
-            <button class="glyph" title="VOLUME" onclick={() => {
+            <button class="glyph" title="Lautstärke" onclick={() => {
               volume = volume > 0 ? 0 : 50;
               if (audioEl) {
                 audioEl.volume = volume / 100;
@@ -1015,7 +1015,7 @@ header {
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.402);
 
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(80px);
   -webkit-backdrop-filter: blur(80px);
 
@@ -1329,7 +1329,6 @@ header {
   transform: translateY(-1px);
 }
 
-/* Farben für Button-Hintergründe */
 .btn[data-id="airplane"][data-state="on"] {
   background: rgba(255, 159, 10, 0.7);
 }
