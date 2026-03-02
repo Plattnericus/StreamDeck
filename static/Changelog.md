@@ -84,3 +84,4 @@
 - Quality of life
 - Finder
     - Suchfunktion
+- 3D MOdell, when clicked out, modell disappears, flexbox doesnt work, fix it make it better
