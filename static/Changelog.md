@@ -84,4 +84,6 @@
 - Quality of life
 - Finder
     - Suchfunktion
-- 3D MOdell, when clicked out, modell disappears, flexbox doesnt work, fix it make it better
+- 3D Modell, when clicked out, modell disappears, flexbox doesnt work, fix it make it better
+- beim terminal sollte es bei uname das richtige Betriebsystem erkennen und browser und ausgeben
+- Manche commands die ich nciht weiße löschen im Terminal
