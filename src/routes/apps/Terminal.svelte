@@ -101,45 +101,45 @@
   const commands: Record<string, Cmd> = {
     help: () => [
       "",
-      "  BEFEHL          BESCHREIBUNG",
+      "  BEFEHL             BESCHREIBUNG",
       "",
-      "  help             Zeigt diese Hilfe an",
-      "  clear            Leert das Terminal",
-      "  echo [text]      Gibt Text aus",
-      "  date             Zeigt Datum und Uhrzeit",
-      "  whoami           Zeigt den aktuellen Benutzer",
-      "  hostname         Zeigt den Hostnamen",
-      "  pwd              Zeigt das aktuelle Verzeichnis",
-      "  cd [pfad]        Wechselt das Verzeichnis (cd .. / cd ~)",
-      "  ls [pfad]        Listet Dateien und Ordner auf",
-      "  cat [datei]      Zeigt den Inhalt einer Datei",
-      "  mkdir [name]     Erstellt ein neues Verzeichnis",
-      "  touch [name]     Erstellt eine leere Datei",
-      "  rm [name]        Löscht eine Datei oder Ordner",
-      "  mv [a] [b]       Benennt Datei/Ordner um",
-      "  cp [a] [b]       Kopiert eine Datei",
-      "  find [name]      Sucht Dateien im Dateisystem",
-      "  grep [s] [f]     Sucht Text in einer Datei",
-      "  head [datei]     Erste Zeile einer Datei",
-      "  tail [datei]     Letzte Zeile einer Datei",
-      "  wc [datei]       Zählt Zeilen, Wörter, Zeichen",
-      "  uptime           Laufzeit des Terminals",
-      "  uname            Systeminformationen",
-      "  export K=V       Setzt eine Umgebungsvariable",
-      "  env              Zeigt Umgebungsvariablen",
-      "  alias k=v        Alias für einen Befehl",
-      "  unalias [k]      Entfernt einen Alias",
-      "  history          Befehlshistorie",
-      "  rev [text]       Text umkehren",
-      "  base64 [text]    Text in Base64 kodieren",
-      "  calc [expr]      Rechner (+, -, *, /)",
-      "  color [xy]       Terminal-Farbe ändern (0-f)",
-      "  color list       Zeigt alle Farben",
-      "  color reset      Setzt Farben zurück",
-      "  cowsay [text]    Kuh sagt etwas",
-      "  neofetch         System-Info stylisch",
-      "  sudo apt install  Paket installieren",
-      "  shutdown          Terminal beenden",
+      "  help               Zeigt diese Hilfe an",
+      "  clear              Leert das Terminal",
+      "  echo [text]        Gibt Text aus",
+      "  date               Zeigt Datum und Uhrzeit",
+      "  whoami             Zeigt den aktuellen Benutzer",
+      "  hostname           Zeigt den Hostnamen",
+      "  pwd                Zeigt das aktuelle Verzeichnis",
+      "  cd [pfad]          Wechselt das Verzeichnis (cd .. / cd ~)",
+      "  ls [pfad]          Listet Dateien und Ordner auf",
+      "  cat [datei]        Zeigt den Inhalt einer Datei",
+      "  mkdir [name]       Erstellt ein neues Verzeichnis",
+      "  touch [name]       Erstellt eine leere Datei",
+      "  rm [name]          Löscht eine Datei oder Ordner",
+      "  mv [a] [b]         Benennt Datei/Ordner um",
+      "  cp [a] [b]         Kopiert eine Datei",
+      "  find [name]        Sucht Dateien im Dateisystem",
+      "  grep [s] [f]       Sucht Text in einer Datei",
+      "  head [datei]       Erste Zeile einer Datei",
+      "  tail [datei]       Letzte Zeile einer Datei",
+      "  wc [datei]         Zählt Zeilen, Wörter, Zeichen",
+      "  uptime             Laufzeit des Terminals",
+      "  uname              Systeminformationen",
+      "  export K=V         Setzt eine Umgebungsvariable",
+      "  env                Zeigt Umgebungsvariablen",
+      "  alias k=v          Alias für einen Befehl",
+      "  unalias [k]        Entfernt einen Alias",
+      "  history            Befehlshistorie",
+      "  rev [text]         Text umkehren",
+      "  base64 [text]      Text in Base64 kodieren",
+      "  calc [expr]        Rechner (+, -, *, /)",
+      "  color [xy]         Terminal-Farbe ändern (0-f)",
+      "  color list         Zeigt alle Farben",
+      "  color reset        Setzt Farben zurück",
+      "  cowsay [text]      Kuh sagt etwas",
+      "  neofetch           System-Info stylisch",
+      "  sudo apt install   Paket installieren",
+      "  shutdown           Terminal beenden",
       "",
     ],
 
@@ -318,7 +318,29 @@
       return `up ${s}s`;
     },
 
-    uname: () => `${hostname} Darwin 23.4.0 arm64`,
+    uname: () => {
+      const os = (() => {
+        const p = navigator.platform.toLowerCase();
+        if (p.includes("mac")) return "macOS";
+        if (p.includes("win")) return "Windows";
+        if (p.includes("linux")) return "Linux";
+        return "Unbekannt";
+      })();
+    
+      const browser = (() => {
+        const ua = navigator.userAgent;
+        if (ua.includes("Chrome") && !ua.includes("Edge") && !ua.includes("OPR")) return "Chrome";
+        if (ua.includes("Firefox")) return "Firefox";
+        if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+        if (ua.includes("Edge")) return "Edge";
+        if (ua.includes("OPR") || ua.includes("Opera")) return "Opera";
+        return "Unbekannt";
+      })();
+    
+      const arch = navigator.userAgent.includes("arm") ? "arm64" : "x64";
+    
+      return `${hostname} ${os} ${browser} Darwin 23.4.0 ${arch}`;
+    },
 
     export: (_args, full) => {
       const match = full.match(/^export\s+(\w+)=(.*)$/);
