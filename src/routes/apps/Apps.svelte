@@ -15,6 +15,7 @@
   import Terminal from "./Terminal.svelte";
   import Datenschutz from "./Datenschutz.svelte";
   import Model from "./Model.svelte";
+  import Cookies from "./Cookies-info.svelte";
 
   type App = {
     id: number;
@@ -57,15 +58,16 @@
   let searchQuery = "";
 
   const APP_LIST: Omit<App, "open" | "minimized" | "maximized" | "default" | "x" | "y" | "zIndex" | "priority">[] = [
-    { id: 101, name: "About", file: "About.svelte", icon: "about.webp", component: About, category: "System", subtitle: "Über das Projekt", description: "Allgemeine Informationen über das StreamDeck-Projekt.", developer: "System", version: "1.0.0", width: 740, height: 560 },
+    { id: 101, name: "About", file: "About.svelte", icon: "about.webp", component: About, category: "System", subtitle: "Über das Projekt", description: "Allgemeine Informationen über das StreamDeck-Projekt.", developer: "System", version: "111.0.2g", width: 740, height: 560 },
     { id: 102, name: "Info", file: "Info.svelte", icon: "info.webp", component: Info, category: "System", subtitle: "Produktinformationen", description: "Informationen zum Produkt StreamDeck und dessen Funktionen.", developer: "System", version: "1.0.0", width: 320, height: 480 },
-    { id: 103, name: "3D-Modell", file: "Model.svelte", icon: "model.webp", component: Model, category: "System", subtitle: "3D-Modellviewer", description: "Anzeigen und Interagieren mit 3D-Modellen.", developer: "System", version: "1.0.0", width: 720, height: 960 },
-    { id: 104, name: "Galerie", file: "Galerie.svelte", icon: "fotos.webp", component: Galerie, category: "System", subtitle: "Bilder", description: "Durchsuchen und Anzeigen von Bildern.", developer: "System", version: "1.0.0", width: 720, height: 560 },
+    { id: 103, name: "3D-Modell", file: "Model.svelte", icon: "model.webp", component: Model, category: "System", subtitle: "3D-Modellviewer", description: "Anzeigen und Interagieren mit 3D-Modellen.", developer: "System", version: "1.0.0", width: 520, height: 760 },
+    { id: 104, name: "Galerie", file: "Galerie.svelte", icon: "fotos.webp", component: Galerie, category: "System", subtitle: "Bilder", description: "Durchsuchen und Anzeigen von Bildern.", developer: "System", version: "8.0.0", width: 720, height: 560 },
     { id: 105, name: "Terminal", file: "Terminal.svelte", icon: "terminal.webp", component: Terminal, category: "System", subtitle: "Kommandozeile", description: "Ausführen von Befehlen über eine integrierte Konsole.", developer: "System", version: "1.0.0", width: 720, height: 560 },
-    { id: 106, name: "Changelog", file: "Changelog.svelte", icon: "changelog.webp", component: Changelog, category: "System", subtitle: "Änderungen", description: "Versionsverlauf und Neuerungen des Projekts.", developer: "System", version: "1.0.0", width: 640, height: 480 },
-    { id: 107, name: "Datenschutz", file: "Datenschutz.svelte", icon: "datenschutz.webp", component: Datenschutz, category: "System", subtitle: "Datenschutzrichtlinie", description: "Informationen zur Verarbeitung und zum Schutz personenbezogener Daten.", developer: "System", version: "1.0.0", width: 720, height: 560 },
-    { id: 108, name: "Impressum", file: "Impressum.svelte", icon: "impressum.webp", component: Impressum, category: "System", subtitle: "Rechtliche Angaben", description: "Gesetzlich vorgeschriebene Angaben zum Anbieter.", developer: "System", version: "1.0.0", width: 720, height: 560 },
-    { id: 109, name: "AGB", file: "AGB.svelte", icon: "agb.webp", component: Agb, category: "System", subtitle: "Nutzungsbedingungen", description: "Allgemeine Geschäfts- und Nutzungsbedingungen.", developer:"System" , version:"1.0.0" , width : 720 , height : 560 }
+    { id: 106, name: "Changelog", file: "Changelog.svelte", icon: "changelog.webp", component: Changelog, category: "System", subtitle: "Änderungen", description: "Versionsverlauf und Neuerungen des Projekts.", developer: "System", version: "9.4.2", width: 640, height: 480 },
+    { id: 107, name: "Datenschutz", file: "Datenschutz.svelte", icon: "datenschutz.webp", component: Datenschutz, category: "System", subtitle: "Datenschutzrichtlinie", description: "Informationen zur Verarbeitung und zum Schutz personenbezogener Daten.", developer: "System", version: "1.20b.0", width: 720, height: 560 },
+    { id: 108, name: "Impressum", file: "Impressum.svelte", icon: "impressum.webp", component: Impressum, category: "System", subtitle: "Rechtliche Angaben", description: "Gesetzlich vorgeschriebene Angaben zum Anbieter.", developer: "System", version: "21.0.0", width: 720, height: 560 },
+    { id: 109, name: "AGB", file: "AGB.svelte", icon: "agb.webp", component: Agb, category: "System", subtitle: "Nutzungsbedingungen", description: "Allgemeine Geschäfts- und Nutzungsbedingungen.", developer:"System" , version:"1.0.0" , width : 720 , height : 560 },
+    { id: 110, name: "Cookies", file: "Cookies-info.svelte", icon: "cookies.png", component: Cookies, category: "System", subtitle: "Cookie-Richtlinie", description: "Informationen zu Cookies und deren Verwendung.", developer:"System" , version:"1.0.1" , width : 720 , height : 560 }
   ];
 
 

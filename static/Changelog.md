@@ -66,7 +66,13 @@
 - Fixed stutter when Tab is moved
 - added about mac popup
 
-
+# 02.03.2026
+- fixed bug with browser x (Tab from brwoser)
+- added Terminal with commands
+- added cookies
+- added Datenschutz, AGB, Impressum and Cookies-Info
+- added Changelog function
+- Header buttons are working!+
 
 
 ## TO DO
@@ -78,7 +84,3 @@
 - Quality of life
 - Finder
     - Suchfunktion
-- Terminal
-    - neofetch
-    - apt install opsec -y
-    - shutdown: tab schließt sich

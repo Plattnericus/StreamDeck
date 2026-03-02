@@ -1,10 +1,12 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
     import { preloadCode } from "$app/navigation";
+    import Cookies from "./apps/Cookies.svelte";
 
     let fill: HTMLDivElement | undefined;
     let showLogin = false;
     let showBoot = true;
+    let showCookies = false;
     let password = "";
     let errorText = "";
     let isUnlocking = false;
@@ -18,6 +20,7 @@
     let slideProgress = 0;
     let slideActiveTimer: number | undefined;
     let wheelHandler: ((e: WheelEvent) => void) | null = null;
+    let declineCount = 0;
 
     onMount(() => {
         if (!fill) return;
@@ -99,7 +102,13 @@
             slideProgress = 1;
             slideActive = false;
             setTimeout(() => {
-                window.location.href = "/desktop";
+                // Check if cookies already consented
+                const consent = localStorage.getItem("cookie-consent");
+                if (consent) {
+                    window.location.href = "/desktop";
+                } else {
+                    showCookies = true;
+                }
             }, 900);
             return;
         }
@@ -109,6 +118,23 @@
 
     function handleKeydown(e: KeyboardEvent): void {
         if (e.key === "Enter") handleSubmit();
+    }
+
+    function handleCookieConsent(): void {
+        window.location.href = "/desktop";
+    }
+
+    function handleCookieDecline(): void {
+        declineCount++;
+        if (declineCount >= 2) {
+            localStorage.setItem("cookie-consent", "declined");
+            window.location.href = "/desktop";
+            return;
+        }
+        showCookies = false;
+        isUnlocking = false;
+        slideProgress = 0;
+        errorText = "Es wäre vorteilhaft die Cookies zu akzeptieren";
     }
 </script>
 
@@ -167,6 +193,10 @@
                 {/if}
             </div>
         </div>
+    {/if}
+
+    {#if showCookies}
+        <Cookies on:consent={handleCookieConsent} on:decline={handleCookieDecline} />
     {/if}
 </div>
 

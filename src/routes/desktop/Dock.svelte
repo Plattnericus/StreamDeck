@@ -410,7 +410,8 @@ function scheduleDockUpdate() {
       style:height="{app.maximized ? `calc(100vh - ${headerHeight}px)` : app.height + 'px'}"
       style:z-index={app.zIndex}
     >
-      <div class="title-bar" ondblclick={(e) => { e.stopPropagation(); toggleMaximize(app); }}>
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <div class="title-bar" role="toolbar" tabindex="-1" ondblclick={(e) => { e.stopPropagation(); toggleMaximize(app); }}>
         <div class="controls">
           <button class="ctrl close" aria-label="Close window" title="Close window" onclick={(e) => {e.stopPropagation(); closeApp(app);}}></button>
           <button class="ctrl minimize" aria-label="Minimize window" title="Minimize window" onclick={(e) => {e.stopPropagation(); toggleMinimize(app);}}></button>
@@ -420,7 +421,7 @@ function scheduleDockUpdate() {
       </div>
       
       <div class="window-content">
-        <svelte:component this={app.component} on:openapp={handleOpenApp} />
+        <svelte:component this={app.component} on:openapp={handleOpenApp} popup={false} />
       </div>
 
       <div class="resizer" use:resizable={app}></div>
@@ -481,8 +482,8 @@ function scheduleDockUpdate() {
       0 40px 80px rgba(0,0,0,0.36);
   }
 
-  .app-window.is-dragging,
-  .app-window.is-resizing {
+  .app-window :global(.is-dragging),
+  .app-window :global(.is-resizing) {
     transition: none;
   }
 

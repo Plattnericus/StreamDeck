@@ -1,6 +1,68 @@
 ﻿
 <script lang="ts">
   import { onMount, tick } from 'svelte';
+  import { openTab } from "../../lib/openTab";
+  import { addOrOpenApp } from "../../lib/appStore";
+
+  import Settings from '../apps/Settings.svelte';
+  import Browser from '../apps/Browser.svelte';
+  import Terminal from '../apps/Terminal.svelte';
+  import Finder from '../apps/Finder.svelte';
+  import AppsComponent from '../apps/Apps.svelte';
+  import Github from '../apps/Github.svelte';
+  import About from '../apps/About.svelte';
+  import Changelog from '../apps/Changelog.svelte';
+  import Galerie from '../apps/Galerie.svelte';
+  import Impressum from '../apps/Impressum.svelte';
+  import Agb from '../apps/AGB.svelte';
+  import Info from '../apps/Info.svelte';
+  import Datenschutz from '../apps/Datenschutz.svelte';
+  import ModelApp from '../apps/Model.svelte';
+  import CookiesInfo from '../apps/Cookies-info.svelte';
+
+  type HeaderApp = {
+    id: number;
+    name: string;
+    icon: string;
+    component: any;
+    width: number;
+    height: number;
+    open: boolean;
+    minimized: boolean;
+    maximized: boolean;
+    default: boolean;
+    x: number;
+    y: number;
+    zIndex: number;
+  };
+
+  let headerNextZ = 2000;
+
+  const headerApps: Record<string, HeaderApp> = {
+    settings: { id: 3, name: 'Settings', icon: '/icons/settings.webp', component: Settings, width: 600, height: 400, open: false, minimized: false, maximized: false, default: true, x: 0, y: 0, zIndex: 0 },
+    appstore: { id: 2, name: 'App Store', icon: '/icons/app-store.webp', component: AppsComponent, width: 800, height: 600, open: false, minimized: false, maximized: false, default: true, x: 0, y: 0, zIndex: 0 },
+    finder: { id: 1, name: 'Finder', icon: '/icons/finder.webp', component: Finder, width: 600, height: 400, open: false, minimized: false, maximized: false, default: true, x: 0, y: 0, zIndex: 0 },
+    safari: { id: 4, name: 'Safari', icon: '/icons/safari.webp', component: Browser, width: 1000, height: 700, open: false, minimized: false, maximized: false, default: true, x: 0, y: 0, zIndex: 0 },
+    terminal: { id: 5, name: 'Terminal', icon: '/icons/terminal.webp', component: Terminal, width: 500, height: 350, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    github: { id: 6, name: 'Github', icon: '/icons/github.webp', component: Github, width: 820, height: 650, open: false, minimized: false, maximized: false, default: true, x: 0, y: 0, zIndex: 0 },
+    about: { id: 101, name: 'About', icon: '/icons/about.webp', component: About, width: 740, height: 560, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    info: { id: 102, name: 'Info', icon: '/icons/info.webp', component: Info, width: 320, height: 480, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    model: { id: 103, name: '3D-Modell', icon: '/icons/model.webp', component: ModelApp, width: 520, height: 760, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    galerie: { id: 104, name: 'Galerie', icon: '/icons/fotos.webp', component: Galerie, width: 720, height: 560, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    changelog: { id: 106, name: 'Changelog', icon: '/icons/changelog.webp', component: Changelog, width: 640, height: 480, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    datenschutz: { id: 107, name: 'Datenschutz', icon: '/icons/datenschutz.webp', component: Datenschutz, width: 720, height: 560, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    impressum: { id: 108, name: 'Impressum', icon: '/icons/impressum.webp', component: Impressum, width: 720, height: 560, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    agb: { id: 109, name: 'AGB', icon: '/icons/agb.webp', component: Agb, width: 720, height: 560, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+    cookies: { id: 110, name: 'Cookies', icon: '/icons/cookies.png', component: CookiesInfo, width: 720, height: 560, open: false, minimized: false, maximized: false, default: false, x: 0, y: 0, zIndex: 0 },
+  };
+
+  function openAppFromMenu(key: string) {
+    const template = headerApps[key];
+    if (!template) return;
+    const app = { ...template, zIndex: headerNextZ++ };
+    openTab(app);
+    addOrOpenApp(app);
+  }
 
   type ToggleState = {
     airplane: boolean;
@@ -210,6 +272,7 @@
     window.removeEventListener('mouseup', stopWinDrag);
   }
 
+
   const menuGroups: MenuGroup[] = [
     {
       id: 'apple',
@@ -217,33 +280,33 @@
       items: [
         { label: 'Über diesen Mac', action: openAboutMac },
         { divider: true, label: '' },
-        { label: 'Systemeinstellungen...' },
-        { label: 'App Store...' },
+        { label: 'Systemeinstellungen...', action: () => openAppFromMenu('settings') },
+        { label: 'App Store...', action: () => openAppFromMenu('appstore') },
         { divider: true, label: '' },
         { label: 'Letzte Elemente', disabled: true },
         { divider: true, label: '' },
-        { label: 'Sofort beenden...' },
+        { label: 'Sofort beenden...', action: () => window.location.href = '/'},
         { divider: true, label: '' },
-        { label: 'Ruhezustand' },
-        { label: 'Neu starten...' },
-        { label: 'Ausschalten...' },
+        { label: 'Ruhezustand', action: () => window.location.href = '/' },
+        { label: 'Neu starten...', action: () => window.location.href = '/' },
+        { label: 'Ausschalten...', action: () => window.location.href = '/'},
         { divider: true, label: '' },
-        { label: 'Bildschirm sperren' },
-        { label: 'Abmelden...' }
+        { label: 'Bildschirm sperren', action: () => window.location.href = '/' },
+        { label: 'Abmelden...', action: () => window.location.href = '/' }
       ]
     },
     {
       id: 'finder',
       label: 'Finder',
       items: [
-        { label: 'Über den Finder' },
+        { label: 'Über den Finder', action: () => openAppFromMenu('finder') },
         { divider: true, label: '' },
-        { label: 'Einstellungen...' },
+        { label: 'Einstellungen...', action: () => openAppFromMenu('settings') },
         { divider: true, label: '' },
-        { label: 'Papierkorb leeren' },
+        { label: 'Papierkorb leeren', action: () => openAppFromMenu('trash') },
         { divider: true, label: '' },
-        { label: 'Finder ausblenden' },
-        { label: 'Andere ausblenden' },
+        { label: 'Finder ausblenden', disabled: true },
+        { label: 'Andere ausblenden', disabled: true },
         { label: 'Alle anzeigen', disabled: true }
       ]
     },
@@ -251,20 +314,20 @@
       id: 'file',
       label: 'Datei',
       items: [
-        { label: 'Neues Finder Fenster' },
-        { label: 'Neuer Ordner' },
+        { label: 'Neues Finder Fenster', action: () => openAppFromMenu('finder') },
+        { label: 'Neuer Ordner', action: () => openAppFromMenu('finder') },
         { label: 'Neuer Ordner mit Auswahl', disabled: true },
         { divider: true, label: '' },
-        { label: 'Neuer Smart Ordner' },
+        { label: 'Neuer Smart Ordner', action: () => openAppFromMenu('finder') },
         { divider: true, label: '' },
-        { label: 'Neuer Tab' },
+        { label: 'Neuer Tab', action: () => openAppFromMenu('finder') },
         { label: 'Öffnen', disabled: true },
         { label: 'Öffnen mit', disabled: true },
         { divider: true, label: '' },
         { label: 'Drucken', disabled: true },
         { label: 'Fenster schliessen', disabled: true },
         { divider: true, label: '' },
-        { label: 'Informationen' },
+        { label: 'Informationen', action: () => openAppFromMenu('info') },
         { label: 'Umbenennen', disabled: true },
         { divider: true, label: '' },
         { label: 'Komprimieren', disabled: true },
@@ -272,10 +335,10 @@
         { label: 'Alias erzeugen', disabled: true },
         { label: 'Schnellansicht', disabled: true },
         { divider: true, label: '' },
-        { label: 'Zum Papierkorb', disabled: true },
+        { label: 'Zum Papierkorb', action: () => openAppFromMenu('trash') },
         { label: 'Auswerfen', disabled: true },
         { divider: true, label: '' },
-        { label: 'Suchen' },
+        { label: 'Suchen', disabled: true },
         { label: 'Tags...', disabled: true }
       ]
     },
@@ -291,9 +354,9 @@
         { label: 'Einfügen', disabled: true },
         { label: 'Alles auswählen', disabled: true },
         { divider: true, label: '' },
-        { label: 'Zwischenablage anzeigen' },
-        { label: 'Diktat starten...' },
-        { label: 'Emoji & Symbole' }
+        { label: 'Zwischenablage anzeigen', disabled: true},
+        { label: 'Diktat starten...', disabled: true },
+        { label: 'Emoji & Symbole', disabled: true }
       ]
     },
     {
@@ -311,7 +374,8 @@
         { label: 'Seitenleiste ausblenden', disabled: true },
         { label: 'Vorschau einblenden', disabled: true },
         { divider: true, label: '' },
-        { label: 'Vollbild starten' }
+        { label: 'Vollbild starten', disabled: true },
+        { label: 'Vollbild beenden', disabled: true }
       ]
     },
     {
@@ -321,18 +385,18 @@
         { label: 'Zurück', disabled: true },
         { label: 'Vorwärts', disabled: true },
         { divider: true, label: '' },
-        { label: 'Aktueller Ordner' },
+        { label: 'Aktueller Ordner', action: () => openAppFromMenu('finder') },
         { divider: true, label: '' },
-        { label: 'Zuletzt benutzt' },
-        { label: 'Dokumente' },
-        { label: 'Schreibtisch' },
-        { label: 'Downloads' },
-        { label: 'Benutzerordner' },
-        { label: 'Computer' },
-        { label: 'Netzwerk' },
+        { label: 'Zuletzt benutzt', action: () => openAppFromMenu('finder') },
+        { label: 'Dokumente', action: () => openAppFromMenu('finder') },
+        { label: 'Schreibtisch', action: () => openAppFromMenu('finder') },
+        { label: 'Downloads', action: () => openAppFromMenu('finder') },
+        { label: 'Benutzerordner', action: () => openAppFromMenu('finder') },
+        { label: 'Computer', action: () => openAppFromMenu('finder') },
+        { label: 'Netzwerk', action: () => openAppFromMenu('finder') },
         { divider: true, label: '' },
-        { label: 'Zum Ordner...' },
-        { label: 'Mit Server verbinden...' }
+        { label: 'Zum Ordner...', action: () => openAppFromMenu('finder') },
+        { label: 'Mit Server verbinden...', action: () => openAppFromMenu('finder') }
       ]
     },
     {
@@ -345,9 +409,9 @@
         { label: 'Fenster nach links', disabled: true },
         { label: 'Fenster nach rechts', disabled: true },
         { divider: true, label: '' },
-        { label: 'Durch Fenster wechseln' },
+        { label: 'Durch Fenster wechseln', disabled: true },
         { divider: true, label: '' },
-        { label: 'Alle nach vorne' }
+        { label: 'Alle nach vorne', disabled: true }
       ]
     },
     {
@@ -356,7 +420,7 @@
       items: [
         { label: 'Finder Feedback senden' },
         { divider: true, label: '' },
-        { label: 'macOS Hilfe' }
+        { label: 'macOS Hilfe', action: () => window.open('https://support.apple.com', '_blank') }
       ]
     }
   ];
@@ -368,16 +432,16 @@
   let contextY = 0;
 
   const contextItems = [
-    { label: 'Neuer Ordner' },
-    { label: 'Informationen' },
-    { label: 'Schreibtischhintergrund ändern' },
+    { label: 'Neuer Ordner', disabled: true },
+    { label: 'Informationen', disabled: true },
+    { label: 'Schreibtischhintergrund ändern', disabled: true },
     { divider: true },
-    { label: 'Stapel verwenden' },
-    { label: 'Sortieren nach' },
-    { label: 'Aufräumen' },
-    { label: 'Aufräumen nach' },
+    { label: 'Stapel verwenden', disabled: true },
+    { label: 'Sortieren nach', disabled: true },
+    { label: 'Aufräumen', disabled: true },
+    { label: 'Aufräumen nach', disabled: true },
     { divider: true },
-    { label: 'Darstellungsoptionen anzeigen' }
+    { label: 'Darstellungsoptionen anzeigen', disabled: true }
   ];
   let time = '';
   let date = '';

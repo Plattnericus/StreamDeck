@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { appStore } from "$lib/appStore";
+
   let tabs = [{ id: 1, title: "Neuer Tab", url: "" }];
   let activeTabId = 1;
   let nextId = 2;
@@ -12,7 +14,13 @@
   };
 
   const closeTab = (id: number) => {
-    if (tabs.length === 1) return;
+    if (tabs.length === 1) {
+      // Letzter Tab → komplette App schließen
+      appStore.update(apps =>
+        apps.map(a => a.name === "Safari" ? { ...a, open: false } : a)
+      );
+      return;
+    }
     tabs = tabs.filter((tab) => tab.id !== id);
     if (activeTabId === id) {
       activeTabId = tabs[0]?.id ?? 1;

@@ -11,12 +11,17 @@ export function openTab(
   windowWidth: number = typeof window !== 'undefined' ? window.innerWidth : 1024,
   windowHeight: number = typeof window !== 'undefined' ? window.innerHeight : 768
 ) {
+  const headerHeight = 28;
+  const dockHeight = 85;
+  const usableTop = headerHeight;
+  const usableHeight = windowHeight - headerHeight - dockHeight;
+
   const centerX = (windowWidth / 2) - (app.width / 2);
-  const centerY = (windowHeight / 2) - (app.height / 2);
+  const centerY = usableTop + (usableHeight / 2) - (app.height / 2);
 
   if (!app.open) {
     app.x = centerX;
-    app.y = centerY;
+    app.y = Math.max(usableTop, centerY);
   }
 
   app.open = true;
@@ -31,8 +36,13 @@ export function getCenterPosition(
   windowWidth: number = typeof window !== 'undefined' ? window.innerWidth : 1024,
   windowHeight: number = typeof window !== 'undefined' ? window.innerHeight : 768
 ) {
+  const headerHeight = 28;
+  const dockHeight = 85;
+  const usableTop = headerHeight;
+  const usableHeight = windowHeight - headerHeight - dockHeight;
+
   return {
     x: (windowWidth / 2) - (width / 2),
-    y: (windowHeight / 2) - (height / 2)
+    y: Math.max(usableTop, usableTop + (usableHeight / 2) - (height / 2))
   };
 }
