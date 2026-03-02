@@ -86,5 +86,5 @@
     - Suchfunktion
 - 3D Modell, when clicked out, modell disappears, flexbox doesnt work, fix it make it better
 - beim terminal sollte es bei uname das richtige Betriebsystem erkennen und browser und ausgeben
-- Manche commands die ich nciht weiße löschen im Terminal
+- Manche commands die ich nicht weiß löschen im Terminal
 - Beim finder ein Dateisysem /static Folder, dort sollten Dateien von Cloud (Felix Kiste) sein und man kann die anschauen und viewen wie bei einem richtigen viewer, kann sie löschen --> Papierkorb und dann endgültig löschen(localstorage)
