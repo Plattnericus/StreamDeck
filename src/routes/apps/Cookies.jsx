@@ -53,8 +53,8 @@ export default function Cookies({ onConsent, onDecline }) {
           </div>
         </div>
       )}
-      {showCookiesInfo && <CookiesInfo onClose={() => setShowCookiesInfo(false)} />}
-      {showDatenschutz && <Datenschutz onClose={() => setShowDatenschutz(false)} />}
+      {showCookiesInfo && <CookiesInfo popup={true} onClose={() => setShowCookiesInfo(false)} />}
+      {showDatenschutz && <Datenschutz popup={true} onClose={() => setShowDatenschutz(false)} />}
     </>
   );
 }

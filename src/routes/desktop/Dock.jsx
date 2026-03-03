@@ -101,6 +101,9 @@ export default function Dock({ onOpenApp }) {
   const [dockMouseX, setDockMouseX] = useState(null);
   const nextZIndex = useRef(10);
   const [enteringIds, setEnteringIds] = useState(new Set());
+  const [draggingIds, setDraggingIds] = useState(new Set());
+  const [minimizingIds, setMinimizingIds] = useState(new Set());
+  const [restoringIds, setRestoringIds] = useState(new Set());
 
   // Persist non-default dock apps whenever the list changes
   useEffect(() => {
@@ -193,6 +196,14 @@ export default function Dock({ onOpenApp }) {
   }, [headerHeight]);
 
   const handleMouseUp = useCallback(() => {
+    if (dragRef.current) {
+      const id = dragRef.current.appId;
+      setDraggingIds((prev) => { const s = new Set(prev); s.delete(id); return s; });
+    }
+    if (resizeRef.current) {
+      const id = resizeRef.current.appId;
+      setDraggingIds((prev) => { const s = new Set(prev); s.delete(id); return s; });
+    }
     dragRef.current = null;
     resizeRef.current = null;
   }, []);
@@ -249,6 +260,9 @@ export default function Dock({ onOpenApp }) {
   );
 
   const closeApp = useCallback((id) => {
+    // Clean up any ongoing minimize/restore animations
+    setMinimizingIds((s) => { const n = new Set(s); n.delete(id); return n; });
+    setRestoringIds((s) => { const n = new Set(s); n.delete(id); return n; });
     setApps((prev) =>
       prev.map((app) =>
         app.id === id
@@ -259,11 +273,27 @@ export default function Dock({ onOpenApp }) {
   }, []);
 
   const toggleMinimize = useCallback((id) => {
-    setApps((prev) =>
-      prev.map((app) =>
-        app.id === id ? { ...app, minimized: !app.minimized } : app
-      )
-    );
+    setApps((prev) => {
+      const app = prev.find((a) => a.id === id);
+      if (!app) return prev;
+
+      if (!app.minimized) {
+        // Minimizing: play animation first, then actually hide
+        setMinimizingIds((s) => new Set(s).add(id));
+        setTimeout(() => {
+          setMinimizingIds((s) => { const n = new Set(s); n.delete(id); return n; });
+          setApps((p) => p.map((a) => a.id === id ? { ...a, minimized: true } : a));
+        }, 350);
+        return prev; // don't set minimized yet
+      } else {
+        // Restoring: set minimized false immediately, play restore animation
+        setRestoringIds((s) => new Set(s).add(id));
+        setTimeout(() => {
+          setRestoringIds((s) => { const n = new Set(s); n.delete(id); return n; });
+        }, 350);
+        return prev.map((a) => a.id === id ? { ...a, minimized: false } : a);
+      }
+    });
   }, []);
 
   const toggleMaximize = useCallback((id) => {
@@ -379,6 +409,7 @@ export default function Dock({ onOpenApp }) {
       focusApp(id);
       const app = apps.find((a) => a.id === id);
       if (!app) return;
+      setDraggingIds((prev) => new Set(prev).add(id));
       dragRef.current = {
         appId: id,
         startX: e.clientX,
@@ -397,6 +428,7 @@ export default function Dock({ onOpenApp }) {
       focusApp(id);
       const app = apps.find((a) => a.id === id);
       if (!app) return;
+      setDraggingIds((prev) => new Set(prev).add(id));
       resizeRef.current = {
         appId: id,
         startX: e.clientX,
@@ -418,17 +450,19 @@ export default function Dock({ onOpenApp }) {
     <>
       {/* App windows */}
       {apps
-        .filter((app) => app.open && !app.minimized)
+        .filter((app) => app.open && (!app.minimized || minimizingIds.has(app.id)))
         .map((app) => {
           const isFocused = app.id === focusedId;
+          const isMinimizing = minimizingIds.has(app.id);
+          const isRestoring = restoringIds.has(app.id);
           const AppComponent = app.component;
           return (
             <div
               key={app.id}
-              className={`app-window${app.maximized ? ' maximized' : ''}${isFocused ? ' focused' : ''}`}
+              className={`app-window${app.maximized ? ' maximized' : ''}${isFocused ? ' focused' : ''}${draggingIds.has(app.id) ? ' no-transition' : ''}${isMinimizing ? ' minimizing' : ''}${isRestoring ? ' restoring' : ''}`}
               style={
                 app.maximized
-                  ? { left: 0, top: headerHeight, width: '100%', height: `calc(100% - ${headerHeight}px - 85px)`, zIndex: app.zIndex }
+                  ? { left: 0, top: headerHeight, width: window.innerWidth, height: window.innerHeight - headerHeight - 85, zIndex: app.zIndex }
                   : { left: app.x, top: app.y, width: app.width, height: app.height, zIndex: app.zIndex }
               }
               onMouseDown={() => focusApp(app.id)}
@@ -457,7 +491,7 @@ export default function Dock({ onOpenApp }) {
                 <span className="title-text">{app.name}</span>
               </div>
               <div className="window-content">
-                <AppComponent onOpenApp={handleOpenApp} />
+                <AppComponent onOpenApp={handleOpenApp} onClose={() => closeApp(app.id)} />
               </div>
               {!app.maximized && (
                 <div

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 
-export default function Impressum({ popup = true, onClose }) {
+export default function Impressum({ popup = false, onClose }) {
   useEffect(() => {
     if (!popup) return;
     const handler = (e) => { if (e.key === 'Escape') onClose?.(); };

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import './Browser.css';
 
-export default function Browser() {
+export default function Browser({ onClose }) {
   const [tabs, setTabs] = useState([{ id: 1, title: 'Neuer Tab', url: '' }]);
   const [activeTabId, setActiveTabId] = useState(1);
   const [nextId, setNextId] = useState(2);
@@ -17,7 +17,11 @@ export default function Browser() {
   };
 
   const closeTab = (id) => {
-    if (tabs.length === 1) return; // last tab — do nothing in standalone
+    if (tabs.length === 1) {
+      // Last tab — close the entire browser window
+      if (onClose) onClose();
+      return;
+    }
     setTabs((prev) => prev.filter((t) => t.id !== id));
     if (activeTabId === id) {
       setActiveTabId(tabs.find((t) => t.id !== id)?.id ?? 1);

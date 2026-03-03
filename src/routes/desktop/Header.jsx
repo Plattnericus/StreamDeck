@@ -41,6 +41,27 @@ function saveSettings(s) {
   localStorage.setItem('control_center_settings_v1', JSON.stringify(s));
 }
 
+/* ---- music player persistence ---- */
+const MUSIC_STORAGE_KEY = 'music_player_state_v1';
+
+function loadMusicState() {
+  try {
+    const raw = localStorage.getItem(MUSIC_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        trackIdx: typeof parsed.trackIdx === 'number' && parsed.trackIdx >= 0 && parsed.trackIdx < tracks.length ? parsed.trackIdx : 0,
+        playing: !!parsed.playing,
+      };
+    }
+  } catch { /* ignore */ }
+  return { trackIdx: 0, playing: false };
+}
+
+function saveMusicState(trackIdx, playing) {
+  localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify({ trackIdx, playing }));
+}
+
 /* ------------------------------------------------------------------ */
 /*  Helper — German date/time                                         */
 /* ------------------------------------------------------------------ */
@@ -107,9 +128,14 @@ export default function Header({ onOpenApp }) {
 
   /* ---- music ---- */
   const audioRef = useRef(null);
-  const [trackIdx, setTrackIdx] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [trackIdx, setTrackIdx] = useState(() => loadMusicState().trackIdx);
+  const [playing, setPlaying] = useState(() => loadMusicState().playing);
   const [progress, setProgress] = useState(0);
+
+  // persist music player state
+  useEffect(() => {
+    saveMusicState(trackIdx, playing);
+  }, [trackIdx, playing]);
 
   const currentTrack = tracks[trackIdx];
 

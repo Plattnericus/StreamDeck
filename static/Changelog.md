@@ -95,3 +95,4 @@
 - Manche commands die ich nicht weiß löschen im Terminal
 - Beim finder ein Dateisysem /static Folder, dort sollten Dateien von Cloud (Felix Kiste) sein und man kann die anschauen und viewen wie bei einem richtigen viewer, kann sie löschen --> Papierkorb und dann endgültig löschen(localstorage)
 - Fix taskbar (Css) LINK:https://snipzy.dev/snippets/liquid-glass-card.html
+- Fix APP. 3D Model (Fullscreen escape/Layout)

@@ -8,7 +8,6 @@ import Galerie from './Galerie';
 import Impressum from './Impressum';
 import Agb from './AGB';
 import Info from './Info';
-import Terminal from './Terminal';
 import Datenschutz from './Datenschutz';
 import Model from './Model';
 import CookiesInfo from './Cookies-info';
@@ -33,7 +32,6 @@ const APP_LIST = [
   { id: 102, name: 'Info', icon: 'info.webp', component: Info, category: 'System', subtitle: 'Produktinformationen', description: 'Informationen zum Produkt StreamDeck und dessen Funktionen.', developer: 'System', version: '1.0.0', width: 320, height: 480 },
   { id: 103, name: '3D-Modell', icon: 'model.webp', component: Model, category: 'System', subtitle: '3D-Modellviewer', description: 'Anzeigen und Interagieren mit 3D-Modellen.', developer: 'System', version: '1.0.0', width: 520, height: 760 },
   { id: 104, name: 'Galerie', icon: 'fotos.webp', component: Galerie, category: 'System', subtitle: 'Bilder', description: 'Durchsuchen und Anzeigen von Bildern.', developer: 'System', version: '8.0.0', width: 720, height: 560 },
-  { id: 105, name: 'Terminal', icon: 'terminal.webp', component: Terminal, category: 'System', subtitle: 'Kommandozeile', description: 'Ausführen von Befehlen über eine integrierte Konsole.', developer: 'System', version: '1.0.0', width: 920, height: 760 },
   { id: 106, name: 'Changelog', icon: 'changelog.webp', component: Changelog, category: 'System', subtitle: 'Änderungen', description: 'Versionsverlauf und Neuerungen des Projekts.', developer: 'System', version: '9.4.2', width: 640, height: 480 },
   { id: 107, name: 'Datenschutz', icon: 'datenschutz.webp', component: Datenschutz, category: 'System', subtitle: 'Datenschutzrichtlinie', description: 'Informationen zur Verarbeitung und zum Schutz personenbezogener Daten.', developer: 'System', version: '1.20b.0', width: 720, height: 560 },
   { id: 108, name: 'Impressum', icon: 'impressum.webp', component: Impressum, category: 'System', subtitle: 'Rechtliche Angaben', description: 'Gesetzlich vorgeschriebene Angaben zum Anbieter.', developer: 'System', version: '21.0.0', width: 720, height: 560 },

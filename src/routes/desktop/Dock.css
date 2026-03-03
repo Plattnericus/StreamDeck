@@ -9,7 +9,13 @@
   background: rgba(30, 30, 30, 0.92);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
-  transition: box-shadow 0.2s ease;
+  transition:
+    left 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    top 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    width 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    height 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    border-radius 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.2s ease;
   animation: windowOpen 0.25s ease-out;
 }
 
@@ -21,6 +27,42 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+.app-window.no-transition {
+  transition: none !important;
+}
+
+/* ===== MINIMIZE / RESTORE ANIMATIONS ===== */
+.app-window.minimizing {
+  animation: windowMinimize 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
+}
+
+.app-window.restoring {
+  animation: windowRestore 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes windowMinimize {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4) translateY(40vh);
+  }
+}
+
+@keyframes windowRestore {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translateY(40vh);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }
 

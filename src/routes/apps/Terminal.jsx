@@ -108,6 +108,11 @@ export default function Terminal() {
     scrollDown();
   }, [scrollDown]);
 
+  const addJsxLine = useCallback((jsx) => {
+    setLines((prev) => [...prev, { jsx }]);
+    scrollDown();
+  }, [scrollDown]);
+
   const prompt = () => `${user}@${hostname}:${pathRef.current}$ `;
 
   // Build commands object
@@ -142,7 +147,6 @@ export default function Terminal() {
         '  unalias [k]              Entfernt einen Alias',
         '  history                  Befehlshistorie',
         '  rev [text]               Text umkehren',
-        '  base64 [text]            Text in Base64 kodieren',
         '  calc [expr]              Rechner (+, -, *, /)',
         '  color [xy]               Terminal-Farbe ändern (0-f)',
         '  color list               Zeigt alle Farben',
@@ -155,10 +159,8 @@ export default function Terminal() {
       ],
       clear: () => { setLines([]); },
       echo: (_args, full) => {
-        // Strip 'echo ' prefix to get the raw argument string
         const raw = full.replace(/^echo\s*/, '');
 
-        // Handle >> (append) and > (overwrite) redirection
         const appendMatch = raw.match(/^(.*)\s*>>\s*(.+)$/);
         const overwriteMatch = !appendMatch && raw.match(/^(.*)\s*>\s*(.+)$/);
 
@@ -168,7 +170,6 @@ export default function Terminal() {
           let text = m[1].trim();
           const fileName = m[2].trim();
 
-          // Strip surrounding quotes from text
           if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
             text = text.slice(1, -1);
           }
@@ -183,14 +184,11 @@ export default function Terminal() {
           if (Array.isArray(existing)) return `echo: ${fileName}: Ist ein Verzeichnis`;
 
           if (isAppend) {
-            // >> append
             fs[resolved] = typeof existing === 'string' ? existing + '\n' + text : text;
           } else {
-            // > overwrite
             fs[resolved] = text;
           }
 
-          // Register file in parent directory if new
           if (!fs[parent].includes(baseName)) {
             fs[parent].push(baseName);
           }
@@ -198,7 +196,6 @@ export default function Terminal() {
           return '';
         }
 
-        // Normal echo — just print
         let text = raw;
         if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
           text = text.slice(1, -1);
@@ -447,7 +444,26 @@ export default function Terminal() {
       },
       color: (args) => {
         if (!args[0]) return 'color: Verwendung: color [bg][fg] oder color list / color reset';
-        if (args[0] === 'list') return Object.entries(colorMap).map(([k, v]) => `  ${k} = ${v}`);
+        if (args[0] === 'list') {
+          Object.entries(colorMap).forEach(([k, v]) => {
+            addJsxLine(
+              <span style={{ fontFamily: 'inherit', fontSize: 'inherit' }}>
+                {'  '}{k} = {v}{' '}
+                <span style={{
+                  display: 'inline-block',
+                  width: 12,
+                  height: 12,
+                  background: v,
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  verticalAlign: 'middle',
+                  marginLeft: 6,
+                }} />
+              </span>
+            );
+          });
+          return;
+        }
         if (args[0] === 'reset') {
           setBgColor('rgba(18, 18, 22, 0.95)');
           setTermColor('#e2e2e2');
@@ -467,17 +483,94 @@ export default function Terminal() {
         }
         return 'color: Verwende 1 oder 2 Zeichen (0-f). Beispiel: color a, color 0a';
       },
-      neofetch: () => [
-        '', `         .:'          ${user}@${hostname}`,
-        `     __ :'__          ──────────────────`,
-        `  .'  \\   /  '.      OS: macOS Sequoia`,
-        `  :  .  > <  .  :     Host: ${hostname}`,
-        `  '.  /   \\  .'      Kernel: Darwin 23.4.0`,
-        `    '.___.'          Shell: nexor-sh`,
-        `                     Terminal: Terminal.app`,
-        `                     CPU: Apple Silicon`,
-        `                     Memory: 16 GB`, '',
-      ],
+      neofetch: () => {
+        const green = '#4ade80';
+        const white = '#d4d4d4';
+        const dim = '#888';
+        const logo = [
+          '                 ,xNMM.',
+          '               .OMMMMo',
+          '               OMMM0,',
+          '     .;loddo:  loolloddol;.',
+          '   cKMMMMMMMMMMNWMMMMMMMMMM0:',
+          ' .KMMMMMMMMMMMMMMMMMMMMMMMWd.',
+          ' XMMMMMMMMMMMMMMMMMMMMMMMX.',
+          ';MMMMMMMMMMMMMMMMMMMMMMMM:',
+          ':MMMMMMMMMMMMMMMMMMMMMMMM:',
+          '.MMMMMMMMMMMMMMMMMMMMMMMMX.',
+          ' kMMMMMMMMMMMMMMMMMMMMMMMMWd.',
+          ' .XMMMMMMMMMMMMMMMMMMMMMMMMk',
+          '  .XMMMMMMMMMMMMMMMMMMMMK.',
+          '    kMMMMMMMMMMMMMMMMMMd.',
+          '     ;KMMMMMMMWXXWMMMk.',
+          '       .cooc,.    .,coo:.',
+        ];
+        const info = [
+          { label: `${user}@${hostname}`, color: green },
+          { label: '──────────────────', color: dim },
+          { label: 'OS', value: 'macOS Sequoia 15.4', color: white },
+          { label: 'Host', value: hostname, color: white },
+          { label: 'Kernel', value: 'Darwin 24.4.0', color: white },
+          { label: 'Shell', value: 'nexor-sh 1.0', color: white },
+          { label: 'Terminal', value: 'Terminal.app', color: white },
+          { label: 'CPU', value: 'Apple M4 Pro', color: white },
+          { label: 'GPU', value: 'Apple M4 Pro', color: white },
+          { label: 'Memory', value: '16384 MiB', color: white },
+          { label: '', value: '', color: white },
+          { label: 'colors', value: null, color: null },
+        ];
+
+        addLine('');
+        logo.forEach((logoLine, i) => {
+          const infoEntry = info[i];
+          if (infoEntry) {
+            if (infoEntry.label === 'colors') {
+              // Render color blocks
+              const colorBlocks = ['#1e1e1e','#ef4444','#22c55e','#eab308','#3b82f6','#a855f7','#06b6d4','#d4d4d4'];
+              addJsxLine(
+                <span style={{ fontFamily: 'inherit', fontSize: 'inherit' }}>
+                  <span style={{ color: green }}>{logoLine}</span>
+                  {'   '}
+                  {colorBlocks.map((c, j) => (
+                    <span key={j} style={{
+                      display: 'inline-block',
+                      width: 14,
+                      height: 14,
+                      background: c,
+                      borderRadius: 2,
+                      marginRight: 2,
+                      verticalAlign: 'middle',
+                      border: c === '#1e1e1e' ? '1px solid rgba(255,255,255,0.15)' : 'none',
+                    }} />
+                  ))}
+                </span>
+              );
+            } else if (infoEntry.value !== undefined && infoEntry.value !== null) {
+              addJsxLine(
+                <span style={{ fontFamily: 'inherit', fontSize: 'inherit' }}>
+                  <span style={{ color: green }}>{logoLine}</span>
+                  {'   '}
+                  <span style={{ color: green, fontWeight: 600 }}>{infoEntry.label}</span>
+                  {infoEntry.label && <span style={{ color: dim }}>: </span>}
+                  <span style={{ color: infoEntry.color }}>{infoEntry.value}</span>
+                </span>
+              );
+            } else {
+              addJsxLine(
+                <span style={{ fontFamily: 'inherit', fontSize: 'inherit' }}>
+                  <span style={{ color: green }}>{logoLine}</span>
+                  {'   '}
+                  <span style={{ color: infoEntry.color }}>{infoEntry.label}</span>
+                </span>
+              );
+            }
+          } else {
+            addLine(logoLine, green);
+          }
+        });
+        addLine('');
+        return;
+      },
       shutdown: () => {
         addLine('Shutting down...', '#ef4444');
         setInputDisabled(true);
@@ -509,7 +602,7 @@ export default function Terminal() {
       },
     };
     return commands;
-  }, [addLine, scrollDown]);
+  }, [addLine, addJsxLine, scrollDown]);
 
   const runAptInstall = useCallback((pkg) => {
     if (pkg !== 'opsec') {
@@ -652,6 +745,8 @@ export default function Terminal() {
           {lines.map((line, i) =>
             line.image ? (
               <img key={i} src={line.image} alt="opsec" className="term-image" />
+            ) : line.jsx ? (
+              <div key={i} className="line">{line.jsx}</div>
             ) : (
               <div key={i} className="line" style={{ color: line.color || termColor }}>{line.text}</div>
             )
