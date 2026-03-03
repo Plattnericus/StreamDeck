@@ -73,7 +73,7 @@
 
   const dispatch = createEventDispatcher<{ openapp: { app: App } }>();
 
-  let nextZIndex = 1000;
+  let nextZIndex = -1000;
   const installed = new Set<number>();
 
   function iconUrl(icon: string) {
