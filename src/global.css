@@ -1,0 +1,40 @@
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+}
+
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: 'InterVariable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-optical-sizing: auto;
+  }
+}
+
+html, body, button, input, select, textarea {
+  font-family: inherit;
+}
+
+* {
+  scrollbar-width: none !important;
+}
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+  display: none !important;
+}
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+::-webkit-scrollbar-corner {
+  background: transparent !important;
+}

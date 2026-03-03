@@ -1,0 +1,75 @@
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bsod {
+  --light-grey: #e0e2f4;
+  --grey: #aaaaaa;
+  --blue: #0414a7;
+  --base-font-size: 20px;
+  --font-stack: "Courier New", "Courier", monospace;
+
+  position: fixed;
+  inset: 0;
+  background: var(--blue);
+  z-index: 999999;
+  overflow: auto;
+  padding-top: 15%;
+  font: normal var(--base-font-size) / 1.25rem var(--font-stack);
+  color: var(--light-grey);
+}
+
+.bsod h1,
+.bsod p,
+.bsod a {
+  color: var(--light-grey);
+  font-family: var(--font-stack);
+  font-weight: normal;
+}
+
+.bsod h1 {
+  font-size: 2.75rem;
+  line-height: 1.05em;
+}
+
+.bsod-container {
+  width: 90%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.neg {
+  text-align: center;
+  color: var(--blue);
+}
+
+.bg {
+  background: var(--grey);
+  padding: 0 15px 2px 13px;
+  display: inline-block;
+}
+
+.title {
+  margin: 0 0 50px 0;
+}
+
+.bsod .nav {
+  margin-top: 35px;
+  text-align: center;
+}
+
+.bsod .link {
+  text-decoration: none;
+  padding: 0 9px 2px 8px;
+  display: inline-block;
+  color: var(--light-grey);
+}
+
+.bsod .link:hover,
+.bsod .link:focus {
+  background: var(--grey);
+  color: var(--blue);
+  outline: none;
+}

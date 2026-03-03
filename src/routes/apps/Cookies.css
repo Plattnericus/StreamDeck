@@ -1,0 +1,25 @@
+.cookie-overlay{position:fixed;bottom:24px;right:24px;z-index:9999;pointer-events:auto}
+.cookie-banner{position:relative;width:370px;padding:22px 24px 18px;border-radius:22px;color:#fff;display:flex;flex-direction:column;gap:14px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.08) 40%,rgba(200,220,255,.12) 70%,rgba(255,255,255,.06) 100%);backdrop-filter:blur(32px) saturate(1.6) brightness(1.05);-webkit-backdrop-filter:blur(32px) saturate(1.6) brightness(1.05);border:1px solid rgba(255,255,255,.32);box-shadow:0 24px 80px rgba(0,0,0,.4),0 8px 32px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.1),inset 0 -20px 40px rgba(255,255,255,.06);animation:banner-slide-in 500ms cubic-bezier(.34,1.56,.64,1) forwards;text-shadow:0 1px 8px rgba(0,0,0,.3)}
+.cookie-banner.closing{animation:banner-slide-out 400ms cubic-bezier(.55,0,1,.45) forwards}
+.cookie-banner .glass-shine{position:absolute;inset:-50% -20% auto -20%;height:65%;background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,rgba(255,255,255,.15) 30%,rgba(255,255,255,.02) 100%);transform:rotate(-5deg);opacity:.55;pointer-events:none;border-radius:50%}
+.cookie-banner .glass-caustic{position:absolute;inset:0;background:radial-gradient(140px 80px at 80% 15%,rgba(255,255,255,.35),transparent 70%),radial-gradient(200px 120px at 15% 85%,rgba(180,210,255,.15),transparent 70%),radial-gradient(100px 100px at 50% 50%,rgba(255,255,255,.08),transparent 70%);opacity:.6;mix-blend-mode:screen;pointer-events:none;animation:caustic-drift 6s ease-in-out infinite}
+.cookie-icon{font-size:32px;text-align:center;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));animation:cookie-bounce 2s ease-in-out infinite;position:relative;z-index:1}
+.cookie-content{position:relative;z-index:1}
+.cookie-title{margin:0 0 6px;font-size:17px;font-weight:700;letter-spacing:.2px}
+.cookie-text{margin:0;font-size:12.5px;line-height:1.5;opacity:.88}
+.cookie-actions{display:flex;gap:10px;position:relative;z-index:1}
+.btn{flex:1;padding:10px 16px;border-radius:14px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;letter-spacing:.2px;transition:all 200ms ease;position:relative;overflow:hidden}
+.btn-decline{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.btn-decline:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.4);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.3)}
+.btn-accept{background:linear-gradient(135deg,rgba(59,130,246,.7),rgba(99,102,241,.7));color:#fff;border:1px solid rgba(130,170,255,.4);box-shadow:0 4px 16px rgba(59,130,246,.3),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-accept:hover{background:linear-gradient(135deg,rgba(59,130,246,.85),rgba(99,102,241,.85));transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.4),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn:active{transform:translateY(0) scale(.98)}
+.cookie-links{display:flex;justify-content:center;align-items:center;gap:8px;position:relative;z-index:1}
+.link-btn{background:none;border:none;color:#93c5fd;font-size:11.5px;cursor:pointer;text-decoration:underline;text-underline-offset:2px;opacity:.7;padding:0;transition:opacity 200ms,color 200ms}
+.link-btn:hover{color:#bfdbfe;opacity:1}
+.link-sep{color:rgba(255,255,255,.35);font-size:12px}
+@keyframes banner-slide-in{0%{opacity:0;transform:translateY(40px) scale(.92)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes banner-slide-out{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(30px) scale(.95)}}
+@keyframes cookie-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes caustic-drift{0%,100%{opacity:.5}50%{opacity:.7}}
+@media(max-width:440px){.cookie-overlay{bottom:12px;right:12px;left:12px}.cookie-banner{width:auto}}

@@ -1,0 +1,195 @@
+.app-store-glass {
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background:
+    radial-gradient(520px 260px at 20% 0%, rgba(0, 122, 255, 0.16), transparent 60%),
+    radial-gradient(520px 260px at 80% 0%, rgba(255, 120, 210, 0.12), transparent 62%),
+    rgba(14, 14, 18, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(165%);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.app-store-scroller {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 16px 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--min, 320px), 1fr));
+  gap: 16px;
+  align-content: flex-start;
+  scrollbar-width: none;
+}
+
+.app-store-scroller::-webkit-scrollbar { width: 10px; }
+.app-store-scroller::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+.app-store-scroller::-webkit-scrollbar-track { background: transparent; }
+
+.app-store-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.app-store-search-icon {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.app-store-search-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.92);
+  outline: none;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.app-store-search-input::placeholder { color: rgba(255, 255, 255, 0.32); }
+.app-store-search-input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(0, 122, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.18);
+}
+.app-store-search-input::-webkit-search-cancel-button { display: none; }
+
+.app-store-search-clear {
+  all: unset;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.09);
+  cursor: pointer;
+}
+.app-store-search-clear svg { width: 12px; height: 12px; color: rgba(255, 255, 255, 0.6); }
+.app-store-search-clear:hover { background: rgba(255, 255, 255, 0.17); }
+
+.app-store-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  font-size: 13px;
+}
+
+.app-store-card {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  animation: appStorePop 0.22s ease forwards;
+  opacity: 0;
+  transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.16s, border-color 0.16s, box-shadow 0.16s;
+}
+
+.app-store-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.app-store-card.loading { opacity: 0.85; }
+.app-store-card.error { border-color: rgba(255, 100, 100, 0.3); background: rgba(255, 100, 100, 0.05); }
+
+@keyframes appStorePop {
+  from { opacity: 0; transform: translateY(6px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.app-store-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.app-store-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.app-store-card:hover .app-store-icon { transform: scale(1.06); }
+
+.app-store-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.app-store-name { color: rgba(255, 255, 255, 0.95); font-weight: 950; font-size: 15px; letter-spacing: -0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-store-sub { font-size: 12px; color: rgba(255, 255, 255, 0.68); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+
+.app-store-btn {
+  border: 1px solid rgba(0, 122, 255, 0.32);
+  background: rgba(0, 122, 255, 0.22);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 950;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  height: 34px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.14s, background 0.14s, border-color 0.14s;
+}
+
+.app-store-btn:hover:not(:disabled) { background: rgba(0, 122, 255, 0.35); border-color: rgba(0, 122, 255, 0.5); transform: translateY(-2px); }
+.app-store-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+.app-store-btn.btn-downloading { border-color: rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.06); min-width: 40px; padding: 4px; cursor: default; }
+.app-store-btn.btn-installed { border-color: rgba(0, 122, 255, 0.5); background: rgba(0, 122, 255, 0.32); }
+
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.progress-ring { width: 26px; height: 26px; display: block; }
+.ring-track { fill: none; stroke: rgba(255, 255, 255, 0.15); stroke-width: 3; }
+.ring-fill { fill: none; stroke: rgba(255, 255, 255, 0.92); stroke-width: 3; stroke-linecap: round; transform-origin: 16px 16px; transform: rotate(-90deg); transition: stroke-dashoffset 0.08s linear; }
+
+.app-store-desc { color: rgba(255, 255, 255, 0.72); font-size: 12px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 34px; }
+
+.app-store-bot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.app-store-pill { font-size: 11px; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.75); font-weight: 600; }
+.app-store-ver { font-size: 11px; color: rgba(255, 255, 255, 0.56); }

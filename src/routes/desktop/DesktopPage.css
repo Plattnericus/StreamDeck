@@ -1,0 +1,7 @@
+.desktop {
+  position: fixed;
+  inset: 0;
+  background: url('/lake-tahoe.webp') center / cover no-repeat;
+  background-color: #1c1c2e;
+  overflow: hidden;
+}

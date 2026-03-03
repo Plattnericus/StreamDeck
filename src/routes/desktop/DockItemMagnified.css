@@ -1,0 +1,90 @@
+.dock-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  z-index: 10000000;
+  will-change: width, height;
+  /* No CSS transition on width/height — JS rAF loop handles it at 120fps */
+  transition: transform 0.18s cubic-bezier(0.23, 1, 0.32, 1),
+              filter 0.18s ease;
+  transform: translateZ(0);
+  transform-origin: center bottom;
+  align-self: flex-end;
+  contain: layout style;
+}
+
+/* Dock item enter animation — scale up + fade in from bottom */
+.dock-item-enter {
+  animation: dockItemEnter 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes dockItemEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.app-tooltip {
+  position: absolute;
+  top: -28px;
+  background: rgba(12, 12, 14, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 1000000;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.dock-item:hover .app-tooltip {
+  opacity: 1;
+}
+
+.dock-item img {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  pointer-events: none;
+  transition: transform 0.18s ease;
+}
+
+.dock-item:hover {
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.25));
+}
+
+.dock-item:active img {
+  transform: scale(0.94);
+}
+
+.dock-item:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 6px;
+  border-radius: 14px;
+}
+
+.dot {
+  position: absolute;
+  bottom: 2px;
+  width: 7px;
+  height: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: black;
+  border-radius: 50%;
+}

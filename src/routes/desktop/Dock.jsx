@@ -1,0 +1,552 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import DockItemMagnified from './DockItemMagnified';
+import Settings from '../apps/settings/Settings';
+import Browser from '../apps/Browser';
+import Terminal from '../apps/Terminal';
+import Finder from '../apps/Finder';
+import Papierkorb from '../apps/Trash';
+import Apps from '../apps/Apps';
+import Github from '../apps/Github';
+import About from '../apps/About';
+import Changelog from '../apps/Changelog';
+import Galerie from '../apps/Galerie';
+import Impressum from '../apps/Impressum';
+import Agb from '../apps/AGB';
+import Info from '../apps/Info';
+import TerminalApp from '../apps/Terminal';
+import Datenschutz from '../apps/Datenschutz';
+import Model from '../apps/Model';
+import CookiesInfo from '../apps/Cookies-info';
+import { openTab, getCenterPosition } from '../../lib/openTab';
+import './Dock.css';
+
+/* Map of component name → component for restoring from localStorage */
+const COMPONENT_MAP = {
+  Finder, Apps, Settings, Browser, Terminal, Github, Papierkorb,
+  About, Changelog, Galerie, Impressum, Agb, Info, Datenschutz, Model, CookiesInfo,
+};
+
+const DOCK_STORAGE_KEY = 'dock_pinned_apps_v1';
+
+function loadPinnedApps() {
+  try {
+    const raw = localStorage.getItem(DOCK_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { /* ignore */ }
+  return [];
+}
+
+function savePinnedApps(apps) {
+  // Only save non-default apps that were added from the App Store
+  const pinned = apps
+    .filter((a) => !a.default)
+    .map((a) => ({
+      id: a.id,
+      name: a.name,
+      icon: a.icon,
+      componentName: a.componentName || a.name,
+      width: a.width,
+      height: a.height,
+    }));
+  localStorage.setItem(DOCK_STORAGE_KEY, JSON.stringify(pinned));
+}
+
+const defaultApps = [
+  { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 640, height: 400, zIndex: 0 },
+  { id: 2, name: 'App Store', icon: '/icons/app-store.webp', open: false, minimized: false, maximized: false, component: Apps, default: true, x: 0, y: 0, width: 720, height: 480, zIndex: 0 },
+  { id: 3, name: 'Settings', icon: '/icons/settings.webp', open: false, minimized: false, maximized: false, component: Settings, default: true, x: 0, y: 0, width: 680, height: 460, zIndex: 0 },
+  { id: 4, name: 'Safari', icon: '/icons/safari.webp', open: false, minimized: false, maximized: false, component: Browser, default: true, x: 0, y: 0, width: 800, height: 500, zIndex: 0 },
+  { id: 5, name: 'Terminal', icon: '/icons/terminal.webp', open: false, minimized: false, maximized: false, component: Terminal, default: true, x: 0, y: 0, width: 860, height: 480, zIndex: 0 },
+  { id: 6, name: 'Github', icon: '/icons/github.webp', open: false, minimized: false, maximized: false, component: Github, default: true, x: 0, y: 0, width: 920, height: 600, zIndex: 0 },
+  { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 560, height: 360, zIndex: 0 },
+];
+
+function buildInitialApps() {
+  const pinned = loadPinnedApps();
+  const base = defaultApps.map((a) => ({ ...a }));
+
+  // Insert pinned apps between Terminal (id=5) and Github (id=6)
+  const terminalIdx = base.findIndex((a) => a.id === 5);
+  const insertIdx = terminalIdx !== -1 ? terminalIdx + 1 : base.length - 1;
+
+  const restoredApps = pinned
+    .filter((p) => !base.some((b) => b.id === p.id))
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      icon: p.icon,
+      component: COMPONENT_MAP[p.componentName] || null,
+      componentName: p.componentName,
+      default: false,
+      open: false,
+      minimized: false,
+      maximized: false,
+      x: 0,
+      y: 0,
+      width: p.width || 640,
+      height: p.height || 400,
+      zIndex: 0,
+    }))
+    .filter((a) => a.component); // Only restore if we can resolve the component
+
+  // Splice pinned apps after Terminal
+  base.splice(insertIdx, 0, ...restoredApps);
+  return base;
+}
+
+export default function Dock({ onOpenApp }) {
+  const [apps, setApps] = useState(() => buildInitialApps());
+  const [contextMenu, setContextMenu] = useState(null);
+  const [headerHeight] = useState(28);
+  const [dockMouseX, setDockMouseX] = useState(null);
+  const nextZIndex = useRef(10);
+  const [enteringIds, setEnteringIds] = useState(new Set());
+
+  // Persist non-default dock apps whenever the list changes
+  useEffect(() => {
+    savePinnedApps(apps);
+  }, [apps]);
+
+  /* ---- Glass-card hover refs ---- */
+  const glassCardRef = useRef(null);
+  const glassSpecularRef = useRef(null);
+
+  const handleGlassMouseMove = useCallback((e) => {
+    const card = glassCardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Update SVG displacement scale based on cursor position
+    const displace = card.querySelector
+      ? document.querySelector('#glass-distortion feDisplacementMap')
+      : null;
+    if (displace) {
+      const scaleX = (x / rect.width) * 100;
+      const scaleY = (y / rect.height) * 100;
+      displace.setAttribute('scale', String(Math.min(scaleX, scaleY)));
+    }
+
+    // Specular highlight follows cursor
+    const spec = glassSpecularRef.current;
+    if (spec) {
+      spec.style.background = `radial-gradient(
+        circle at ${x}px ${y}px,
+        rgba(255,255,255,0.15) 0%,
+        rgba(255,255,255,0.05) 30%,
+        rgba(255,255,255,0) 60%
+      )`;
+    }
+  }, []);
+
+  const handleGlassMouseLeave = useCallback(() => {
+    const displace = document.querySelector('#glass-distortion feDisplacementMap');
+    if (displace) displace.setAttribute('scale', '77');
+
+    const spec = glassSpecularRef.current;
+    if (spec) spec.style.background = 'none';
+  }, []);
+
+  // Focused app = highest zIndex among open + not-minimized
+  const focusedId = (() => {
+    let best = null;
+    let bestZ = -Infinity;
+    for (const app of apps) {
+      if (app.open && !app.minimized && app.zIndex > bestZ) {
+        bestZ = app.zIndex;
+        best = app.id;
+      }
+    }
+    return best;
+  })();
+
+  // --- Drag state (not React state to avoid re-renders during drag) ---
+  const dragRef = useRef(null); // { appId, startX, startY, origX, origY }
+  const resizeRef = useRef(null); // { appId, startX, startY, origW, origH }
+
+  const handleMouseMove = useCallback((e) => {
+    if (dragRef.current) {
+      const { appId, startX, startY, origX, origY } = dragRef.current;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      setApps((prev) =>
+        prev.map((app) =>
+          app.id === appId
+            ? { ...app, x: origX + dx, y: Math.max(headerHeight, origY + dy) }
+            : app
+        )
+      );
+    }
+    if (resizeRef.current) {
+      const { appId, startX, startY, origW, origH } = resizeRef.current;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      setApps((prev) =>
+        prev.map((app) =>
+          app.id === appId
+            ? { ...app, width: Math.max(200, origW + dx), height: Math.max(150, origH + dy) }
+            : app
+        )
+      );
+    }
+  }, [headerHeight]);
+
+  const handleMouseUp = useCallback(() => {
+    dragRef.current = null;
+    resizeRef.current = null;
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
+
+  // --- Click outside context menu ---
+  useEffect(() => {
+    if (!contextMenu) return;
+    const handler = () => setContextMenu(null);
+    window.addEventListener('click', handler);
+    return () => window.removeEventListener('click', handler);
+  }, [contextMenu]);
+
+  // --- Load last opened on mount ---
+  useEffect(() => {
+    // placeholder: load persisted open state if desired
+  }, []);
+
+  // --- Functions ---
+  const focusApp = useCallback((id) => {
+    nextZIndex.current += 1;
+    setApps((prev) =>
+      prev.map((app) =>
+        app.id === id ? { ...app, zIndex: nextZIndex.current } : app
+      )
+    );
+  }, []);
+
+  const openApp = useCallback(
+    (id) => {
+      nextZIndex.current += 1;
+      setApps((prev) =>
+        prev.map((app) => {
+          if (app.id !== id) return app;
+          const opened = openTab({ ...app }, window.innerWidth, window.innerHeight);
+          opened.zIndex = nextZIndex.current;
+          return opened;
+        })
+      );
+      if (onOpenApp) {
+        const app = apps.find((a) => a.id === id);
+        if (app) onOpenApp(app);
+      }
+    },
+    [apps, onOpenApp]
+  );
+
+  const closeApp = useCallback((id) => {
+    setApps((prev) =>
+      prev.map((app) =>
+        app.id === id
+          ? { ...app, open: false, minimized: false, maximized: false }
+          : app
+      )
+    );
+  }, []);
+
+  const toggleMinimize = useCallback((id) => {
+    setApps((prev) =>
+      prev.map((app) =>
+        app.id === id ? { ...app, minimized: !app.minimized } : app
+      )
+    );
+  }, []);
+
+  const toggleMaximize = useCallback((id) => {
+    setApps((prev) =>
+      prev.map((app) =>
+        app.id === id ? { ...app, maximized: !app.maximized } : app
+      )
+    );
+  }, []);
+
+  const handleOpenApp = useCallback(
+    (appOrName) => {
+      // Accept either a string (menu clicks) or a full app object (App Store)
+      if (typeof appOrName === 'string') {
+        const existing = apps.find(
+          (a) => a.name.toLowerCase() === appOrName.toLowerCase()
+        );
+        if (existing) openApp(existing.id);
+        return;
+      }
+
+      // Full app object from App Store — add to dock if not already there
+      const appData = appOrName;
+      const pinOnly = !!appData.pinOnly; // If true, just add to dock without opening
+      const existing = apps.find((a) => a.id === appData.id);
+      if (existing) {
+        // Already in the list — open / focus it (unless pinOnly)
+        if (!pinOnly) openApp(existing.id);
+      } else {
+        // Find component name for persistence
+        const componentName = Object.keys(COMPONENT_MAP).find(
+          (k) => COMPONENT_MAP[k] === appData.component
+        ) || appData.name;
+
+        // Dynamically add the new app between Terminal and Github
+        nextZIndex.current += 1;
+        const newApp = {
+          id: appData.id,
+          name: appData.name,
+          icon: appData.icon,
+          component: appData.component,
+          componentName,
+          default: false,
+          open: false,
+          minimized: false,
+          maximized: false,
+          x: 0,
+          y: 0,
+          width: appData.width || 640,
+          height: appData.height || 400,
+          zIndex: 0,
+        };
+        // Mark as entering for animation
+        setEnteringIds((prev) => new Set(prev).add(newApp.id));
+        setTimeout(() => {
+          setEnteringIds((prev) => { const s = new Set(prev); s.delete(newApp.id); return s; });
+        }, 500);
+
+        setApps((prev) => {
+          // Insert between Terminal (id=5) and Github (id=6)
+          const copy = [...prev];
+          const termIdx = copy.findIndex((a) => a.id === 5);
+          const insertIdx = termIdx !== -1 ? termIdx + 1 : copy.length - 1;
+          // Check again in case of race
+          if (copy.some((a) => a.id === newApp.id)) return prev;
+          copy.splice(insertIdx, 0, newApp);
+          return copy;
+        });
+        // Open after state update via a micro-task (unless pinOnly)
+        if (!pinOnly) setTimeout(() => openApp(appData.id), 0);
+      }
+    },
+    [apps, openApp]
+  );
+
+  const handleDockContextMenu = useCallback((e, appId) => {
+    e.preventDefault();
+    setContextMenu({ appId, x: e.clientX, y: e.clientY });
+  }, []);
+
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(null);
+  }, []);
+
+  const handleContextAction = useCallback(
+    (action) => {
+      if (!contextMenu) return;
+      const { appId } = contextMenu;
+      switch (action) {
+        case 'open':
+          openApp(appId);
+          break;
+        case 'close':
+          closeApp(appId);
+          break;
+        case 'minimize':
+          toggleMinimize(appId);
+          break;
+        case 'maximize':
+          toggleMaximize(appId);
+          break;
+        default:
+          break;
+      }
+      closeContextMenu();
+    },
+    [contextMenu, openApp, closeApp, toggleMinimize, toggleMaximize, closeContextMenu]
+  );
+
+  const startDrag = useCallback(
+    (e, id) => {
+      e.preventDefault();
+      focusApp(id);
+      const app = apps.find((a) => a.id === id);
+      if (!app) return;
+      dragRef.current = {
+        appId: id,
+        startX: e.clientX,
+        startY: e.clientY,
+        origX: app.x,
+        origY: app.y,
+      };
+    },
+    [apps, focusApp]
+  );
+
+  const startResize = useCallback(
+    (e, id) => {
+      e.preventDefault();
+      e.stopPropagation();
+      focusApp(id);
+      const app = apps.find((a) => a.id === id);
+      if (!app) return;
+      resizeRef.current = {
+        appId: id,
+        startX: e.clientX,
+        startY: e.clientY,
+        origW: app.width,
+        origH: app.height,
+      };
+    },
+    [apps, focusApp]
+  );
+
+  // --- Dock sorting: preserve array order but always keep Trash last ---
+  // Non-default apps only show in dock if they've been pinned (persisted)
+  const withoutTrash = apps.filter((a) => a.id !== 10 && (a.default || !a.default));
+  const trash = apps.filter((a) => a.id === 10);
+  const sortedDockApps = [...withoutTrash, ...trash];
+
+  return (
+    <>
+      {/* App windows */}
+      {apps
+        .filter((app) => app.open && !app.minimized)
+        .map((app) => {
+          const isFocused = app.id === focusedId;
+          const AppComponent = app.component;
+          return (
+            <div
+              key={app.id}
+              className={`app-window${app.maximized ? ' maximized' : ''}${isFocused ? ' focused' : ''}`}
+              style={
+                app.maximized
+                  ? { left: 0, top: headerHeight, width: '100%', height: `calc(100% - ${headerHeight}px - 85px)`, zIndex: app.zIndex }
+                  : { left: app.x, top: app.y, width: app.width, height: app.height, zIndex: app.zIndex }
+              }
+              onMouseDown={() => focusApp(app.id)}
+            >
+              <div
+                className="title-bar"
+                onMouseDown={(e) => !app.maximized && startDrag(e, app.id)}
+              >
+                <div className="controls">
+                  <button
+                    className="ctrl close"
+                    onClick={() => closeApp(app.id)}
+                    aria-label="Close"
+                  />
+                  <button
+                    className="ctrl minimize"
+                    onClick={() => toggleMinimize(app.id)}
+                    aria-label="Minimize"
+                  />
+                  <button
+                    className="ctrl maximize"
+                    onClick={() => toggleMaximize(app.id)}
+                    aria-label="Maximize"
+                  />
+                </div>
+                <span className="title-text">{app.name}</span>
+              </div>
+              <div className="window-content">
+                <AppComponent onOpenApp={handleOpenApp} />
+              </div>
+              {!app.maximized && (
+                <div
+                  className="resizer"
+                  onMouseDown={(e) => startResize(e, app.id)}
+                />
+              )}
+            </div>
+          );
+        })}
+
+      {/* SVG Filter for Glass Distortion */}
+      <svg style={{ display: 'none' }}>
+        <filter id="glass-distortion">
+          <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="77" />
+        </filter>
+      </svg>
+
+      {/* Dock */}
+      <div
+        className="dock-container"
+        onMouseMove={(e) => setDockMouseX(e.clientX)}
+        onMouseLeave={() => setDockMouseX(null)}
+      >
+        <div
+          className="glass-card"
+          ref={glassCardRef}
+          onMouseMove={handleGlassMouseMove}
+          onMouseLeave={handleGlassMouseLeave}
+        >
+          <div className="glass-filter" />
+          <div className="glass-distortion-overlay" />
+          <div className="glass-overlay" />
+          <div className="glass-specular" ref={glassSpecularRef} />
+          <div className="glass-content">
+            {sortedDockApps.map((app) => (
+              <DockItemMagnified
+                key={app.id}
+                app_id={app.id}
+                name={app.name}
+                icon={app.icon}
+                is_open={app.open}
+                entering={enteringIds.has(app.id)}
+                mouse_x={dockMouseX}
+                onClick={() => (app.open ? (app.minimized ? toggleMinimize(app.id) : focusApp(app.id)) : openApp(app.id))}
+                onContextMenu={(e) => handleDockContextMenu(e, app.id)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Context menu */}
+      {contextMenu && (
+        <div
+          className="context-menu-overlay"
+          onClick={closeContextMenu}
+        >
+          <div
+            className="context-menu"
+            style={{ left: contextMenu.x, top: contextMenu.y }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {(() => {
+              const app = apps.find((a) => a.id === contextMenu.appId);
+              if (!app) return null;
+              return (
+                <>
+                  {!app.open && (
+                    <button onClick={() => handleContextAction('open')}>Open</button>
+                  )}
+                  {app.open && (
+                    <>
+                      <button onClick={() => handleContextAction('close')}>Close</button>
+                      <button onClick={() => handleContextAction('minimize')}>
+                        {app.minimized ? 'Show' : 'Minimize'}
+                      </button>
+                      <button onClick={() => handleContextAction('maximize')}>
+                        {app.maximized ? 'Restore' : 'Maximize'}
+                      </button>
+                    </>
+                  )}
+                </>
+              );
+            })()}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

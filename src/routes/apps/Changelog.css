@@ -1,0 +1,40 @@
+.cl-wrap{display:flex;flex-direction:column;height:100%;background:#1a1a2e;color:#e0e0e0;font-family:inherit;overflow:hidden}
+.cl-center{display:flex;align-items:center;justify-content:center;height:100%}
+.cl-spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.15);border-top-color:#6c63ff;border-radius:50%;animation:clspin .8s linear infinite}
+@keyframes clspin{to{transform:rotate(360deg)}}
+.cl-err{color:#ff6b6b;font-size:14px}
+.cl-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06)}
+.cl-bar-svg{opacity:.5}
+.cl-bar-t{font-size:13px;font-weight:600;flex:1}
+.cl-bar-s{font-size:11px;background:rgba(108,99,255,.25);color:#a5a0ff;padding:2px 8px;border-radius:12px}
+.cl-scroll{flex:1;overflow-y:auto;padding:14px}
+.cl-scroll::-webkit-scrollbar{width:6px}
+.cl-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.cl-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;margin-bottom:12px;overflow:hidden;animation:clSlide .35s ease both}
+.cl-card.today{border-color:rgba(108,99,255,.35);box-shadow:0 0 20px rgba(108,99,255,.1)}
+.cl-card.todo{border-color:rgba(46,204,113,.25)}
+@keyframes clSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.cl-card-head{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.04)}
+.cl-cal{display:flex;flex-direction:column;align-items:center;width:36px;height:36px;background:rgba(108,99,255,.12);border-radius:8px;justify-content:center;flex-shrink:0}
+.cl-cal.today{background:rgba(108,99,255,.3)}
+.cl-cal-d{font-size:14px;font-weight:700;line-height:1}
+.cl-cal-m{font-size:9px;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-top:1px}
+.cl-card-date{font-size:13px;font-weight:500;flex:1}
+.cl-card-n{font-size:11px;background:rgba(255,255,255,.08);padding:2px 7px;border-radius:10px;color:#aaa}
+.cl-card-n.todo-n{background:rgba(46,204,113,.15);color:#2ecc71}
+.cl-now{font-size:10px;background:rgba(108,99,255,.2);color:#a5a0ff;padding:2px 8px;border-radius:10px;font-weight:600}
+.cl-rows{padding:8px 14px}
+.cl-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;animation:clFade .3s ease both}
+@keyframes clFade{from{opacity:0}to{opacity:1}}
+.cl-ic{width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:5px;flex-shrink:0;padding:2px}
+.cl-ic svg{width:12px;height:12px}
+.cl-ic.fix{background:rgba(255,107,107,.15);color:#ff6b6b}
+.cl-ic.add{background:rgba(46,204,113,.15);color:#2ecc71}
+.cl-ic.remove{background:rgba(255,165,0,.15);color:#ffa500}
+.cl-ic.update{background:rgba(100,149,237,.15);color:#6495ed}
+.cl-ic.default{background:rgba(255,255,255,.08);color:#888}
+.cl-ic.todo-ic{background:rgba(46,204,113,.15);color:#2ecc71;width:22px;height:22px}
+.cl-ic.todo-ic svg{width:14px;height:14px}
+.cl-circ{width:8px;height:8px;border:1.5px solid rgba(255,255,255,.2);border-radius:50%;margin-top:4px;flex-shrink:0}
+.cl-txt{font-size:12.5px;line-height:1.45;color:#ccc}
+.cl-txt.dim{opacity:.7}

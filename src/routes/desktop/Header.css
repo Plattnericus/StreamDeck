@@ -1,0 +1,637 @@
+/* ============================== */
+/*  BRIGHTNESS OVERLAY            */
+/* ============================== */
+.brightness-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+  z-index: 999999;
+  transition: opacity 0.25s ease;
+}
+
+/* ============================== */
+/*  HEADER BAR                    */
+/* ============================== */
+.header-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  background: rgba(30, 30, 30, 0.55);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  z-index: 10000;
+  user-select: none;
+  -webkit-user-select: none;
+  font-size: 13px;
+  color: #fff;
+}
+
+/* ---- Left — Menus ---- */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+}
+
+.menu-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 10px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: default;
+  border-radius: 4px;
+}
+
+.menu-trigger:hover,
+.menu-trigger.active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.apple-logo {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  filter: brightness(10);
+}
+
+/* ---- Dropdown ---- */
+.menu-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  padding: 4px 0;
+  background: rgba(40, 40, 40, 0.92);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  z-index: 10001;
+  animation: menuPop 0.12s ease-out;
+}
+
+@keyframes menuPop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.menu-dropdown.closing {
+  animation: menuClose 0.15s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes menuClose {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-4px) scale(0.97); }
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 16px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: default;
+}
+
+.menu-item:hover {
+  background: rgba(59, 130, 246, 0.75);
+  border-radius: 4px;
+}
+
+.menu-shortcut {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  margin-left: 24px;
+}
+
+.menu-divider {
+  height: 1px;
+  margin: 4px 8px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ---- Right ---- */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+}
+
+.header-icon-group {
+  display: flex;
+  align-items: center;
+}
+
+.header-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  width: 26px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.header-icon-btn:hover,
+.header-icon-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.header-icon-btn:active {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(0.92);
+}
+
+.header-status-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(10);
+}
+
+.header-datetime {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+/* ============================== */
+/*  ABOUT THIS MAC                */
+/* ============================== */
+.about-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.about-window {
+  width: 300px;
+  background: rgba(40, 40, 40, 0.95);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: menuPop 0.2s ease-out;
+}
+
+.about-titlebar {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  background: rgba(50, 50, 50, 0.9);
+  cursor: grab;
+}
+
+.about-titlebar:active { cursor: grabbing; }
+
+.about-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.about-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.about-btn.close    { background: #ff5f57; }
+.about-btn.minimize { background: #febc2e; }
+.about-btn.maximize { background: #28c840; }
+
+.about-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.about-apple-logo {
+  width: 180px;
+  height: auto;
+  margin-bottom: 12px;
+  object-fit: contain;
+}
+
+.about-body h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.about-version {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin: 0 0 16px;
+}
+
+.about-specs {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.about-spec-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.about-spec-row span:first-child {
+  color: rgba(255,255,255,0.5);
+}
+
+.about-more-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: none;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.about-more-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* ============================== */
+/*  CONTROL CENTER                */
+/* ============================== */
+.cc-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+}
+
+.cc-panel {
+  position: absolute;
+  top: 32px;
+  right: 8px;
+  width: 320px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(30, 30, 30, 0.85);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  animation: ccSlide 0.2s ease-out;
+  color: #fff;
+}
+
+@keyframes ccSlide {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cc-panel.closing {
+  animation: ccSlideOut 0.2s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes ccSlideOut {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-8px) scale(0.97); }
+}
+
+.cc-section {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  animation: ccFadeIn 0.3s ease-out both;
+}
+
+.cc-section:nth-child(1) { animation-delay: 0.03s; }
+.cc-section:nth-child(2) { animation-delay: 0.08s; }
+.cc-section:nth-child(3) { animation-delay: 0.13s; }
+.cc-section:nth-child(4) { animation-delay: 0.18s; }
+.cc-section:nth-child(5) { animation-delay: 0.23s; }
+.cc-section:nth-child(6) { animation-delay: 0.28s; }
+
+@keyframes ccFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Toggles */
+.cc-toggle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.cc-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cc-toggle-btn.on {
+  background: rgba(59, 130, 246, 0.6);
+  color: #fff;
+}
+
+/* Flugmodus — Apple orange */
+.cc-toggle-btn.cc-airplane.on {
+  background: rgba(255, 159, 10, 0.75);
+}
+
+/* Mobilfunk — Apple green */
+.cc-toggle-btn.cc-cellular.on {
+  background: rgba(52, 199, 89, 0.75);
+}
+
+.cc-toggle-icon {
+  width: 18px;
+  height: 18px;
+  filter: brightness(10);
+}
+
+/* Music */
+.cc-music {
+  padding: 10px;
+}
+
+.cc-music-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.cc-music-cover {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.cc-music-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cc-music-title {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cc-music-artist {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cc-music-progress {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.cc-music-progress-bar {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 2px;
+  transition: width 0.3s linear;
+}
+
+.cc-music-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.cc-music-controls button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cc-music-controls img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(10);
+}
+
+.cc-music-controls button:nth-child(2) img {
+  width: 22px;
+  height: 22px;
+}
+
+/* Sliders */
+.cc-slider-section {
+  padding: 10px 12px;
+}
+
+.cc-slider-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.cc-slider-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(10);
+}
+
+.cc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+.cc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Extra toggles */
+.cc-extra-toggles {
+  display: flex;
+  gap: 8px;
+}
+
+.cc-toggle-sm {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.cc-toggle-sm.on {
+  background: rgba(59, 130, 246, 0.6);
+  color: #fff;
+}
+
+/* Sperren — red */
+.cc-toggle-sm.cc-lock.on {
+  background: rgba(255, 59, 48, 0.75);
+}
+
+.cc-toggle-sm img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(10);
+}
+
+/* Shortcuts */
+.cc-shortcuts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cc-shortcut-btn {
+  flex: 1;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.cc-shortcut-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.cc-shortcut-btn img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(10);
+}
+
+/* ============================== */
+/*  DESKTOP CONTEXT MENU          */
+/* ============================== */
+.desktop-ctx-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50001;
+}
+
+.desktop-ctx {
+  position: fixed;
+  min-width: 180px;
+  padding: 4px 0;
+  background: rgba(40, 40, 40, 0.92);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: menuPop 0.12s ease-out;
+}
+
+.desktop-ctx button {
+  display: block;
+  width: 100%;
+  padding: 5px 16px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: default;
+}
+
+.desktop-ctx button:hover {
+  background: rgba(59, 130, 246, 0.75);
+  border-radius: 4px;
+}
