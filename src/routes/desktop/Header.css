@@ -60,10 +60,10 @@
 }
 
 .apple-logo {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
-  filter: brightness(10);
+  filter: brightness(0);
 }
 
 .menu-dropdown {
@@ -165,8 +165,8 @@
 }
 
 .header-status-icon {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
   filter: brightness(10);
 }
