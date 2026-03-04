@@ -45,7 +45,7 @@ function loadInstalled() {
   try {
     const raw = localStorage.getItem(INSTALLED_KEY);
     if (raw) return new Set(JSON.parse(raw));
-  } catch { /* ignore */ }
+  } catch {  }
   return new Set();
 }
 
@@ -61,7 +61,6 @@ export default function Apps({ onOpenApp }) {
   const [loading, setLoading] = useState(new Set());
   const [errors, setErrors] = useState({});
 
-  // Persist installed to localStorage whenever it changes
   useEffect(() => {
     saveInstalled(installed);
   }, [installed]);
@@ -97,7 +96,6 @@ export default function Apps({ onOpenApp }) {
         setDownloadProgress((prev) => { const p = { ...prev }; delete p[app.id]; return p; });
         setInstalled((prev) => new Set(prev).add(app.id));
 
-        // Pin to dock immediately after download (without opening)
         if (onOpenApp) {
           const original = APP_LIST.find((a) => a.id === app.id);
           if (original) {
@@ -121,9 +119,7 @@ export default function Apps({ onOpenApp }) {
     setLoading((prev) => new Set(prev).add(app.id));
     setInstalled((prev) => new Set(prev).add(app.id));
 
-    // Dispatch full app object to parent Dock so it can create a window
     if (onOpenApp) {
-      // Find the original APP_LIST entry to get the component reference
       const original = APP_LIST.find((a) => a.id === app.id);
       if (original) {
         onOpenApp({
@@ -153,7 +149,6 @@ export default function Apps({ onOpenApp }) {
 
   return (
     <div className="app-store-glass">
-      {/* Search */}
       <div className="app-store-search-bar">
         <svg className="app-store-search-icon" viewBox="0 0 20 20">
           <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
@@ -178,7 +173,6 @@ export default function Apps({ onOpenApp }) {
         )}
       </div>
 
-      {/* Cards grid */}
       <div className="app-store-scroller" style={{ '--min': `${CFG.cardMinWidth}px` }}>
         {filteredApps.length === 0 ? (
           <div className="app-store-empty">

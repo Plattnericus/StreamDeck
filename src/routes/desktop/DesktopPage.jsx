@@ -8,8 +8,6 @@ import './DesktopPage.css';
 
 export default function DesktopPage() {
   const handleOpenApp = (appName) => {
-    // The Dock handles openApp internally — this callback is for
-    // Header menu items that want to open an app by name.
   };
 
   return (

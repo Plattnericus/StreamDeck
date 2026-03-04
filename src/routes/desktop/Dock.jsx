@@ -20,7 +20,6 @@ import CookiesInfo from '../apps/Cookies-info';
 import { openTab, getCenterPosition } from '../../lib/openTab';
 import './Dock.css';
 
-/* Map of component name → component for restoring from localStorage */
 const COMPONENT_MAP = {
   Finder, Apps, Settings, Browser, Terminal, Github, Papierkorb,
   About, Changelog, Galerie, Impressum, Agb, Info, Datenschutz, Model, CookiesInfo,
@@ -32,12 +31,11 @@ function loadPinnedApps() {
   try {
     const raw = localStorage.getItem(DOCK_STORAGE_KEY);
     if (raw) return JSON.parse(raw);
-  } catch { /* ignore */ }
+  } catch { }
   return [];
 }
 
 function savePinnedApps(apps) {
-  // Only save non-default apps that were added from the App Store
   const pinned = apps
     .filter((a) => !a.default)
     .map((a) => ({
@@ -65,7 +63,6 @@ function buildInitialApps() {
   const pinned = loadPinnedApps();
   const base = defaultApps.map((a) => ({ ...a }));
 
-  // Insert pinned apps between Terminal (id=5) and Github (id=6)
   const terminalIdx = base.findIndex((a) => a.id === 5);
   const insertIdx = terminalIdx !== -1 ? terminalIdx + 1 : base.length - 1;
 
@@ -87,9 +84,8 @@ function buildInitialApps() {
       height: p.height || 400,
       zIndex: 0,
     }))
-    .filter((a) => a.component); // Only restore if we can resolve the component
+    .filter((a) => a.component);
 
-  // Splice pinned apps after Terminal
   base.splice(insertIdx, 0, ...restoredApps);
   return base;
 }
@@ -105,12 +101,10 @@ export default function Dock({ onOpenApp }) {
   const [minimizingIds, setMinimizingIds] = useState(new Set());
   const [restoringIds, setRestoringIds] = useState(new Set());
 
-  // Persist non-default dock apps whenever the list changes
   useEffect(() => {
     savePinnedApps(apps);
   }, [apps]);
 
-  /* ---- Glass-card hover refs ---- */
   const glassCardRef = useRef(null);
   const glassSpecularRef = useRef(null);
 
@@ -121,17 +115,13 @@ export default function Dock({ onOpenApp }) {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Update SVG displacement scale based on cursor position
-    const displace = card.querySelector
-      ? document.querySelector('#glass-distortion feDisplacementMap')
-      : null;
+    const displace = document.querySelector('#glass-distortion feDisplacementMap');
     if (displace) {
       const scaleX = (x / rect.width) * 100;
       const scaleY = (y / rect.height) * 100;
-      displace.setAttribute('scale', String(Math.min(scaleX, scaleY)));
+      displace.setAttribute('scale', Math.min(scaleX, scaleY));
     }
 
-    // Specular highlight follows cursor
     const spec = glassSpecularRef.current;
     if (spec) {
       spec.style.background = `radial-gradient(
@@ -151,7 +141,6 @@ export default function Dock({ onOpenApp }) {
     if (spec) spec.style.background = 'none';
   }, []);
 
-  // Focused app = highest zIndex among open + not-minimized
   const focusedId = (() => {
     let best = null;
     let bestZ = -Infinity;
@@ -164,9 +153,8 @@ export default function Dock({ onOpenApp }) {
     return best;
   })();
 
-  // --- Drag state (not React state to avoid re-renders during drag) ---
-  const dragRef = useRef(null); // { appId, startX, startY, origX, origY }
-  const resizeRef = useRef(null); // { appId, startX, startY, origW, origH }
+  const dragRef = useRef(null);
+  const resizeRef = useRef(null);
 
   const handleMouseMove = useCallback((e) => {
     if (dragRef.current) {
@@ -217,7 +205,6 @@ export default function Dock({ onOpenApp }) {
     };
   }, [handleMouseMove, handleMouseUp]);
 
-  // --- Click outside context menu ---
   useEffect(() => {
     if (!contextMenu) return;
     const handler = () => setContextMenu(null);
@@ -225,12 +212,8 @@ export default function Dock({ onOpenApp }) {
     return () => window.removeEventListener('click', handler);
   }, [contextMenu]);
 
-  // --- Load last opened on mount ---
-  useEffect(() => {
-    // placeholder: load persisted open state if desired
-  }, []);
 
-  // --- Functions ---
+
   const focusApp = useCallback((id) => {
     nextZIndex.current += 1;
     setApps((prev) =>
@@ -260,7 +243,6 @@ export default function Dock({ onOpenApp }) {
   );
 
   const closeApp = useCallback((id) => {
-    // Clean up any ongoing minimize/restore animations
     setMinimizingIds((s) => { const n = new Set(s); n.delete(id); return n; });
     setRestoringIds((s) => { const n = new Set(s); n.delete(id); return n; });
     setApps((prev) =>
@@ -278,15 +260,13 @@ export default function Dock({ onOpenApp }) {
       if (!app) return prev;
 
       if (!app.minimized) {
-        // Minimizing: play animation first, then actually hide
         setMinimizingIds((s) => new Set(s).add(id));
         setTimeout(() => {
           setMinimizingIds((s) => { const n = new Set(s); n.delete(id); return n; });
           setApps((p) => p.map((a) => a.id === id ? { ...a, minimized: true } : a));
         }, 350);
-        return prev; // don't set minimized yet
+        return prev;
       } else {
-        // Restoring: set minimized false immediately, play restore animation
         setRestoringIds((s) => new Set(s).add(id));
         setTimeout(() => {
           setRestoringIds((s) => { const n = new Set(s); n.delete(id); return n; });
@@ -306,7 +286,6 @@ export default function Dock({ onOpenApp }) {
 
   const handleOpenApp = useCallback(
     (appOrName) => {
-      // Accept either a string (menu clicks) or a full app object (App Store)
       if (typeof appOrName === 'string') {
         const existing = apps.find(
           (a) => a.name.toLowerCase() === appOrName.toLowerCase()
@@ -315,20 +294,16 @@ export default function Dock({ onOpenApp }) {
         return;
       }
 
-      // Full app object from App Store — add to dock if not already there
       const appData = appOrName;
-      const pinOnly = !!appData.pinOnly; // If true, just add to dock without opening
+      const pinOnly = !!appData.pinOnly;
       const existing = apps.find((a) => a.id === appData.id);
       if (existing) {
-        // Already in the list — open / focus it (unless pinOnly)
         if (!pinOnly) openApp(existing.id);
       } else {
-        // Find component name for persistence
         const componentName = Object.keys(COMPONENT_MAP).find(
           (k) => COMPONENT_MAP[k] === appData.component
         ) || appData.name;
 
-        // Dynamically add the new app between Terminal and Github
         nextZIndex.current += 1;
         const newApp = {
           id: appData.id,
@@ -346,23 +321,19 @@ export default function Dock({ onOpenApp }) {
           height: appData.height || 400,
           zIndex: 0,
         };
-        // Mark as entering for animation
         setEnteringIds((prev) => new Set(prev).add(newApp.id));
         setTimeout(() => {
           setEnteringIds((prev) => { const s = new Set(prev); s.delete(newApp.id); return s; });
         }, 500);
 
         setApps((prev) => {
-          // Insert between Terminal (id=5) and Github (id=6)
           const copy = [...prev];
           const termIdx = copy.findIndex((a) => a.id === 5);
           const insertIdx = termIdx !== -1 ? termIdx + 1 : copy.length - 1;
-          // Check again in case of race
           if (copy.some((a) => a.id === newApp.id)) return prev;
           copy.splice(insertIdx, 0, newApp);
           return copy;
         });
-        // Open after state update via a micro-task (unless pinOnly)
         if (!pinOnly) setTimeout(() => openApp(appData.id), 0);
       }
     },
@@ -440,15 +411,13 @@ export default function Dock({ onOpenApp }) {
     [apps, focusApp]
   );
 
-  // --- Dock sorting: preserve array order but always keep Trash last ---
-  // Non-default apps only show in dock if they've been pinned (persisted)
   const withoutTrash = apps.filter((a) => a.id !== 10 && (a.default || !a.default));
   const trash = apps.filter((a) => a.id === 10);
   const sortedDockApps = [...withoutTrash, ...trash];
 
   return (
     <>
-      {/* App windows */}
+      
       {apps
         .filter((app) => app.open && (!app.minimized || minimizingIds.has(app.id)))
         .map((app) => {
@@ -503,7 +472,7 @@ export default function Dock({ onOpenApp }) {
           );
         })}
 
-      {/* SVG Filter for Glass Distortion */}
+      
       <svg style={{ display: 'none' }}>
         <filter id="glass-distortion">
           <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
@@ -511,7 +480,7 @@ export default function Dock({ onOpenApp }) {
         </filter>
       </svg>
 
-      {/* Dock */}
+      
       <div
         className="dock-container"
         onMouseMove={(e) => setDockMouseX(e.clientX)}
@@ -524,7 +493,6 @@ export default function Dock({ onOpenApp }) {
           onMouseLeave={handleGlassMouseLeave}
         >
           <div className="glass-filter" />
-          <div className="glass-distortion-overlay" />
           <div className="glass-overlay" />
           <div className="glass-specular" ref={glassSpecularRef} />
           <div className="glass-content">
@@ -545,7 +513,7 @@ export default function Dock({ onOpenApp }) {
         </div>
       </div>
 
-      {/* Context menu */}
+      
       {contextMenu && (
         <div
           className="context-menu-overlay"

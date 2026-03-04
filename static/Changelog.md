@@ -80,6 +80,12 @@
 - Fixed some major Bugs
 - It's Like the same like Svelte but in React!!!
 
+# 04.03.2026
+- fixed updates
+- Changed Design of the Dock
+
+
+
 
 ## TO DO
 - make every site work

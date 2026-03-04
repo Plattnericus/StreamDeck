@@ -23,7 +23,6 @@ export default function AGB({ popup = false, onClose }) {
         </div>
         <div className="legal-popup-body">
 
-          {/* Intro */}
           <section>
             <p className="intro-text">
               Allgemeine Geschäftsbedingungen für die Nutzung der Website von Felix Plattner.
@@ -32,7 +31,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* § 1 Allgemeines */}
           <section className="section-hero">
             <h3>§ 1 Allgemeines</h3>
             <p>
@@ -51,7 +49,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* § 2 Leistungsbeschreibung */}
           <section className="section-hero">
             <h3>§ 2 Leistungsbeschreibung</h3>
             <p>
@@ -70,7 +67,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* § 3 Zugang und Nutzerkonto */}
           <section>
             <h3>§ 3 Zugang und Nutzerkonto</h3>
             <p>
@@ -86,7 +82,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* § 4 Pflichten des Nutzers */}
           <section>
             <h3>§ 4 Pflichten des Nutzers</h3>
             <p>
@@ -107,7 +102,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* § 5 Geistiges Eigentum und Urheberrecht */}
           <section className="section-hero">
             <h3>§ 5 Geistiges Eigentum und Urheberrecht</h3>
             <p>
@@ -126,7 +120,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* § 6 Haftungsbeschränkung */}
           <section className="section-hero">
             <h3>§ 6 Haftungsbeschränkung</h3>
             <p>
@@ -145,7 +138,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* § 7 Verfügbarkeit */}
           <section>
             <h3>§ 7 Verfügbarkeit</h3>
             <p>
@@ -158,7 +150,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* § 8 Links zu externen Websites */}
           <section>
             <h3>§ 8 Links zu externen Websites</h3>
             <p>
@@ -174,7 +165,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* § 9 Datenschutz */}
           <section>
             <h3>§ 9 Datenschutz</h3>
             <p>
@@ -187,7 +177,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* § 10 Änderung der AGB */}
           <section>
             <h3>§ 10 Änderung der AGB</h3>
             <p>
@@ -200,7 +189,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* § 11 Anwendbares Recht und Gerichtsstand */}
           <section className="section-hero">
             <h3>§ 11 Anwendbares Recht und Gerichtsstand</h3>
             <p>
@@ -216,7 +204,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* § 12 EU-Streitschlichtung */}
           <section>
             <h3>§ 12 EU-Streitschlichtung</h3>
             <p>
@@ -232,7 +219,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* § 13 Salvatorische Klausel */}
           <section>
             <h3>§ 13 Salvatorische Klausel</h3>
             <p>
@@ -242,7 +228,6 @@ export default function AGB({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* § 14 Kontakt */}
           <section>
             <h3>§ 14 Kontakt</h3>
             <p>Bei Fragen zu diesen AGB können Sie sich an den Betreiber wenden:</p>
@@ -256,7 +241,6 @@ export default function AGB({ popup = false, onClose }) {
             </div>
           </section>
 
-          {/* Last updated */}
           <p className="legal-last-updated">Stand: März 2026</p>
 
         </div>

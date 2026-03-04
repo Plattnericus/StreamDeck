@@ -25,7 +25,6 @@ export default function LoginPage() {
   const slideProgressRef = useRef(0);
   const passwordRef = useRef('');
 
-  // Keep refs in sync
   useEffect(() => { isUnlockingRef.current = isUnlocking; }, [isUnlocking]);
   useEffect(() => { slideProgressRef.current = slideProgress; }, [slideProgress]);
   useEffect(() => { passwordRef.current = password; }, [password]);

@@ -28,8 +28,6 @@ export default function DesktopMarquee({ children, className, onEnd }) {
   }
 
   const onPointerDown = useCallback((e) => {
-    // Only start marquee when clicking directly on the desktop background,
-    // not on any child (windows, dock, header, etc.)
     if (e.target !== hostRef.current) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     hostRef.current.setPointerCapture(e.pointerId);

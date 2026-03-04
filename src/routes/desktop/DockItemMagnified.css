@@ -6,7 +6,7 @@
   cursor: pointer;
   z-index: 10000000;
   will-change: width, height;
-  /* No CSS transition on width/height — JS rAF loop handles it at 120fps */
+  
   transition: transform 0.18s cubic-bezier(0.23, 1, 0.32, 1),
               filter 0.18s ease;
   transform: translateZ(0);
@@ -15,7 +15,6 @@
   contain: layout style;
 }
 
-/* Dock item enter animation — scale up + fade in from bottom */
 .dock-item-enter {
   animation: dockItemEnter 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }

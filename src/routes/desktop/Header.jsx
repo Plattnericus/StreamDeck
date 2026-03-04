@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './Header.css';
 
-/* ------------------------------------------------------------------ */
-/*  Tracks                                                            */
-/* ------------------------------------------------------------------ */
 const tracks = [
   { title: 'emails i can\'t send', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - emails i cant send - Sabrina Carpenter.mp3' },
   { title: 'Tornado Warnings', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - Tornado Warnings - Sabrina Carpenter.mp3' },
@@ -15,9 +12,6 @@ const tracks = [
   { title: 'We Almost Broke Up Again Last Night', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend.jpg', src: '/songs/SpotiDownloader.com - We Almost Broke Up Again Last Night - Sabrina Carpenter.mp3' },
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Default settings                                                  */
-/* ------------------------------------------------------------------ */
 const DEFAULT_SETTINGS = {
   wifi: true,
   bluetooth: false,
@@ -33,7 +27,7 @@ function loadSettings() {
   try {
     const raw = localStorage.getItem('control_center_settings_v1');
     if (raw) return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-  } catch { /* ignore */ }
+  } catch {  }
   return { ...DEFAULT_SETTINGS };
 }
 
@@ -41,7 +35,6 @@ function saveSettings(s) {
   localStorage.setItem('control_center_settings_v1', JSON.stringify(s));
 }
 
-/* ---- music player persistence ---- */
 const MUSIC_STORAGE_KEY = 'music_player_state_v1';
 
 function loadMusicState() {
@@ -54,7 +47,7 @@ function loadMusicState() {
         playing: !!parsed.playing,
       };
     }
-  } catch { /* ignore */ }
+  } catch {  }
   return { trackIdx: 0, playing: false };
 }
 
@@ -62,9 +55,6 @@ function saveMusicState(trackIdx, playing) {
   localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify({ trackIdx, playing }));
 }
 
-/* ------------------------------------------------------------------ */
-/*  Helper — German date/time                                         */
-/* ------------------------------------------------------------------ */
 function formatDate(d) {
   const days = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
   const months = ['Jan.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'];
@@ -74,29 +64,22 @@ function formatTime(d) {
   return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
 }
 
-/* ================================================================== */
-/*  Header Component                                                  */
-/* ================================================================== */
 export default function Header({ onOpenApp }) {
-  /* ---- clock ---- */
   const [now, setNow] = useState(new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 10_000);
     return () => clearInterval(id);
   }, []);
 
-  /* ---- control-center settings ---- */
   const [settings, setSettings] = useState(loadSettings);
   useEffect(() => saveSettings(settings), [settings]);
   const toggle = (key) => {
     setSettings((s) => {
       const next = { ...s, [key]: !s[key] };
-      // Airplane mode: turning ON disables WiFi & Mobilfunk
       if (key === 'airplane' && next.airplane) {
         next.wifi = false;
         next.cellular = false;
       }
-      // Turning on WiFi or Cellular disables airplane mode
       if ((key === 'wifi' || key === 'cellular') && next[key]) {
         next.airplane = false;
       }
@@ -104,15 +87,13 @@ export default function Header({ onOpenApp }) {
     });
   };
 
-  /* ---- UI toggles ---- */
-  const [openMenu, setOpenMenu] = useState(null);       // menu-bar dropdown id
-  const [closingMenu, setClosingMenu] = useState(null);  // menu closing animation
-  const [showCC, setShowCC] = useState(false);           // control center
-  const [ccClosing, setCcClosing] = useState(false);     // CC close animation
-  const [showAbout, setShowAbout] = useState(false);     // About Mac dialog
-  const [ctxMenu, setCtxMenu] = useState(null);          // right-click {x,y}
+  const [openMenu, setOpenMenu] = useState(null);
+  const [closingMenu, setClosingMenu] = useState(null);
+  const [showCC, setShowCC] = useState(false);
+  const [ccClosing, setCcClosing] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [ctxMenu, setCtxMenu] = useState(null);
 
-  // Animated menu close
   const closeMenu = useCallback(() => {
     if (openMenu) {
       setClosingMenu(openMenu);
@@ -126,26 +107,23 @@ export default function Header({ onOpenApp }) {
     setTimeout(() => { setCcClosing(false); setShowCC(false); }, 200);
   }, []);
 
-  /* ---- music ---- */
   const audioRef = useRef(null);
   const [trackIdx, setTrackIdx] = useState(() => loadMusicState().trackIdx);
   const [playing, setPlaying] = useState(() => loadMusicState().playing);
   const [progress, setProgress] = useState(0);
 
-  // persist music player state
   useEffect(() => {
     saveMusicState(trackIdx, playing);
   }, [trackIdx, playing]);
 
   const currentTrack = tracks[trackIdx];
 
-  // sync audio element
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
     a.src = currentTrack.src;
     if (playing) a.play().catch(() => {});
-  }, [trackIdx]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [trackIdx]);
 
   useEffect(() => {
     const a = audioRef.current;
@@ -180,12 +158,10 @@ export default function Header({ onOpenApp }) {
   const prevTrack = () => { setTrackIdx((i) => (i - 1 + tracks.length) % tracks.length); };
   const nextTrack = () => { setTrackIdx((i) => (i + 1) % tracks.length); };
 
-  /* ---- brightness as CSS var ---- */
   useEffect(() => {
     document.documentElement.style.setProperty('--brightness', `${settings.brightness}%`);
   }, [settings.brightness]);
 
-  /* ---- About Mac dragging ---- */
   const aboutRef = useRef(null);
   const aboutDrag = useRef(null);
   const [aboutPos, setAboutPos] = useState({ x: 0, y: 0 });
@@ -203,7 +179,6 @@ export default function Header({ onOpenApp }) {
     return () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); };
   }, []);
 
-  /* ---- close overlays on outside click (left + right) ---- */
   const headerRef = useRef(null);
   useEffect(() => {
     const handler = (e) => {
@@ -219,7 +194,6 @@ export default function Header({ onOpenApp }) {
     };
   }, [closeMenu]);
 
-  /* ---- close CC on outside click (left + right) ---- */
   useEffect(() => {
     if (!showCC) return;
     const handler = (e) => {
@@ -237,10 +211,8 @@ export default function Header({ onOpenApp }) {
     };
   }, [showCC, closeCC]);
 
-  /* ---- right-click context menu ---- */
   useEffect(() => {
     const handler = (e) => {
-      // only on desktop bg
       if (e.target.closest('.app-window') || e.target.closest('.dock-container') || e.target.closest('header')) return;
       e.preventDefault();
       setCtxMenu({ x: e.clientX, y: e.clientY });
@@ -251,7 +223,6 @@ export default function Header({ onOpenApp }) {
     return () => { window.removeEventListener('contextmenu', handler); window.removeEventListener('mousedown', close); };
   }, []);
 
-  /* ---- menu definitions ---- */
   const menus = useMemo(() => [
     {
       id: 'apple', label: '', icon: '/logos/apple-logo.png',
@@ -345,24 +316,17 @@ export default function Header({ onOpenApp }) {
     },
   ], [onOpenApp, closeMenu]);
 
-  /* ---- shortcuts for CC ---- */
   const shortcuts = [
     { icon: '/icons/moon.png', label: 'Nicht stören' },
     { icon: '/icons/bright.png', label: 'Nachtmodus' },
     { icon: '/icons/airplay.png', label: 'AirPlay' },
   ];
 
-  /* ================================================================ */
-  /*  RENDER                                                          */
-  /* ================================================================ */
   return (
     <>
-      {/* Brightness overlay */}
       <div className="brightness-overlay" style={{ opacity: 1 - settings.brightness / 100 }} />
 
-      {/* ---- HEADER BAR ---- */}
       <header className="header-bar" ref={headerRef}>
-        {/* Left — Menus */}
         <div className="header-left">
           {menus.map((menu) => {
             const isOpen = openMenu === menu.id;
@@ -402,14 +366,11 @@ export default function Header({ onOpenApp }) {
           })}
         </div>
 
-        {/* Right — status icons + date/time */}
         <div className="header-right">
-          {/* Battery */}
           <div className="header-icon-group">
             <img src="/icons/battery.png" alt="Battery" className="header-status-icon" />
           </div>
 
-          {/* Wi-Fi */}
           <button
             className="header-icon-btn"
             onClick={() => toggle('wifi')}
@@ -423,7 +384,6 @@ export default function Header({ onOpenApp }) {
             />
           </button>
 
-          {/* Control Center toggle */}
           <button
             className={`header-icon-btn${showCC ? ' active' : ''}`}
             onClick={() => { if (showCC) closeCC(); else setShowCC(true); }}
@@ -431,14 +391,12 @@ export default function Header({ onOpenApp }) {
             <img src="/icons/control-menu.svg" alt="Control Center" className="header-status-icon" />
           </button>
 
-          {/* Date & Time */}
           <span className="header-datetime">
             {formatDate(now)}&ensp;{formatTime(now)}
           </span>
         </div>
       </header>
 
-      {/* ---- ABOUT THIS MAC ---- */}
       {showAbout && (
         <div className="about-overlay" onClick={() => setShowAbout(false)}>
           <div
@@ -472,11 +430,9 @@ export default function Header({ onOpenApp }) {
         </div>
       )}
 
-      {/* ---- CONTROL CENTER ---- */}
       {showCC && (
         <div className="cc-overlay" onClick={closeCC}>
           <div className={`cc-panel${ccClosing ? ' closing' : ''}`} onClick={(e) => e.stopPropagation()}>
-            {/* Connectivity toggles */}
             <div className="cc-section cc-toggles">
               <div className="cc-toggle-grid">
                 <button className={`cc-toggle-btn${settings.wifi ? ' on' : ''}`} onClick={() => toggle('wifi')}>
@@ -498,7 +454,6 @@ export default function Header({ onOpenApp }) {
               </div>
             </div>
 
-            {/* Music player */}
             <div className="cc-section cc-music">
               <div className="cc-music-info">
                 <img
@@ -528,7 +483,6 @@ export default function Header({ onOpenApp }) {
               </div>
             </div>
 
-            {/* Brightness */}
             <div className="cc-section cc-slider-section">
               <div className="cc-slider-label">
                 <img src="/icons/bright.png" alt="" className="cc-slider-icon" />
@@ -544,7 +498,6 @@ export default function Header({ onOpenApp }) {
               />
             </div>
 
-            {/* Volume */}
             <div className="cc-section cc-slider-section">
               <div className="cc-slider-label">
                 <img src="/icons/volume.png" alt="" className="cc-slider-icon" />
@@ -560,7 +513,6 @@ export default function Header({ onOpenApp }) {
               />
             </div>
 
-            {/* Extra toggles */}
             <div className="cc-section cc-extra-toggles">
               <button className={`cc-toggle-sm cc-lock${settings.lock ? ' on' : ''}`} onClick={() => toggle('lock')}>
                 <img src="/icons/lock.png" alt="" />
@@ -572,7 +524,6 @@ export default function Header({ onOpenApp }) {
               </button>
             </div>
 
-            {/* Shortcuts */}
             <div className="cc-section cc-shortcuts">
               {shortcuts.map((s, i) => (
                 <button key={i} className="cc-shortcut-btn">
@@ -585,7 +536,6 @@ export default function Header({ onOpenApp }) {
         </div>
       )}
 
-      {/* ---- DESKTOP CONTEXT MENU ---- */}
       {ctxMenu && (
         <div className="desktop-ctx-overlay" onClick={() => setCtxMenu(null)}>
           <div className="desktop-ctx" style={{ left: ctxMenu.x, top: ctxMenu.y }} onClick={(e) => e.stopPropagation()}>
@@ -600,7 +550,6 @@ export default function Header({ onOpenApp }) {
         </div>
       )}
 
-      {/* Hidden audio element */}
       <audio ref={audioRef} preload="metadata" />
     </>
   );

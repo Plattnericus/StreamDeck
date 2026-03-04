@@ -24,7 +24,7 @@ function loadFs() {
   try {
     const saved = localStorage.getItem('terminal-fs');
     if (saved) return JSON.parse(saved);
-  } catch { /* ignore */ }
+  } catch {  }
   return JSON.parse(JSON.stringify(defaultFs));
 }
 
@@ -68,7 +68,7 @@ export default function Terminal() {
   linesRef.current = lines;
 
   const saveFs = () => {
-    try { localStorage.setItem('terminal-fs', JSON.stringify(fsRef.current)); } catch { /* */ }
+    try { localStorage.setItem('terminal-fs', JSON.stringify(fsRef.current)); } catch {  }
   };
 
   const normalizePath = (p) => {
@@ -115,7 +115,6 @@ export default function Terminal() {
 
   const prompt = () => `${user}@${hostname}:${pathRef.current}$ `;
 
-  // Build commands object
   const getCommands = useCallback(() => {
     const fs = fsRef.current;
     const commands = {
@@ -341,7 +340,6 @@ export default function Terminal() {
         const ua = navigator.userAgent || '';
         const platform = navigator.platform || '';
 
-        // Detect OS
         const os = (() => {
           if (/Mac/i.test(platform) || /Macintosh/i.test(ua)) return 'macOS';
           if (/Win/i.test(platform) || /Windows/i.test(ua)) {
@@ -360,7 +358,6 @@ export default function Terminal() {
           return 'Unknown';
         })();
 
-        // Detect browser + version
         const browser = (() => {
           if (/OPR\/|Opera/i.test(ua))    { const m = ua.match(/OPR\/(\S+)/); return 'Opera' + (m ? ' ' + m[1] : ''); }
           if (/Edg\//i.test(ua))           { const m = ua.match(/Edg\/(\S+)/); return 'Edge' + (m ? ' ' + m[1] : ''); }
@@ -372,7 +369,6 @@ export default function Terminal() {
           return 'Unknown';
         })();
 
-        // Architecture
         const arch = (() => {
           if (/arm64|aarch64/i.test(ua) || /arm64|aarch64/i.test(platform)) return 'arm64';
           if (/arm/i.test(ua)) return 'armv7';
@@ -381,7 +377,6 @@ export default function Terminal() {
           return 'unknown';
         })();
 
-        // Kernel version (fake but plausible)
         const kernel = 'Darwin 23.4.0';
 
         const flag = (args[0] || '').trim();
@@ -525,7 +520,6 @@ export default function Terminal() {
           const infoEntry = info[i];
           if (infoEntry) {
             if (infoEntry.label === 'colors') {
-              // Render color blocks
               const colorBlocks = ['#1e1e1e','#ef4444','#22c55e','#eab308','#3b82f6','#a855f7','#06b6d4','#d4d4d4'];
               addJsxLine(
                 <span style={{ fontFamily: 'inherit', fontSize: 'inherit' }}>

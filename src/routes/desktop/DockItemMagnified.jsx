@@ -25,9 +25,6 @@ const widthOutput = [
 
 const sizeInterp = interpolate(distanceInput, widthOutput);
 
-/* ------------------------------------------------------------------ */
-/*  120 fps dock icon — all sizing via refs + direct DOM, zero rerenders */
-/* ------------------------------------------------------------------ */
 export default function DockItemMagnified({
   app_id,
   name,
@@ -39,11 +36,10 @@ export default function DockItemMagnified({
   onContextMenu,
 }) {
   const elRef = useRef(null);
-  const curRef = useRef(baseWidth);   // current rendered width
-  const tgtRef = useRef(baseWidth);   // target width
+  const curRef = useRef(baseWidth);
+  const tgtRef = useRef(baseWidth);
   const rafRef = useRef(null);
 
-  /* — update target whenever mouse_x changes — */
   useEffect(() => {
     if (mouse_x === null) {
       tgtRef.current = baseWidth;
@@ -54,10 +50,9 @@ export default function DockItemMagnified({
     }
   }, [mouse_x]);
 
-  /* — single persistent rAF loop — direct DOM writes, no setState — */
   useEffect(() => {
     let running = true;
-    const lerp = 0.22;               // spring-like smoothing factor
+    const lerp = 0.22;
 
     function tick() {
       if (!running) return;

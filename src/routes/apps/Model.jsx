@@ -123,7 +123,6 @@ export default function Model() {
     const loader = new STLLoader();
     loaderRef.current = loader;
 
-    // Orientation cube
     const oScene = new THREE.Scene();
     const oCamera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     oCamera.position.set(0, 0, 100);
@@ -163,12 +162,10 @@ export default function Model() {
     oScene.add(new THREE.AmbientLight(0xffffff, 1));
 
     if (orientationContainerRef.current) {
-      // Clear any existing canvas (prevents duplicates on StrictMode remount)
       orientationContainerRef.current.innerHTML = '';
       orientationContainerRef.current.appendChild(oRenderer.domElement);
     }
 
-    // Load initial model
     setTimeout(() => loadModel(models[0].path), 50);
 
     const handleResize = () => {
@@ -185,7 +182,6 @@ export default function Model() {
       controls.update();
       renderer.render(scene, camera);
 
-      // Orientation cube sync
       if (cube && camera) {
         const q = new THREE.Quaternion();
         q.copy(camera.quaternion);
@@ -211,7 +207,6 @@ export default function Model() {
       cancelAnimationFrame(animId);
       renderer.dispose();
       oRenderer.dispose();
-      // Clean up DOM elements
       if (container && renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement);
       }

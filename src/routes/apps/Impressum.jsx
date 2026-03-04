@@ -23,7 +23,6 @@ export default function Impressum({ popup = false, onClose }) {
         </div>
         <div className="legal-popup-body">
 
-          {/* Intro */}
           <section>
             <p className="intro-text">
               Diese Website wird betrieben von Felix Plattner als privates, nicht-kommerzielles Portfolio- und Showcase-Projekt.
@@ -32,7 +31,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Geschäftsangaben */}
           <section className="section-hero">
             <h3>Geschäftsangaben</h3>
             <p>
@@ -50,7 +48,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Kontakt */}
           <section>
             <h3>Kontakt</h3>
             <p>
@@ -66,7 +63,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Online-Präsenzen */}
           <section>
             <h3>Online-Präsenzen</h3>
             <p>
@@ -76,7 +72,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Verantwortlich für den Inhalt */}
           <section>
             <h3>Verantwortlich für den Inhalt</h3>
             <p>
@@ -91,7 +86,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* EU-Streitschlichtung */}
           <section>
             <h3>EU-Streitschlichtung</h3>
             <p>
@@ -107,7 +101,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Haftung für Inhalte */}
           <section className="section-hero">
             <h3>Haftung für Inhalte</h3>
             <p>
@@ -120,7 +113,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Haftung für Links */}
           <section>
             <h3>Haftung für Links</h3>
             <p>
@@ -130,7 +122,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Urheberrecht */}
           <section>
             <h3>Urheberrecht</h3>
             <p>
@@ -140,7 +131,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Bildnachweise und Lizenzen */}
           <section>
             <h3>Bildnachweise und Lizenzen</h3>
             <p>
@@ -153,7 +143,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Technologie und Design */}
           <section>
             <h3>Technologie und Design</h3>
             <p>
@@ -166,7 +155,6 @@ export default function Impressum({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Anwendbares Recht */}
           <section>
             <h3>Anwendbares Recht</h3>
             <p>
@@ -174,7 +162,6 @@ export default function Impressum({ popup = false, onClose }) {
             </p>
           </section>
 
-          {/* Last updated */}
           <p className="legal-last-updated">Stand: März 2026</p>
 
         </div>

@@ -1,6 +1,3 @@
-/* ============================== */
-/*  BRIGHTNESS OVERLAY            */
-/* ============================== */
 .brightness-overlay {
   position: fixed;
   inset: 0;
@@ -10,9 +7,6 @@
   transition: opacity 0.25s ease;
 }
 
-/* ============================== */
-/*  HEADER BAR                    */
-/* ============================== */
 .header-bar {
   position: fixed;
   top: 0;
@@ -33,7 +27,6 @@
   color: #fff;
 }
 
-/* ---- Left — Menus ---- */
 .header-left {
   display: flex;
   align-items: center;
@@ -73,7 +66,6 @@
   filter: brightness(10);
 }
 
-/* ---- Dropdown ---- */
 .menu-dropdown {
   position: absolute;
   top: calc(100% + 6px);
@@ -136,7 +128,6 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
-/* ---- Right ---- */
 .header-right {
   display: flex;
   align-items: center;
@@ -187,9 +178,6 @@
   white-space: nowrap;
 }
 
-/* ============================== */
-/*  ABOUT THIS MAC                */
-/* ============================== */
 .about-overlay {
   position: fixed;
   inset: 0;
@@ -300,9 +288,6 @@
   background: rgba(255,255,255,0.1);
 }
 
-/* ============================== */
-/*  CONTROL CENTER                */
-/* ============================== */
 .cc-overlay {
   position: fixed;
   inset: 0;
@@ -364,7 +349,6 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Toggles */
 .cc-toggle-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -390,12 +374,10 @@
   color: #fff;
 }
 
-/* Flugmodus — Apple orange */
 .cc-toggle-btn.cc-airplane.on {
   background: rgba(255, 159, 10, 0.75);
 }
 
-/* Mobilfunk — Apple green */
 .cc-toggle-btn.cc-cellular.on {
   background: rgba(52, 199, 89, 0.75);
 }
@@ -406,7 +388,6 @@
   filter: brightness(10);
 }
 
-/* Music */
 .cc-music {
   padding: 10px;
 }
@@ -487,7 +468,6 @@
   height: 22px;
 }
 
-/* Sliders */
 .cc-slider-section {
   padding: 10px 12px;
 }
@@ -527,7 +507,6 @@
   cursor: pointer;
 }
 
-/* Extra toggles */
 .cc-extra-toggles {
   display: flex;
   gap: 8px;
@@ -553,7 +532,6 @@
   color: #fff;
 }
 
-/* Sperren — red */
 .cc-toggle-sm.cc-lock.on {
   background: rgba(255, 59, 48, 0.75);
 }
@@ -564,7 +542,6 @@
   filter: brightness(10);
 }
 
-/* Shortcuts */
 .cc-shortcuts {
   display: flex;
   gap: 8px;
@@ -597,9 +574,6 @@
   filter: brightness(10);
 }
 
-/* ============================== */
-/*  DESKTOP CONTEXT MENU          */
-/* ============================== */
 .desktop-ctx-overlay {
   position: fixed;
   inset: 0;

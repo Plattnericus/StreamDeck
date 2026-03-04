@@ -18,7 +18,6 @@ export default function Browser({ onClose }) {
 
   const closeTab = (id) => {
     if (tabs.length === 1) {
-      // Last tab — close the entire browser window
       if (onClose) onClose();
       return;
     }
@@ -50,7 +49,6 @@ export default function Browser({ onClose }) {
 
   return (
     <div className="brave-shell">
-      {/* Tab bar */}
       <div className="browser-topbar">
         <div className="browser-tabs">
           {tabs.map((tab) => (
@@ -68,7 +66,6 @@ export default function Browser({ onClose }) {
         </div>
       </div>
 
-      {/* Address bar */}
       <div className="browser-toolbar">
         <div className="nav">
           <span className="nav-btn left" />
@@ -88,7 +85,6 @@ export default function Browser({ onClose }) {
         </form>
       </div>
 
-      {/* Page */}
       <div className={`browser-page${activeTab?.url ? ' has-webview' : ''}`}>
         <div className="browser-viewport">
           {activeTab?.url ? (

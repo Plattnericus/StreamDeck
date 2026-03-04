@@ -12,7 +12,7 @@ export default function Settings() {
     try {
       const saved = localStorage.getItem('settings');
       if (saved) return { ...defaultSettings, ...JSON.parse(saved) };
-    } catch { /* ignore */ }
+    } catch {  }
     return { ...defaultSettings };
   });
 

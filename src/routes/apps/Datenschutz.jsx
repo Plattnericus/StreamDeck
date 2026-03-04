@@ -24,7 +24,6 @@ export default function Datenschutz({ popup = false, onClose }) {
         </div>
         <div className="legal-popup-body">
 
-          {/* Section 1: Einleitung */}
           <section className="section-hero">
             <h3>1. Einleitung</h3>
             <p className="intro-text">
@@ -37,7 +36,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.1: Kontaktdaten */}
           <section>
             <h3>1.1 Kontaktdaten des Verantwortlichen</h3>
             <div className="legal-contact-card">
@@ -50,7 +48,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.2: Umfang der Datenverarbeitung */}
           <section>
             <h3>1.2 Umfang der Datenverarbeitung</h3>
             <p>
@@ -66,7 +63,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.3: Datenverarbeitung außerhalb des EWR */}
           <section>
             <h3>1.3 Datenverarbeitung außerhalb des EWR</h3>
             <p>
@@ -76,7 +72,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.4: Speicherdauer */}
           <section>
             <h3>1.4 Speicherdauer</h3>
             <p>
@@ -86,7 +81,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.5: Rechte der Betroffenen */}
           <section>
             <h3>1.5 Rechte der Betroffenen</h3>
             <p>Im Rahmen der geltenden Datenschutzgesetze stehen Ihnen folgende Rechte zu:</p>
@@ -111,7 +105,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.6: Pflicht zur Bereitstellung von Daten */}
           <section>
             <h3>1.6 Pflicht zur Bereitstellung von Daten</h3>
             <p>
@@ -121,7 +114,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.7: Keine automatische Entscheidungsfindung */}
           <section>
             <h3>1.7 Keine automatische Entscheidungsfindung</h3>
             <p>
@@ -131,7 +123,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 1.8: Kontaktaufnahme */}
           <section>
             <h3>1.8 Kontaktaufnahme</h3>
             <p>
@@ -141,14 +132,12 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Section 2: Datenverarbeitung auf unserer Website */}
           <section className="section-hero">
             <h3>2. Datenverarbeitung auf unserer Website</h3>
           </section>
 
           <div className="legal-section-divider" />
 
-          {/* Section 2.1: Hinweis für EU-Besucher */}
           <section>
             <h3>2.1 Hinweis für EU-Besucher</h3>
             <p>
@@ -158,7 +147,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 2.2: Informatorische Nutzung */}
           <section>
             <h3>2.2 Informatorische Nutzung der Website</h3>
             <p>
@@ -182,7 +170,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 2.3: Webhosting */}
           <section>
             <h3>2.3 Webhosting</h3>
             <p>
@@ -195,7 +182,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 2.4: Technisch notwendige Cookies und localStorage */}
           <section>
             <h3>2.4 Technisch notwendige Cookies und localStorage</h3>
             <p>
@@ -245,7 +231,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 2.5: Lokal eingebundene Schriftarten */}
           <section>
             <h3>2.5 Lokal eingebundene Schriftarten</h3>
             <p>
@@ -255,7 +240,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 2.6: Lokal eingebundene Bibliotheken */}
           <section>
             <h3>2.6 Lokal eingebundene Bibliotheken</h3>
             <p>
@@ -265,7 +249,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-section-divider" />
 
-          {/* Section 2.7: Keine Drittanbieter-Tracking-Tools */}
           <section>
             <h3>2.7 Keine Drittanbieter-Tracking-Tools</h3>
             <p>
@@ -275,7 +258,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Section 3: SSL/TLS-Verschlüsselung */}
           <section>
             <h3>3. SSL/TLS-Verschlüsselung</h3>
             <p>
@@ -285,7 +267,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Section 4: Online-Präsenzen */}
           <section>
             <h3>4. Online-Präsenzen in sozialen Netzwerken</h3>
             <p>
@@ -301,7 +282,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Section 5: Änderungen */}
           <section>
             <h3>5. Änderungen dieser Datenschutzerklärung</h3>
             <p>
@@ -311,7 +291,6 @@ export default function Datenschutz({ popup = false, onClose }) {
 
           <div className="legal-major-divider" />
 
-          {/* Section 6: Fragen und Kommentare */}
           <section>
             <h3>6. Fragen und Kommentare</h3>
             <p>
