@@ -63,7 +63,6 @@
   width: 18px;
   height: 18px;
   object-fit: contain;
-  filter: brightness(0);
 }
 
 .menu-dropdown {
@@ -426,18 +425,40 @@
 }
 
 .cc-music-progress {
-  height: 3px;
+  height: 4px;
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.15);
   margin-bottom: 8px;
-  overflow: hidden;
+  overflow: visible;
+  cursor: pointer;
+  position: relative;
+  transition: height 0.15s ease;
+}
+
+.cc-music-progress:hover {
+  height: 6px;
 }
 
 .cc-music-progress-bar {
   height: 100%;
   background: rgba(255, 255, 255, 0.7);
   border-radius: 2px;
-  transition: width 0.3s linear;
+  transition: none;
+  position: relative;
+  will-change: width;
+}
+
+.cc-music-progress:hover .cc-music-progress-bar::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
 
 .cc-music-controls {

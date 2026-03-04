@@ -9,6 +9,15 @@
   overflow: hidden;
 }
 
+.brave-shell *::-webkit-scrollbar {
+  display: none;
+}
+
+.brave-shell * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .browser-topbar {
   display: flex;
   align-items: center;
@@ -96,6 +105,33 @@
   padding: 10px 14px 12px;
   background: rgba(23, 26, 34, 0.72);
   backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.browser-loading-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+  background-size: 200% 100%;
+  animation: loadingSlide 1.2s ease-in-out infinite;
+  width: 100%;
+  z-index: 10;
+}
+
+@keyframes loadingSlide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.nav-btn.reload.spinning::after {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .nav {
@@ -109,6 +145,20 @@
   border-radius: 8px;
   background: rgba(44, 50, 64, 0.9);
   position: relative;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 180ms ease, opacity 180ms ease;
+}
+
+.nav-btn:hover {
+  background: rgba(62, 70, 86, 0.95);
+}
+
+.nav-btn.disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
 }
 
 .nav-btn::after {
@@ -264,4 +314,63 @@
 .wip-sub {
   font-size: 12px;
   color: #8b949e;
+}
+
+.browser-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #1a1d24;
+  z-index: 5;
+  color: #cfd4df;
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.error-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.error-sub {
+  font-size: 13px;
+  color: #8b949e;
+  max-width: 300px;
+  text-align: center;
+  word-break: break-all;
+}
+
+.error-retry, .error-open-external {
+  margin-top: 4px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 180ms ease, transform 160ms ease;
+}
+
+.error-retry:hover, .error-open-external:hover {
+  background: rgba(255,255,255,0.16);
+  transform: translateY(-1px);
+}
+
+.error-open-external {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.error-open-external:hover {
+  background: rgba(59, 130, 246, 0.45);
 }

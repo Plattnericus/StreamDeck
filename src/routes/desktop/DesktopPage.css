@@ -5,3 +5,79 @@
   background-color: #1c1c2e;
   overflow: hidden;
 }
+
+/* ── Mobile Lock Screen ── */
+.mobile-lockscreen {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-lockscreen {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 9999999;
+    align-items: center;
+    justify-content: center;
+    background: url('/lake-tahoe.webp') center / cover no-repeat;
+    background-color: #1c1c2e;
+  }
+
+  .mobile-lockscreen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+  }
+
+  .mobile-lockscreen-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 32px;
+    color: #fff;
+    animation: lockscreen-fade-in 0.6s ease;
+  }
+
+  .mobile-lockscreen-icon {
+    margin-bottom: 24px;
+    opacity: 0.85;
+  }
+
+  .mobile-lockscreen-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0 0 12px;
+  }
+
+  .mobile-lockscreen-text {
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    opacity: 0.9;
+  }
+
+  .mobile-lockscreen-subtext {
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    opacity: 0.55;
+  }
+
+  @keyframes lockscreen-fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}

@@ -20,6 +20,7 @@ const orientationLabels = {
 
 export default function Model() {
   const containerRef = useRef(null);
+  const wrapperRef = useRef(null);
   const orientationContainerRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
@@ -47,46 +48,74 @@ export default function Model() {
     const loader = loaderRef.current;
     if (!scene || !camera || !controls || !loader) return;
 
-    if (currentMeshRef.current) {
-      scene.remove(currentMeshRef.current);
-      currentMeshRef.current = null;
-    }
+    const fadeOutAndLoad = () => {
+      const oldMesh = currentMeshRef.current;
 
-    loader.load(modelPath, (geometry) => {
-      const material = new THREE.MeshStandardMaterial({
-        color: 0x2a2a2a, metalness: 0.3, roughness: 0.8, opacity: 0, transparent: true
-      });
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.rotation.x = -Math.PI / 2;
-      geometry.center();
-      geometry.computeBoundingBox();
+      const doLoad = () => {
+        if (oldMesh) {
+          scene.remove(oldMesh);
+          oldMesh.geometry?.dispose();
+          if (Array.isArray(oldMesh.material)) oldMesh.material.forEach(m => m.dispose());
+          else oldMesh.material?.dispose();
+          currentMeshRef.current = null;
+        }
 
-      const bb = geometry.boundingBox;
-      if (bb) {
-        const size = bb.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = camera.fov * (Math.PI / 180);
-        let distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 2.2;
-        defaultDistRef.current = distance;
-        camera.position.set(0, distance * 0.6, distance * 0.8);
-        camera.lookAt(0, 0, 0);
-        controls.target.set(0, 0, 0);
-      }
+        loader.load(modelPath, (geometry) => {
+          const material = new THREE.MeshStandardMaterial({
+            color: 0x2a2a2a, metalness: 0.3, roughness: 0.8, opacity: 0, transparent: true
+          });
+          const mesh = new THREE.Mesh(geometry, material);
+          mesh.rotation.x = -Math.PI / 2;
+          geometry.center();
+          geometry.computeBoundingBox();
 
-      scene.add(mesh);
-      currentMeshRef.current = mesh;
+          const bb = geometry.boundingBox;
+          if (bb) {
+            const size = bb.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const fov = camera.fov * (Math.PI / 180);
+            let distance = Math.abs(maxDim / 2 / Math.tan(fov / 2)) * 2.2;
+            defaultDistRef.current = distance;
+            camera.position.set(0, distance * 0.6, distance * 0.8);
+            camera.lookAt(0, 0, 0);
+            controls.target.set(0, 0, 0);
+          }
 
-      const duration = 500;
-      const startTime = Date.now();
-      const animateOpacity = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = progress * progress * (3 - 2 * progress);
-        material.opacity = eased;
-        if (progress < 1) requestAnimationFrame(animateOpacity);
+          scene.add(mesh);
+          currentMeshRef.current = mesh;
+
+          const duration = 400;
+          const startTime = Date.now();
+          const animateIn = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = progress * progress * (3 - 2 * progress);
+            material.opacity = eased;
+            if (progress < 1) requestAnimationFrame(animateIn);
+          };
+          animateIn();
+        }, undefined, (error) => console.error('Error loading model:', error));
       };
-      animateOpacity();
-    }, undefined, (error) => console.error('Error loading model:', error));
+
+      if (oldMesh && oldMesh.material) {
+        const mat = oldMesh.material;
+        const startOpacity = mat.opacity || 1;
+        const duration = 250;
+        const startTime = Date.now();
+        const animateOut = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = progress * progress;
+          mat.opacity = startOpacity * (1 - eased);
+          if (progress < 1) requestAnimationFrame(animateOut);
+          else doLoad();
+        };
+        animateOut();
+      } else {
+        doLoad();
+      }
+    };
+    fadeOutAndLoad();
   }, []);
 
   useEffect(() => {
@@ -170,11 +199,18 @@ export default function Model() {
 
     const handleResize = () => {
       if (!container) return;
-      camera.aspect = container.clientWidth / container.clientHeight;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      if (w === 0 || h === 0) return;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setSize(w, h);
     };
-    window.addEventListener('resize', handleResize);
+
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+    resizeObserver.observe(container);
 
     let animId;
     const animate = () => {
@@ -203,7 +239,7 @@ export default function Model() {
     animate();
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
       cancelAnimationFrame(animId);
       renderer.dispose();
       oRenderer.dispose();
@@ -280,7 +316,7 @@ export default function Model() {
   }
 
   function toggleFullscreen() {
-    const el = containerRef.current;
+    const el = wrapperRef.current;
     if (!el) return;
     if (!document.fullscreenElement) el.requestFullscreen().catch(console.error);
     else document.exitFullscreen();
@@ -295,7 +331,7 @@ export default function Model() {
 
   return (
     <div className="viewer-container">
-      <div className="viewport-wrapper">
+      <div className="viewport-wrapper" ref={wrapperRef}>
         <div ref={containerRef} className="viewport" />
 
         <div className="orientation-display">

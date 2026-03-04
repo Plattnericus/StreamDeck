@@ -83,7 +83,9 @@
 # 04.03.2026
 - fixed updates
 - Changed Design of the Dock
-
+- added mobile view is blocked
+- made some changes with the music player
+- browser search function works sometimes
 
 
 

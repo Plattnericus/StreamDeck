@@ -162,11 +162,13 @@ export default function Dock({ onOpenApp }) {
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
       setApps((prev) =>
-        prev.map((app) =>
-          app.id === appId
-            ? { ...app, x: origX + dx, y: Math.max(headerHeight, origY + dy) }
-            : app
-        )
+        prev.map((app) => {
+          if (app.id !== appId) return app;
+          const minVisible = 100;
+          const newX = Math.max(-(app.width - minVisible), Math.min(window.innerWidth - minVisible, origX + dx));
+          const newY = Math.max(headerHeight, Math.min(window.innerHeight - 50, origY + dy));
+          return { ...app, x: newX, y: newY };
+        })
       );
     }
     if (resizeRef.current) {

@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './Header.css';
 
-const tracks = [
-  { title: 'emails i can\'t send', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - emails i cant send - Sabrina Carpenter.mp3' },
-  { title: 'Tornado Warnings', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - Tornado Warnings - Sabrina Carpenter.mp3' },
-  { title: 'Vicious', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - Vicious - Sabrina Carpenter.mp3' },
-  { title: 'bet u wanna', artist: 'Sabrina Carpenter', cover: '/songs/Short n Sweet (Deluxe).jpg', src: '/songs/SpotiDownloader.com - bet u wanna - Sabrina Carpenter.mp3' },
-  { title: 'Couldn\'t Make It Any Harder', artist: 'Sabrina Carpenter', cover: '/songs/Short n Sweet (Deluxe).jpg', src: '/songs/SpotiDownloader.com - Couldnt Make It Any Harder - Sabrina Carpenter.mp3' },
-  { title: 'Such A Funny Way', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend (Bonus Track Version).jpg', src: '/songs/SpotiDownloader.com - Such A Funny Way - Sabrina Carpenter.mp3' },
-  { title: 'buy me presents', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend.jpg', src: '/songs/SpotiDownloader.com - buy me presents - Sabrina Carpenter.mp3' },
-  { title: 'We Almost Broke Up Again Last Night', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend.jpg', src: '/songs/SpotiDownloader.com - We Almost Broke Up Again Last Night - Sabrina Carpenter.mp3' },
+const ALL_TRACKS = [
+  /*0*/{ title: 'emails i can\'t send', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - emails i cant send - Sabrina Carpenter.mp3' },
+  /*1*/{ title: 'Tornado Warnings', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - Tornado Warnings - Sabrina Carpenter.mp3' },
+  /*2*/{ title: 'Vicious', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - Vicious - Sabrina Carpenter.mp3' },
+  /*3*/{ title: 'bet u wanna', artist: 'Sabrina Carpenter', cover: '/songs/Short n Sweet (Deluxe).jpg', src: '/songs/SpotiDownloader.com - bet u wanna - Sabrina Carpenter.mp3' },
+  /*4*/{ title: 'Couldn\'t Make It Any Harder', artist: 'Sabrina Carpenter', cover: '/songs/Short n Sweet (Deluxe).jpg', src: '/songs/SpotiDownloader.com - Couldnt Make It Any Harder - Sabrina Carpenter.mp3' },
+  /*5*/{ title: 'Such A Funny Way', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend (Bonus Track Version).jpg', src: '/songs/SpotiDownloader.com - Such A Funny Way - Sabrina Carpenter.mp3' },
+  /*6*/{ title: 'buy me presents', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend.jpg', src: '/songs/SpotiDownloader.com - buy me presents - Sabrina Carpenter.mp3' },
+  /*7*/{ title: 'We Almost Broke Up Again Last Night', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend.jpg', src: '/songs/SpotiDownloader.com - We Almost Broke Up Again Last Night - Sabrina Carpenter.mp3' },
 ];
+
+const TRACK_ORDER = [4, 1, 5, 6, 2, 7, 0, 3];
+
+const tracks = TRACK_ORDER.map((i) => ALL_TRACKS[i]);
 
 const DEFAULT_SETTINGS = {
   wifi: true,
@@ -45,14 +49,15 @@ function loadMusicState() {
       return {
         trackIdx: typeof parsed.trackIdx === 'number' && parsed.trackIdx >= 0 && parsed.trackIdx < tracks.length ? parsed.trackIdx : 0,
         playing: !!parsed.playing,
+        currentTime: typeof parsed.currentTime === 'number' ? parsed.currentTime : 0,
       };
     }
   } catch {  }
-  return { trackIdx: 0, playing: false };
+  return { trackIdx: 0, playing: false, currentTime: 0 };
 }
 
-function saveMusicState(trackIdx, playing) {
-  localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify({ trackIdx, playing }));
+function saveMusicState(trackIdx, playing, currentTime) {
+  localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify({ trackIdx, playing, currentTime }));
 }
 
 function formatDate(d) {
@@ -108,20 +113,37 @@ export default function Header({ onOpenApp }) {
   }, []);
 
   const audioRef = useRef(null);
-  const [trackIdx, setTrackIdx] = useState(() => loadMusicState().trackIdx);
-  const [playing, setPlaying] = useState(() => loadMusicState().playing);
+  const savedMusic = useRef(loadMusicState());
+  const [trackIdx, setTrackIdx] = useState(() => savedMusic.current.trackIdx);
+  const [playing, setPlaying] = useState(() => savedMusic.current.playing);
   const [progress, setProgress] = useState(0);
 
+  // Save full state (incl. currentTime) periodically
   useEffect(() => {
-    saveMusicState(trackIdx, playing);
+    const a = audioRef.current;
+    saveMusicState(trackIdx, playing, a ? a.currentTime : 0);
+  }, [trackIdx, playing]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      const a = audioRef.current;
+      if (a) saveMusicState(trackIdx, playing, a.currentTime);
+    }, 2000);
+    return () => clearInterval(id);
   }, [trackIdx, playing]);
 
   const currentTrack = tracks[trackIdx];
 
+  // When track changes, load src and restore saved time on first load
+  const isFirstLoad = useRef(true);
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
     a.src = currentTrack.src;
+    if (isFirstLoad.current && savedMusic.current.currentTime > 0) {
+      a.currentTime = savedMusic.current.currentTime;
+      isFirstLoad.current = false;
+    }
     if (playing) a.play().catch(() => {});
   }, [trackIdx]);
 
@@ -138,10 +160,13 @@ export default function Header({ onOpenApp }) {
     a.volume = settings.volume / 100;
   }, [settings.volume]);
 
+  const seekingRef = useRef(false);
+
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
     const tick = () => {
+      if (seekingRef.current) return;
       if (a.duration) setProgress((a.currentTime / a.duration) * 100);
     };
     const onEnded = () => {
@@ -157,6 +182,32 @@ export default function Header({ onOpenApp }) {
 
   const prevTrack = () => { setTrackIdx((i) => (i - 1 + tracks.length) % tracks.length); };
   const nextTrack = () => { setTrackIdx((i) => (i + 1) % tracks.length); };
+
+  const progressRef = useRef(null);
+
+  const seekTo = useCallback((e) => {
+    const bar = progressRef.current;
+    const a = audioRef.current;
+    if (!bar || !a || !a.duration) return;
+    const rect = bar.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    setProgress(pct * 100);
+    a.currentTime = pct * a.duration;
+  }, []);
+
+  const onProgressDown = useCallback((e) => {
+    e.preventDefault();
+    seekingRef.current = true;
+    seekTo(e);
+    const onMove = (ev) => { if (seekingRef.current) seekTo(ev); };
+    const onUp = () => {
+      seekingRef.current = false;
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }, [seekTo]);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--brightness', `${settings.brightness}%`);
@@ -225,7 +276,7 @@ export default function Header({ onOpenApp }) {
 
   const menus = useMemo(() => [
     {
-      id: 'apple', label: '', icon: '/logos/apple-logo.png',
+      id: 'apple', label: '', icon: '/icons/apple.png',
       items: [
         { label: 'Über diesen Mac', action: () => { setShowAbout(true); closeMenu(); } },
         { divider: true },
@@ -388,7 +439,7 @@ export default function Header({ onOpenApp }) {
             className={`header-icon-btn${showCC ? ' active' : ''}`}
             onClick={() => { if (showCC) closeCC(); else setShowCC(true); }}
           >
-            <img src="/icons/control-menu.svg" alt="Control Center" className="header-status-icon" />
+            <img src="/icons/control-center.png" alt="Control Center" className="header-status-icon" />
           </button>
 
           <span className="header-datetime">
@@ -467,7 +518,7 @@ export default function Header({ onOpenApp }) {
                   <span className="cc-music-artist">{currentTrack.artist}</span>
                 </div>
               </div>
-              <div className="cc-music-progress">
+              <div className="cc-music-progress" ref={progressRef} onMouseDown={onProgressDown}>
                 <div className="cc-music-progress-bar" style={{ width: `${progress}%` }} />
               </div>
               <div className="cc-music-controls">
