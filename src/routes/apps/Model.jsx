@@ -33,6 +33,7 @@ export default function Model() {
   const orientSceneRef = useRef(null);
   const orientCameraRef = useRef(null);
   const orientCubeRef = useRef(null);
+  const animatingRef = useRef(false);
 
   const [selectedModel, setSelectedModel] = useState(models[0].path);
   const [isRotating, setIsRotating] = useState(false);
@@ -195,6 +196,81 @@ export default function Model() {
       orientationContainerRef.current.appendChild(oRenderer.domElement);
     }
 
+    // --- ViewCube click → rotate camera to that face ---
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    const faceDirections = {
+      0: new THREE.Vector3( 1,  0,  0),  // RECHTS
+      1: new THREE.Vector3(-1,  0,  0),  // LINKS
+      2: new THREE.Vector3( 0,  1,  0),  // OBEN
+      3: new THREE.Vector3( 0, -1,  0),  // UNTEN
+      4: new THREE.Vector3( 0,  0,  1),  // VORNE
+      5: new THREE.Vector3( 0,  0, -1),  // HINTEN
+    };
+
+    const handleCubeClick = (event) => {
+      if (animatingRef.current) return;
+      const rect = oRenderer.domElement.getBoundingClientRect();
+      mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, oCamera);
+      const hits = raycaster.intersectObject(cube);
+      if (hits.length === 0) return;
+
+      const faceIndex = hits[0].face.materialIndex;
+      const dir = faceDirections[faceIndex];
+      if (!dir) return;
+
+      const cam = cameraRef.current;
+      const ctrl = controlsRef.current;
+      if (!cam || !ctrl) return;
+
+      // stop auto-rotate while animating
+      ctrl.autoRotate = false;
+      setIsRotating(false);
+
+      const dist = cam.position.length(); // keep current distance
+      const targetPos = dir.clone().multiplyScalar(dist);
+      // for top/bottom views, nudge the camera slightly so "up" stays coherent
+      if (Math.abs(dir.y) > 0.9) {
+        targetPos.z += 0.001;
+      }
+
+      const startPos = cam.position.clone();
+      const startTarget = ctrl.target.clone();
+      const endTarget = new THREE.Vector3(0, 0, 0);
+
+      animatingRef.current = true;
+      ctrl.enabled = false; // disable user interaction during animation
+
+      const duration = 600; // ms
+      const t0 = Date.now();
+      const animateToFace = () => {
+        const elapsed = Date.now() - t0;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-in-out cubic
+        const t = progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+        cam.position.lerpVectors(startPos, targetPos, t);
+        ctrl.target.lerpVectors(startTarget, endTarget, t);
+        cam.lookAt(ctrl.target);
+
+        if (progress < 1) {
+          requestAnimationFrame(animateToFace);
+        } else {
+          ctrl.enabled = true;
+          animatingRef.current = false;
+        }
+      };
+      animateToFace();
+    };
+
+    oRenderer.domElement.addEventListener('click', handleCubeClick);
+
     setTimeout(() => loadModel(models[0].path), 50);
 
     const handleResize = () => {
@@ -246,6 +322,7 @@ export default function Model() {
       if (container && renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement);
       }
+      oRenderer.domElement.removeEventListener('click', handleCubeClick);
       if (orientationContainerRef.current) {
         orientationContainerRef.current.innerHTML = '';
       }
