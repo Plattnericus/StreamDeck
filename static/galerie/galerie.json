@@ -1,0 +1,36 @@
+{
+  "titel": "Stream Deck",
+  "eintraege": [
+    {
+      "id": 1,
+      "bild": "/galerie/setup.jpg",
+      "titel": "Das perfekte Setup",
+      "text": "Stream Deck XL mit OBS, Audio-Mixer und Szenen-Steuerung auf einen Blick.",
+      "datum": "2024-11-03",
+      "kategorie": "Setup"
+    },
+    {
+      "id": 2,
+      "bild": "/galerie/profile.jpg",
+      "titel": "Profile & Ordner",
+      "text": "Für jede App ein eigenes Layout – Ordner sparen Platz für komplexe Workflows.",
+      "datum": "2024-10-18",
+      "kategorie": "Profile"
+    },
+    {
+      "id": 3,
+      "bild": "/galerie/obs.jpg",
+      "titel": "OBS Integration",
+      "text": "Szenen, Quellen und Aufnahme-Status direkt über das Deck steuern.",
+      "kategorie": "Plugins"
+    },
+    {
+      "id": 4,
+      "bild": "/galerie/audio.jpg",
+      "titel": "Audio-Mixer",
+      "text": "Wave Link macht das XL zur idealen Mixer-Oberfläche für jeden Kanal.",
+      "datum": "2024-08-14",
+      "kategorie": "Audio"
+    }
+  ]
+}

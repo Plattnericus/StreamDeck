@@ -87,6 +87,9 @@
 - made some changes with the music player
 - browser search function works sometimes
 
+# 13.03.2025
+- fixed some bugs
+- added Galerie and Logic behind
 
 
 ## TO DO
