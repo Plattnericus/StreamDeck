@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from './apps/Cookies';
 import './LoginPage.css';
+import { useSEO } from '../hooks/useSEO'
+
 
 export default function LoginPage() {
+    useSEO({
+      title: 'MacOS Tahoe Desktop',
+      description: 'Erlebe das macOS Tahoe Liquid Glass Interface auf deinem Stream Deck DIY. Voll funktionsfähig, mit Echtzeit-Updates und anpassbaren Widgets.  ',
+      path: '/desktop',
+    })
+
   const fillRef = useRef(null);
   const [showLogin, setShowLogin] = useState(false);
   const [showBoot, setShowBoot] = useState(true);

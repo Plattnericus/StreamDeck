@@ -208,7 +208,7 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
-  display: flex;
+  display: flex-end;
   justify-content: center;
   padding: 4px 0;
 }
@@ -221,15 +221,12 @@
   position: relative;
   width: auto;
   min-width: 150px;
-  height: 68px;
+  height: 70px;
   border-radius: 20px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: flex-end;
-  padding: 6px 10px;
-  pointer-events: auto;
 }
 
+/* Layers */
 .glass-filter,
 .glass-overlay,
 .glass-specular {
@@ -244,6 +241,7 @@
   filter: url(#glass-distortion) saturate(120%) brightness(1.15);
 }
 
+/* Animation Overlay */
 .glass-distortion-overlay {
   position: absolute;
   inset: 0;
@@ -262,6 +260,7 @@
   100% { background-position: 0% 0%; }
 }
 
+/* Glass look */
 .glass-overlay {
   z-index: 2;
   background: var(--bg-color);
@@ -272,18 +271,33 @@
   box-shadow: inset 1px 1px 1px var(--highlight);
 }
 
+/* Content horizontal */
 .glass-content {
   position: relative;
   z-index: 4;
+  padding: 4px 4px 4px 4px;
   color: var(--text);
   display: flex;
+  flex-direction: row;
   justify-content: center;
-  align-items: flex-end;
-  width: 100%;
+  align-items: center;
   gap: 2px;
-  pointer-events: auto;
+  height: 100%;
+  text-align: left;
 }
 
+.glass-content h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.glass-content p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   .glass-card {
     --bg-color: rgba(0, 0, 0, 0.25);

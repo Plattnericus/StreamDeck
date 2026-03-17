@@ -1,11 +1,591 @@
 <!doctype html>
-<html lang="en">
+<html lang="de" prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article# profile: https://ogp.me/ns/profile#">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="/logos/apple-logo.png?v=3" />
-    <link rel="stylesheet" href="/fonts/inter/inter.css" />
-    <title>MacOS Inspired</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-language" content="de" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <title>Stream Deck DIY — macOS Tahoe Liquid Glass React Interface</title>
+    <meta name="title" content="Stream Deck DIY — macOS Tahoe Liquid Glass React Interface" />
+    <meta name="subtitle" content="macOS Tahoe Liquid Glass UI in React — DIY Stream Deck mit Node.js" />
+    <meta name="description" content="Stream Deck DIY mit React im macOS Tahoe Liquid Glass Design. Baue eigene Stream Deck Plugins mit React und Node.js — open source Dokumentation, komplett auf Deutsch." />
+    <meta name="abstract" content="Browser-basierte macOS Tahoe Liquid Glass Desktop-Umgebung als DIY Stream Deck Controller, gebaut mit React, Vite und Node.js." />
+    <meta name="summary" content="macOS Tahoe Liquid Glass nachgebaut in React. DIY Stream Deck ohne Hardware. Open source, kostenlos, vollständig dokumentiert." />
+    <meta name="keywords" content="stream deck react, stream deck diy, macos tahoe react, macos liquid glass react, react macos ui, stream deck plugin nodejs, macos tahoe design, liquid glass ui react, stream deck documentation, react desktop ui macos, stream deck plugin entwicklung, macos tahoe liquid glass, react vite macos, stream deck browser, macos im browser, liquid glass css, macos tahoe browser, stream deck open source, react desktop app, macos design system react, stream deck controller react, diy stream deck software, stream deck plugin tutorial, react macos components, backdrop filter react, macos window react, macos dock react, macos menubar react, stream deck diy deutsch, macos tahoe ui, liquid glass design system, react macos tahoe tutorial, stream deck nodejs backend, vite react macos, stream deck ohne hardware, macos inspired react, stream deck web app, react ui components macos, macos tahoe css, liquid glass backdrop filter, stream deck konfiguration, react stream deck, macos tahoe open source" />
+    <meta name="subject" content="macOS Tahoe Liquid Glass React DIY Stream Deck" />
+    <meta name="topic" content="React, macOS Tahoe, Liquid Glass UI, Stream Deck DIY, Node.js, Vite, Web Development" />
+    <meta name="category" content="Web Development, React, macOS, Stream Deck, Open Source" />
+    <meta name="classification" content="Technology / Web Development / React / macOS UI" />
+    <meta name="coverage" content="Worldwide" />
+    <meta name="distribution" content="Global" />
+    <meta name="target" content="all" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="rating" content="general" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="address=no" />
+    <meta name="format-detection" content="email=no" />
+    <meta name="author" content="plattnericus" />
+    <meta name="creator" content="plattnericus" />
+    <meta name="publisher" content="plattnericus" />
+    <meta name="owner" content="plattnericus" />
+    <meta name="designer" content="plattnericus" />
+    <meta name="reply-to" content="https://github.com/Plattnericus" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <meta name="slurp" content="index, follow" />
+    <meta name="msnbot" content="index, follow" />
+    <meta name="alexabot" content="index, follow" />
+    <meta name="teoma" content="index, follow" />
+    <meta name="gigabot" content="index, follow" />
+    <meta name="scrubby" content="index, follow" />
+    <meta name="language" content="de" />
+    <meta name="language" content="German" />
+    <meta name="locale" content="de_DE" />
+    <meta name="geo.region" content="DE" />
+    <meta name="geo.placename" content="Germany" />
+    <meta name="geo.position" content="51.1657;10.4515" />
+    <meta name="ICBM" content="51.1657, 10.4515" />
+    <meta name="country" content="Germany" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="revisit" content="7 days" />
+    <meta name="expires" content="never" />
+    <meta name="pragma" content="no-cache" />
+    <meta name="cache-control" content="no-cache" />
+    <meta name="theme-color" content="#1c1c1e" />
+    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="supported-color-schemes" content="dark light" />
+    <meta name="application-name" content="Stream Deck DIY" />
+    <meta name="generator" content="React 18, Vite 5" />
+    <meta name="identifier-URL" content="https://streamdeck.plattnericus.dev" />
+    <meta name="url" content="https://streamdeck.plattnericus.dev" />
+    <meta name="copyright" content="MIT License — plattnericus 2026" />
+    <meta name="web_author" content="plattnericus" />
+    <meta name="resource-type" content="document" />
+    <meta name="page-type" content="documentation" />
+    <meta name="doc-type" content="Web Page" />
+    <meta name="doc-rights" content="Public" />
+    <meta name="doc-class" content="Living Document" />
+    <meta name="content-type" content="text/html; charset=utf-8" />
+    <meta name="content-language" content="de" />
+    <meta name="content-category" content="Technology" />
+    <meta name="content-style-type" content="text/css" />
+    <meta name="content-script-type" content="text/javascript" />
+
+    <meta name="og:title" content="Stream Deck DIY — macOS Tahoe Liquid Glass in React" />
+    <meta name="og:description" content="macOS Tahoe Liquid Glass Interface nachgebaut in React. DIY Stream Deck Dokumentation mit Node.js Backend — open source, kostenlos." />
+    <meta name="og:url" content="https://streamdeck.plattnericus.dev" />
+    <meta name="og:image" content="https://streamdeck.plattnericus.dev/preview.jpg" />
+    <meta name="og:type" content="website" />
+    <meta name="og:site_name" content="Stream Deck DIY Docs" />
+    <meta name="og:locale" content="de_DE" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Stream Deck DIY — macOS Tahoe Liquid Glass in React" />
+    <meta property="og:description" content="macOS Tahoe Liquid Glass Interface nachgebaut in React. DIY Stream Deck Dokumentation mit Node.js Backend — open source, kostenlos." />
+    <meta property="og:url" content="https://streamdeck.plattnericus.dev" />
+    <meta property="og:image" content="https://streamdeck.plattnericus.dev/preview.jpg" />
+    <meta property="og:image:secure_url" content="https://streamdeck.plattnericus.dev/preview.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Stream Deck DIY macOS Tahoe Liquid Glass React Interface" />
+    <meta property="og:site_name" content="Stream Deck DIY Docs" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta property="og:updated_time" content="2026-03-17T00:00:00+00:00" />
+    <meta property="og:see_also" content="https://github.com/Plattnericus/StreamDeck" />
+    <meta property="og:see_also" content="https://plattnericus.dev" />
+
+    <meta property="article:author" content="plattnericus" />
+    <meta property="article:publisher" content="https://plattnericus.dev" />
+    <meta property="article:published_time" content="2026-01-01T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2026-03-17T00:00:00+00:00" />
+    <meta property="article:section" content="Technology" />
+    <meta property="article:tag" content="React" />
+    <meta property="article:tag" content="macOS Tahoe" />
+    <meta property="article:tag" content="Liquid Glass" />
+    <meta property="article:tag" content="Stream Deck" />
+    <meta property="article:tag" content="Node.js" />
+    <meta property="article:tag" content="Vite" />
+    <meta property="article:tag" content="JavaScript" />
+    <meta property="article:tag" content="CSS" />
+    <meta property="article:tag" content="Open Source" />
+    <meta property="article:tag" content="DIY" />
+    <meta property="article:tag" content="Web Development" />
+    <meta property="article:tag" content="Frontend" />
+    <meta property="article:tag" content="UI Design" />
+    <meta property="article:tag" content="macOS UI" />
+    <meta property="article:tag" content="Stream Deck Plugin" />
+    <meta property="article:tag" content="Browser App" />
+    <meta property="article:tag" content="Desktop UI" />
+    <meta property="article:tag" content="Backdrop Filter" />
+    <meta property="article:tag" content="Frosted Glass" />
+    <meta property="article:tag" content="macOS Design" />
+
+    <meta property="profile:first_name" content="plattnericus" />
+    <meta property="profile:username" content="plattnericus" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@plattnericus" />
+    <meta name="twitter:creator" content="@plattnericus" />
+    <meta name="twitter:title" content="Stream Deck DIY — macOS Tahoe Liquid Glass React" />
+    <meta name="twitter:description" content="macOS Tahoe Liquid Glass Design in React. DIY Stream Deck Plugins mit Node.js bauen." />
+    <meta name="twitter:image" content="https://streamdeck.plattnericus.dev/preview.jpg" />
+    <meta name="twitter:image:alt" content="Stream Deck DIY macOS Tahoe Liquid Glass React Interface" />
+    <meta name="twitter:image:width" content="1200" />
+    <meta name="twitter:image:height" content="630" />
+    <meta name="twitter:url" content="https://streamdeck.plattnericus.dev" />
+    <meta name="twitter:domain" content="streamdeck.plattnericus.dev" />
+    <meta name="twitter:label1" content="Technologie" />
+    <meta name="twitter:data1" content="React · Vite · Node.js" />
+    <meta name="twitter:label2" content="Lizenz" />
+    <meta name="twitter:data2" content="MIT Open Source" />
+    <meta name="twitter:app:name:iphone" content="Stream Deck DIY" />
+    <meta name="twitter:app:name:ipad" content="Stream Deck DIY" />
+    <meta name="twitter:app:name:googleplay" content="Stream Deck DIY" />
+
+    <meta name="DC.title" content="Stream Deck DIY — macOS Tahoe Liquid Glass React Interface" />
+    <meta name="DC.creator" content="plattnericus" />
+    <meta name="DC.subject" content="React, macOS Tahoe, Liquid Glass, Stream Deck, Node.js, Vite" />
+    <meta name="DC.description" content="macOS Tahoe Liquid Glass Interface in React. DIY Stream Deck Controller ohne Hardware." />
+    <meta name="DC.publisher" content="plattnericus" />
+    <meta name="DC.contributor" content="plattnericus" />
+    <meta name="DC.date" content="2026-03-17" />
+    <meta name="DC.type" content="Text" />
+    <meta name="DC.format" content="text/html" />
+    <meta name="DC.identifier" content="https://streamdeck.plattnericus.dev" />
+    <meta name="DC.source" content="https://github.com/Plattnericus/StreamDeck" />
+    <meta name="DC.language" content="de" />
+    <meta name="DC.coverage" content="World" />
+    <meta name="DC.rights" content="MIT License" />
+    <meta name="DCTERMS.created" content="2026-01-01" />
+    <meta name="DCTERMS.modified" content="2026-03-17" />
+    <meta name="DCTERMS.isPartOf" content="https://plattnericus.dev" />
+    <meta name="DCTERMS.license" content="https://opensource.org/licenses/MIT" />
+    <meta name="DCTERMS.audience" content="Developers, React Developers, macOS Users, Stream Deck Users" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Stream Deck DIY" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-TileColor" content="#1c1c1e" />
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
+    <meta name="msapplication-navbutton-color" content="#1c1c1e" />
+    <meta name="msapplication-starturl" content="https://streamdeck.plattnericus.dev" />
+    <meta name="msapplication-tooltip" content="Stream Deck DIY — macOS Tahoe Liquid Glass in React" />
+    <meta name="msapplication-task" content="name=Startseite;action-uri=https://streamdeck.plattnericus.dev/;icon-uri=/favicon.ico" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="msvalidate.01" content="BING_VERIFICATION_CODE_HIER" />
+
+    <meta name="google-site-verification" content="DEINEN_GOOGLE_CODE_HIER_EINSETZEN" />
+    <meta name="yandex-verification" content="YANDEX_CODE_HIER" />
+    <meta name="norton-safeweb-site-verification" content="NORTON_CODE_HIER" />
+    <meta name="p:domain_verify" content="PINTEREST_CODE_HIER" />
+    <meta name="alexaVerifyID" content="ALEXA_CODE_HIER" />
+
+    <meta name="pinterest" content="nopin" />
+    <meta name="pinterest-rich-pin" content="true" />
+
+    <meta itemprop="name" content="Stream Deck DIY — macOS Tahoe Liquid Glass React Interface" />
+    <meta itemprop="description" content="macOS Tahoe Liquid Glass Interface nachgebaut in React. DIY Stream Deck Dokumentation mit Node.js Backend." />
+    <meta itemprop="image" content="https://streamdeck.plattnericus.dev/preview.jpg" />
+    <meta itemprop="url" content="https://streamdeck.plattnericus.dev" />
+    <meta itemprop="author" content="plattnericus" />
+    <meta itemprop="datePublished" content="2026-01-01" />
+    <meta itemprop="dateModified" content="2026-03-17" />
+    <meta itemprop="version" content="2.1.3" />
+    <meta itemprop="license" content="https://opensource.org/licenses/MIT" />
+    <meta itemprop="softwareVersion" content="2.1.3" />
+    <meta itemprop="operatingSystem" content="Web Browser" />
+    <meta itemprop="applicationCategory" content="DeveloperApplication" />
+    <meta itemprop="programmingLanguage" content="JavaScript" />
+    <meta itemprop="codeRepository" content="https://github.com/Plattnericus/StreamDeck" />
+
+    <meta name="revisit-after" content="7 days" />
+    <meta name="page-topic" content="React macOS Tahoe Liquid Glass Stream Deck DIY" />
+    <meta name="page-type" content="Documentation" />
+    <meta name="audience" content="Developers" />
+    <meta name="news_keywords" content="react, macos tahoe, liquid glass, stream deck, nodejs, vite, javascript, open source" />
+    <meta name="standout" content="https://streamdeck.plattnericus.dev" />
+    <meta name="original-source" content="https://streamdeck.plattnericus.dev" />
+    <meta name="syndication-source" content="https://streamdeck.plattnericus.dev" />
+
+    <meta name="medium" content="website" />
+    <meta name="web_author" content="plattnericus" />
+    <meta name="web_author_url" content="https://plattnericus.dev" />
+    <meta name="web_author_email" content="" />
+    <meta name="build" content="Vite 5" />
+    <meta name="framework" content="React 18" />
+    <meta name="runtime" content="Node.js 20" />
+    <meta name="deployment" content="Vercel" />
+    <meta name="cdn" content="Cloudflare" />
+    <meta name="version" content="2.1.3" />
+    <meta name="last-modified" content="2026-03-17" />
+    <meta name="date" content="2026-03-17" />
+    <meta name="created" content="2026-01-01" />
+    <meta name="updated" content="2026-03-17" />
+
+    <meta name="fediverse:creator" content="@plattnericus" />
+
+    <meta name="sailthru.title" content="Stream Deck DIY — macOS Tahoe Liquid Glass React" />
+    <meta name="sailthru.description" content="macOS Tahoe Liquid Glass Interface in React. DIY Stream Deck mit Node.js." />
+    <meta name="sailthru.image.thumb" content="https://streamdeck.plattnericus.dev/preview.jpg" />
+    <meta name="sailthru.author" content="plattnericus" />
+    <meta name="sailthru.tags" content="react, macos, stream-deck, liquid-glass, nodejs, vite, open-source" />
+    <meta name="sailthru.date" content="2026-03-17" />
+
+    <meta property="fb:app_id" content="" />
+    <meta property="fb:admins" content="" />
+
+    <link rel="canonical" href="https://streamdeck.plattnericus.dev" />
+    <link rel="alternate" hreflang="de" href="https://streamdeck.plattnericus.dev" />
+    <link rel="alternate" hreflang="en" href="https://streamdeck.plattnericus.dev" />
+    <link rel="alternate" hreflang="x-default" href="https://streamdeck.plattnericus.dev" />
+    <link rel="me" href="https://github.com/Plattnericus" />
+    <link rel="author" href="https://plattnericus.dev" />
+    <link rel="publisher" href="https://plattnericus.dev" />
+    <link rel="license" href="https://opensource.org/licenses/MIT" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#1c1c1e" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://streamdeck.plattnericus.dev" />
+    <link rel="dns-prefetch" href="https://plattnericus.dev" />
+    <link rel="preload" as="image" href="/preview.jpg" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://streamdeck.plattnericus.dev/#website",
+          "url": "https://streamdeck.plattnericus.dev",
+          "name": "Stream Deck DIY Docs",
+          "alternateName": ["Stream Deck React", "macOS Tahoe React", "Liquid Glass React", "Stream Deck DIY"],
+          "description": "macOS Tahoe Liquid Glass Interface in React — DIY Stream Deck Dokumentation",
+          "inLanguage": "de",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": { "@type": "EntryPoint", "urlTemplate": "https://streamdeck.plattnericus.dev/?q={search_term_string}" },
+            "query-input": "required name=search_term_string"
+          },
+          "publisher": { "@id": "https://streamdeck.plattnericus.dev/#publisher" }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://streamdeck.plattnericus.dev/#webpage",
+          "url": "https://streamdeck.plattnericus.dev",
+          "name": "Stream Deck DIY — macOS Tahoe Liquid Glass React Interface",
+          "isPartOf": { "@id": "https://streamdeck.plattnericus.dev/#website" },
+          "about": { "@id": "https://streamdeck.plattnericus.dev/#article" },
+          "primaryImageOfPage": {
+            "@type": "ImageObject",
+            "url": "https://streamdeck.plattnericus.dev/preview.jpg",
+            "width": 1200,
+            "height": 630
+          },
+          "datePublished": "2026-01-01T00:00:00+00:00",
+          "dateModified": "2026-03-17T00:00:00+00:00",
+          "description": "Browser-basierte macOS Tahoe Liquid Glass Desktop-Umgebung mit DIY Stream Deck Controller in React und Node.js.",
+          "inLanguage": "de",
+          "potentialAction": { "@type": "ReadAction", "target": ["https://streamdeck.plattnericus.dev"] }
+        },
+        {
+          "@type": "TechArticle",
+          "@id": "https://streamdeck.plattnericus.dev/#article",
+          "headline": "Stream Deck DIY mit React im macOS Tahoe Liquid Glass Design",
+          "name": "Stream Deck DIY React macOS Tahoe Dokumentation",
+          "description": "Vollständige Dokumentation für DIY Stream Deck Projekte. Gebaut mit React und Node.js im macOS Tahoe Liquid Glass Design.",
+          "url": "https://streamdeck.plattnericus.dev",
+          "inLanguage": "de",
+          "keywords": "stream deck, react, macos tahoe, liquid glass, diy, nodejs, plugin, documentation, vite, css, javascript, open source",
+          "image": {
+            "@type": "ImageObject",
+            "url": "https://streamdeck.plattnericus.dev/preview.jpg",
+            "width": 1200,
+            "height": 630
+          },
+          "about": [
+            { "@type": "Thing", "name": "Stream Deck", "sameAs": "https://www.elgato.com/stream-deck" },
+            { "@type": "Thing", "name": "React", "sameAs": "https://react.dev" },
+            { "@type": "Thing", "name": "macOS Tahoe", "sameAs": "https://www.apple.com/macos" },
+            { "@type": "Thing", "name": "Liquid Glass UI" },
+            { "@type": "Thing", "name": "Node.js", "sameAs": "https://nodejs.org" },
+            { "@type": "Thing", "name": "Vite", "sameAs": "https://vitejs.dev" },
+            { "@type": "Thing", "name": "JavaScript", "sameAs": "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
+            { "@type": "Thing", "name": "CSS backdrop-filter" },
+            { "@type": "Thing", "name": "Open Source Software" }
+          ],
+          "mentions": [
+            { "@type": "SoftwareApplication", "name": "React", "url": "https://react.dev" },
+            { "@type": "SoftwareApplication", "name": "Vite", "url": "https://vitejs.dev" },
+            { "@type": "SoftwareApplication", "name": "Node.js", "url": "https://nodejs.org" },
+            { "@type": "SoftwareApplication", "name": "Vercel", "url": "https://vercel.com" },
+            { "@type": "SoftwareApplication", "name": "Cloudflare", "url": "https://cloudflare.com" }
+          ],
+          "author": { "@id": "https://streamdeck.plattnericus.dev/#publisher" },
+          "publisher": { "@id": "https://streamdeck.plattnericus.dev/#publisher" },
+          "isPartOf": { "@id": "https://streamdeck.plattnericus.dev/#website" },
+          "datePublished": "2026-01-01T00:00:00+00:00",
+          "dateModified": "2026-03-17T00:00:00+00:00",
+          "codeRepository": "https://github.com/Plattnericus/StreamDeck",
+          "programmingLanguage": ["JavaScript", "React", "Node.js", "CSS"],
+          "license": "https://opensource.org/licenses/MIT",
+          "version": "2.1.3"
+        },
+        {
+          "@type": "Person",
+          "@id": "https://streamdeck.plattnericus.dev/#publisher",
+          "name": "plattnericus",
+          "url": "https://plattnericus.dev",
+          "sameAs": [
+            "https://github.com/Plattnericus",
+            "https://plattnericus.dev"
+          ]
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://streamdeck.plattnericus.dev/#app",
+          "name": "Stream Deck DIY",
+          "alternateName": "Stream Deck React macOS",
+          "url": "https://streamdeck.plattnericus.dev",
+          "description": "Browser-basierte macOS Tahoe Liquid Glass Desktop-Umgebung als DIY Stream Deck Controller",
+          "applicationCategory": "DeveloperApplication",
+          "applicationSubCategory": "Web Application",
+          "operatingSystem": "Web Browser, Windows, macOS, Linux, iOS, Android",
+          "browserRequirements": "Chrome 89+, Firefox 90+, Safari 14+, Edge 89+",
+          "softwareVersion": "2.1.3",
+          "releaseNotes": "https://github.com/Plattnericus/StreamDeck/releases",
+          "screenshot": "https://streamdeck.plattnericus.dev/preview.jpg",
+          "image": "https://streamdeck.plattnericus.dev/preview.jpg",
+          "downloadUrl": "https://streamdeck.plattnericus.dev",
+          "installUrl": "https://streamdeck.plattnericus.dev",
+          "author": { "@id": "https://streamdeck.plattnericus.dev/#publisher" },
+          "creator": { "@id": "https://streamdeck.plattnericus.dev/#publisher" },
+          "license": "https://opensource.org/licenses/MIT",
+          "isAccessibleForFree": true,
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock"
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5",
+            "bestRating": "5",
+            "worstRating": "1",
+            "ratingCount": "2"
+          },
+          "featureList": [
+            "macOS Tahoe Liquid Glass UI",
+            "DIY Stream Deck Controller",
+            "React 18 Components",
+            "Node.js API Backend",
+            "Dark and Light Mode",
+            "Responsive Design",
+            "Open Source MIT License",
+            "Vercel Deployment",
+            "Custom Plugin System",
+            "JSON Button Configuration"
+          ],
+          "keywords": "stream deck, react, macos tahoe, liquid glass, diy, nodejs"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "@id": "https://streamdeck.plattnericus.dev/#sourcecode",
+          "name": "StreamDeck DIY React macOS",
+          "codeRepository": "https://github.com/Plattnericus/StreamDeck",
+          "codeSampleType": "full solution",
+          "programmingLanguage": {
+            "@type": "ComputerLanguage",
+            "name": "JavaScript"
+          },
+          "runtimePlatform": "Node.js",
+          "targetProduct": { "@id": "https://streamdeck.plattnericus.dev/#app" },
+          "description": "macOS Tahoe Liquid Glass desktop environment im Browser, gebaut mit React und Vite",
+          "license": "https://opensource.org/licenses/MIT",
+          "version": "2.1.3",
+          "author": { "@id": "https://streamdeck.plattnericus.dev/#publisher" },
+          "dateCreated": "2026-01-01",
+          "dateModified": "2026-03-17"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://streamdeck.plattnericus.dev/#breadcrumbs",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://streamdeck.plattnericus.dev"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://streamdeck.plattnericus.dev/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Was ist Stream Deck DIY?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Stream Deck DIY ist eine browser-basierte macOS Tahoe Liquid Glass Desktop-Umgebung, die auch als DIY Stream Deck Controller funktioniert. Gebaut mit React, Vite und Node.js."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Brauche ich ein echtes Stream Deck Gerät?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Nein. Alles läuft im Browser. Kein Hardware-Gerät erforderlich."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Ist Stream Deck DIY kostenlos?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja. Das Projekt ist vollständig open source unter der MIT-Lizenz — kostenlos für jeden Zweck nutzbar."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Welche Technologien werden verwendet?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "React 18, Vite 5, Node.js 20, CSS Modules, Vercel Serverless Functions und Cloudflare als CDN."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Was ist macOS Tahoe Liquid Glass?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "macOS Tahoe Liquid Glass ist Apples neuestes Design-System mit transluzenten, glasartigen Oberflächen und Echtzeit-Blur-Effekten. In diesem Projekt wurde es mit CSS backdrop-filter und React nachgebaut."
+              }
+            }
+          ]
+        },
+        {
+          "@type": "HowTo",
+          "@id": "https://streamdeck.plattnericus.dev/#howto",
+          "name": "Stream Deck DIY mit React aufsetzen",
+          "description": "Schritt-für-Schritt Anleitung um das Stream Deck DIY Projekt lokal zu starten",
+          "image": "https://streamdeck.plattnericus.dev/preview.jpg",
+          "totalTime": "PT5M",
+          "supply": [
+            { "@type": "HowToSupply", "name": "Node.js 18+" },
+            { "@type": "HowToSupply", "name": "npm 9+" },
+            { "@type": "HowToSupply", "name": "Git" }
+          ],
+          "tool": [
+            { "@type": "HowToTool", "name": "Terminal" },
+            { "@type": "HowToTool", "name": "Web Browser" }
+          ],
+          "step": [
+            {
+              "@type": "HowToStep",
+              "position": 1,
+              "name": "Repository klonen",
+              "text": "git clone https://github.com/Plattnericus/StreamDeck.git && cd StreamDeck"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 2,
+              "name": "Dependencies installieren",
+              "text": "npm install"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 3,
+              "name": "Entwicklungsserver starten",
+              "text": "npm run dev"
+            },
+            {
+              "@type": "HowToStep",
+              "position": 4,
+              "name": "Im Browser öffnen",
+              "text": "http://localhost:5173 im Browser öffnen"
+            }
+          ]
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://streamdeck.plattnericus.dev/#features",
+          "name": "Stream Deck DIY Features",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "macOS Tahoe Liquid Glass UI" },
+            { "@type": "ListItem", "position": 2, "name": "DIY Stream Deck Controller" },
+            { "@type": "ListItem", "position": 3, "name": "React 18 Components" },
+            { "@type": "ListItem", "position": 4, "name": "Node.js API Backend" },
+            { "@type": "ListItem", "position": 5, "name": "Draggable Window System" },
+            { "@type": "ListItem", "position": 6, "name": "Animated macOS Dock" },
+            { "@type": "ListItem", "position": 7, "name": "macOS Menubar" },
+            { "@type": "ListItem", "position": 8, "name": "Dark and Light Mode" },
+            { "@type": "ListItem", "position": 9, "name": "JSON Button Configuration" },
+            { "@type": "ListItem", "position": 10, "name": "Open Source MIT License" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "plattnericus",
+      "url": "https://plattnericus.dev",
+      "logo": "https://plattnericus.dev/logo.png",
+      "sameAs": [
+        "https://github.com/Plattnericus"
+      ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageObject",
+      "url": "https://streamdeck.plattnericus.dev/preview.jpg",
+      "name": "Stream Deck DIY macOS Tahoe Liquid Glass React Interface",
+      "description": "Screenshot der Stream Deck DIY Anwendung mit macOS Tahoe Liquid Glass Design in React",
+      "width": 1200,
+      "height": 630,
+      "encodingFormat": "image/jpeg",
+      "contentUrl": "https://streamdeck.plattnericus.dev/preview.jpg",
+      "license": "https://opensource.org/licenses/MIT",
+      "creator": { "@type": "Person", "name": "plattnericus" },
+      "copyrightHolder": { "@type": "Person", "name": "plattnericus" },
+      "copyrightYear": 2026
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

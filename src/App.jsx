@@ -9,6 +9,12 @@ function RequireCookieConsent({ children }) {
   const consent = localStorage.getItem('cookie-consent');
   if (!consent) return <Navigate to="/" replace />;
   return children;
+
+      useSEO({
+      title: null,
+      description: 'Stream Deck DIY mit React im macOS Tahoe Liquid Glass Design. Plugins bauen mit Node.js — open source Dokumentation.',
+      path: '/',
+    })
 }
 
 export default function App() {
