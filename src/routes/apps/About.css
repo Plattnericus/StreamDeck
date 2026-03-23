@@ -1,0 +1,241 @@
+.about {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  font-family: inherit;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* ── Sidebar ── */
+.about-sidebar {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 24px;
+  border-right: 0.5px solid rgba(255, 255, 255, 0.07);
+  gap: 0;
+}
+
+.about-icon-wrap {
+  animation: float 7s ease-in-out infinite;
+  margin-bottom: 14px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+
+.about-sidebar img {
+  width: 86px;
+  height: 86px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.1);
+  display: block;
+}
+
+.about-name {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: rgba(255,255,255,0.92);
+  margin-bottom: 6px;
+}
+
+.about-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.06);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 28px;
+}
+
+.about-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #48bb78;
+  box-shadow: 0 0 6px #48bb78;
+  animation: blink 2.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.about-divider {
+  width: 100%;
+  height: 0.5px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 18px;
+}
+
+.about-diy-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+
+.about-diy-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-diy-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diy-key {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+}
+
+.diy-val {
+  font-size: 11px;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  color: rgba(255,255,255,0.6);
+}
+
+.diy-val.green {
+  color: #68d391;
+}
+
+/* ── Main ── */
+.about-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 22px;
+  gap: 18px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.about-main::-webkit-scrollbar { display: none; }
+
+.about-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: rise 0.35s ease both;
+}
+
+.about-group:nth-child(1) { animation-delay: 0s; }
+.about-group:nth-child(2) { animation-delay: 0.06s; }
+.about-group:nth-child(3) { animation-delay: 0.12s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.group-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.2);
+  padding-left: 2px;
+}
+
+.group-card {
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  transition: background 0.12s ease;
+}
+
+.info-row:not(:last-child) {
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+
+.info-row:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.info-key {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.38);
+  font-weight: 400;
+}
+
+.info-val {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.82);
+  font-weight: 500;
+}
+
+.info-val.mono {
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 11.5px;
+  color: rgba(99, 179, 237, 0.85);
+}
+
+.info-val a {
+  color: #63b3ed;
+  text-decoration: none;
+}
+
+.info-val a:hover { color: #90cdf4; }
+
+.info-val.handmade {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #f6ad55;
+  font-size: 12px;
+}
+
+.info-val.handmade svg {
+  opacity: 0.7;
+}
+
+.group-note {
+  padding: 10px 14px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.3);
+  font-style: italic;
+  border-top: 0.5px solid rgba(255,255,255,0.05);
+}
+
+/* ─── Light mode ─── */
+html.light-mode .about { color: #000; }
+html.light-mode .about-sidebar { border-right-color: rgba(0,0,0,0.08); }
+html.light-mode .about-name { color: #000; }
+html.light-mode .about-diy-label { color: rgba(0,0,0,0.5); }
+html.light-mode .diy-key { color: rgba(0,0,0,0.5); }
+html.light-mode .diy-val { color: #000; }
+html.light-mode .about-divider { background: rgba(0,0,0,0.08); }
+html.light-mode .group-label { color: rgba(0,0,0,0.5); }
+html.light-mode .group-card { background: #fff; border-color: rgba(0,0,0,0.08); }
+html.light-mode .info-key { color: rgba(0,0,0,0.5); }
+html.light-mode .info-val { color: #000; }
+html.light-mode .info-row:not(:last-child) { border-bottom-color: rgba(0,0,0,0.06); }
+html.light-mode .group-note { color: rgba(0,0,0,0.35); border-top-color: rgba(0,0,0,0.06); }
+html.light-mode .about-badge { color: rgba(0,0,0,0.4); }

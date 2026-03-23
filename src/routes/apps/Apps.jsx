@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './Apps.css';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 import Browser from './Browser';
 import About from './About';
@@ -28,8 +29,8 @@ function iconUrl(icon) {
 }
 
 const APP_LIST = [
-  { id: 101, name: 'About', icon: 'about.webp', component: About, category: 'System', subtitle: 'Über das Projekt', description: 'Allgemeine Informationen über das StreamDeck-Projekt.', developer: 'System', version: '111.0.2g', width: 740, height: 560 },
-  { id: 102, name: 'Info', icon: 'info.webp', component: Info, category: 'System', subtitle: 'Produktinformationen', description: 'Informationen zum Produkt StreamDeck und dessen Funktionen.', developer: 'System', version: '1.0.0', width: 320, height: 480 },
+  { id: 101, name: 'Info', icon: 'info.webp', component: Info, category: 'System', subtitle: 'Produktinformationen', description: 'Informationen zum Produkt StreamDeck und dessen Funktionen.', developer: 'System', version: '1.0.0', width: 720, height: 580 },
+  { id: 102, name: 'About', icon: 'about.webp', component: About, category: 'System', subtitle: 'Über das Projekt', description: 'Allgemeine Informationen über das StreamDeck-Projekt.', developer: 'System', version: '111.0.2g', width: 740, height: 560 },
   { id: 103, name: '3D-Modell', icon: 'model.webp', component: Model, category: 'System', subtitle: '3D-Modellviewer', description: 'Anzeigen und Interagieren mit 3D-Modellen.', developer: 'System', version: '1.0.0', width: 520, height: 760 },
   { id: 104, name: 'Galerie', icon: 'fotos.webp', component: Galerie, category: 'System', subtitle: 'Bilder', description: 'Durchsuchen und Anzeigen von Bildern.', developer: 'System', version: '8.0.0', width: 720, height: 560 },
   { id: 106, name: 'Changelog', icon: 'changelog.webp', component: Changelog, category: 'System', subtitle: 'Änderungen', description: 'Versionsverlauf und Neuerungen des Projekts.', developer: 'System', version: '9.4.2', width: 640, height: 480 },
@@ -54,6 +55,7 @@ function saveInstalled(set) {
 }
 
 export default function Apps({ onOpenApp }) {
+  const t = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [installed, setInstalled] = useState(() => loadInstalled());
   const [downloading, setDownloading] = useState(new Set());
@@ -157,7 +159,7 @@ export default function Apps({ onOpenApp }) {
         <input
           className="app-store-search-input"
           type="search"
-          placeholder="Apps durchsuchen…"
+          placeholder={t('apps_search')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           autoComplete="off"
@@ -176,7 +178,7 @@ export default function Apps({ onOpenApp }) {
       <div className="app-store-scroller" style={{ '--min': `${CFG.cardMinWidth}px` }}>
         {filteredApps.length === 0 ? (
           <div className="app-store-empty">
-            <p>Keine Apps für „{searchQuery}" gefunden.</p>
+            <p>{t('no_results')}: „{searchQuery}"</p>
           </div>
         ) : (
           filteredApps.map((app) => {
@@ -213,9 +215,9 @@ export default function Apps({ onOpenApp }) {
                     ) : isLoad ? (
                       <span className="spinner" />
                     ) : isInst ? (
-                      'Öffnen'
+                      t('apps_open')
                     ) : (
-                      'Laden'
+                      t('apps_install')
                     )}
                   </button>
                 </div>

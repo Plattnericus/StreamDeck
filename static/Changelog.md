@@ -91,6 +91,14 @@
 - fixed some bugs
 - added Galerie and Logic behind
 
+# 23.03.2026
+- added Info
+- added About
+- Changed style of Changelog!
+- added settings!!
+- fixed small issues
+- added Languages
+- addded many settings and Iphone like Design
 
 ## TO DO
 - make every site work
@@ -110,3 +118,9 @@
 - change Design (PopUp musicplayer) to liquid glass
 - fix Dock bug, that it is aligned correctly
 - add all Apps and functions!
+
+- add toSetings taht every Object and file is translated automatically
+- change in settings that there is a better Designed popup (change language)
+- Fix alle Bugs
+- Try to make every button clickable
+- Animatinos like Fade in Fade out

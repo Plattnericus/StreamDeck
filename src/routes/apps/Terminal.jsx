@@ -45,7 +45,7 @@ export default function Terminal() {
   const hostname = 'MacOS';
 
   const [lines, setLines] = useState([
-    { text: `Welcome to ${hostname} Terminal`, color: '#4ec9b0' },
+    { text: `${hostname} Terminal`, color: '#4ec9b0' },
     { text: 'Type "help" for a list of commands.', color: '#666' },
     { text: '' },
   ]);

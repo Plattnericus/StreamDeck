@@ -3,6 +3,21 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-optical-sizing: auto;
+  --accent-color: #007aff;
+  --brightness: 100%;
+}
+
+html.font-small { font-size: 14px; }
+html.font-large { font-size: 18px; }
+
+html.light-mode .app-window-content,
+html.light-mode .app-window {
+  background: #f2f2f7 !important;
+  color: #000 !important;
+}
+html.light-mode .app-window-content *,
+html.light-mode .app-window * {
+  border-color: rgba(0,0,0,0.1);
 }
 
 @supports (font-variation-settings: normal) {

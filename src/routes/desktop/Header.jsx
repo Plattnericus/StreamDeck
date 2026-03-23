@@ -78,6 +78,11 @@ export default function Header({ onOpenApp }) {
 
   const [settings, setSettings] = useState(loadSettings);
   useEffect(() => saveSettings(settings), [settings]);
+  useEffect(() => {
+    const sync = () => setSettings(loadSettings());
+    window.addEventListener('streamdeck-settings-sync', sync);
+    return () => window.removeEventListener('streamdeck-settings-sync', sync);
+  }, []);
   const toggle = (key) => {
     setSettings((s) => {
       const next = { ...s, [key]: !s[key] };

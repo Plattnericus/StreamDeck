@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Changelog.css';
+import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 
 function parseChangelog(raw) {
   const lines = raw.split('\n');
@@ -27,9 +28,9 @@ function parseChangelog(raw) {
       else if (current) current.items.push(text);
       continue;
     }
-    const subBulletMatch = line.match(/^\s+-\s+(.+)/);
-    if (subBulletMatch) {
-      const text = subBulletMatch[1].trim();
+    const subMatch = line.match(/^\s+-\s+(.+)/);
+    if (subMatch) {
+      const text = subMatch[1].trim();
       if (!text) continue;
       if (inTodo) todoItems.push(text);
       else if (current) current.items.push(text);
@@ -39,55 +40,89 @@ function parseChangelog(raw) {
   return { entries: result, todos: todoItems };
 }
 
-function formatDate(dateStr) {
-  const parts = dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
-  if (parts) {
-    const d = new Date(+parts[3], +parts[2] - 1, +parts[1]);
-    const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-    const weekdays = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-    return { day: parts[1], month: months[d.getMonth()], weekday: weekdays[d.getDay()] };
-  }
-  return { day: '', month: dateStr, weekday: '' };
+function formatDate(dateStr, locale) {
+  const p = dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+  if (!p) return { day: '', month: dateStr, weekday: '' };
+  const d = new Date(+p[3], +p[2] - 1, +p[1]);
+  return {
+    day: p[1],
+    month: new Intl.DateTimeFormat(locale, { month: 'short' }).format(d),
+    weekday: new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(d),
+  };
 }
 
 function isToday(dateStr) {
-  const parts = dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
-  if (!parts) return false;
-  const now = new Date();
-  return +parts[1] === now.getDate() && +parts[2] === (now.getMonth() + 1) && +parts[3] === now.getFullYear();
+  const p = dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
+  if (!p) return false;
+  const n = new Date();
+  return +p[1] === n.getDate() && +p[2] === n.getMonth() + 1 && +p[3] === n.getFullYear();
 }
 
-function getItemType(text) {
+function getType(text) {
   const l = text.toLowerCase();
-  if (l.includes('fix') || l.includes('bug')) return 'fix';
-  if (l.includes('add') || l.includes('added') || l.includes('new') || l.includes('start') || l.includes('made')) return 'add';
-  if (l.includes('delete') || l.includes('removed')) return 'remove';
+  if (l.includes('fix') || l.includes('bug'))                                               return 'fix';
+  if (l.includes('add') || l.includes('added') || l.includes('new') || l.includes('made')) return 'add';
+  if (l.includes('delete') || l.includes('removed'))                                        return 'remove';
   if (l.includes('update') || l.includes('upgrade') || l.includes('rework') || l.includes('change')) return 'update';
   return 'default';
 }
 
-const typeIcon = {
-  fix: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>,
-  add: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  remove: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  update: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>,
-  default: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/></svg>,
+const Icon = {
+  fix: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+    </svg>
+  ),
+  add: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  ),
+  remove: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+  ),
+  update: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 4 23 10 17 10"/>
+      <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+    </svg>
+  ),
+  default: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4"/>
+    </svg>
+  ),
 };
+
+const NAV_CONFIG = [
+  { key: 'all',    labelKey: 'changelog_all',     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> },
+  { key: 'add',    labelKey: 'changelog_added',    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> },
+  { key: 'fix',    labelKey: 'changelog_fixed',    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg> },
+  { key: 'update', labelKey: 'changelog_updated',  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg> },
+  { key: 'remove', labelKey: 'changelog_removed',  icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg> },
+  { key: 'todo',   labelKey: 'changelog_todo',     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> },
+];
 
 export default function Changelog() {
   const [entries, setEntries] = useState([]);
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos]     = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [animatedCount, setAnimatedCount] = useState(0);
-  const lastHashRef = useRef('');
+  const [error, setError]     = useState(null);
+  const [filter, setFilter]   = useState('all');
+  const lastHashRef           = useRef('');
+
+  const t    = useTranslation();
+  const lang = useLanguage();
+  const locale = lang === 'de' ? 'de-DE' : lang === 'it' ? 'it-IT' : 'en-US';
 
   const fetchChangelog = useCallback(async () => {
     try {
       const res = await fetch('/Changelog.md?t=' + Date.now());
-      if (!res.ok) throw new Error('Fehler beim Laden');
+      if (!res.ok) throw new Error('fetch_failed');
       const raw = await res.text();
-      const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(raw));
+      const buf  = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(raw));
       const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
       if (hash === lastHashRef.current) return;
       lastHashRef.current = hash;
@@ -95,12 +130,8 @@ export default function Changelog() {
       setEntries(parsed.entries);
       setTodos(parsed.todos);
       setError(null);
-      setAnimatedCount(0);
-      parsed.entries.forEach((_, i) => {
-        setTimeout(() => setAnimatedCount(i + 1), i * 40);
-      });
-    } catch (e) {
-      setError(e.message);
+    } catch {
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -112,67 +143,108 @@ export default function Changelog() {
     return () => clearInterval(id);
   }, [fetchChangelog]);
 
-  const totalChanges = entries.reduce((sum, e) => sum + e.items.length, 0);
+  const allItems = entries.flatMap(e => e.items);
+  const counts = {
+    all:    allItems.length,
+    add:    allItems.filter(i => getType(i) === 'add').length,
+    fix:    allItems.filter(i => getType(i) === 'fix').length,
+    update: allItems.filter(i => getType(i) === 'update').length,
+    remove: allItems.filter(i => getType(i) === 'remove').length,
+    todo:   todos.length,
+  };
 
-  if (loading) return <div className="cl-wrap"><div className="cl-center"><div className="cl-spinner" /></div></div>;
-  if (error) return <div className="cl-wrap"><div className="cl-center"><span className="cl-err">{error}</span></div></div>;
+  const visibleEntries = filter === 'all' || filter === 'todo'
+    ? entries
+    : entries
+        .map(e => ({ ...e, items: e.items.filter(item => getType(item) === filter) }))
+        .filter(e => e.items.length > 0);
+
+  if (loading) return <div className="changelog"><div className="cl-loading"><div className="cl-spinner" /></div></div>;
+  if (error)   return <div className="changelog"><div className="cl-loading"><span className="cl-err">{t('changelog_error')}</span></div></div>;
 
   return (
-    <div className="cl-wrap">
-      <div className="cl-bar">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="cl-bar-svg"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-        <span className="cl-bar-t">Changelog</span>
-        <span className="cl-bar-s">{totalChanges}</span>
+    <div className="changelog">
+      <div className="cl-sidebar">
+        <div className="cl-sidebar-label">{t('changelog_title')}</div>
+
+        {NAV_CONFIG.map(n => (
+          <button
+            key={n.key}
+            className={`cl-nav-btn${filter === n.key ? ' active' : ''}`}
+            onClick={() => setFilter(n.key)}
+          >
+            <span className="cl-nav-icon">{n.icon}</span>
+            {t(n.labelKey)}
+            <span className="cl-nav-count">{counts[n.key]}</span>
+          </button>
+        ))}
+
+        <div className="cl-sidebar-divider" />
+
+        <div className="cl-stat-row">
+          <span className="cl-stat-key">{t('changelog_entries')}</span>
+          <span className="cl-stat-val">{entries.length}</span>
+        </div>
+        <div className="cl-stat-row">
+          <span className="cl-stat-key">{t('changelog_total')}</span>
+          <span className="cl-stat-val">{counts.all}</span>
+        </div>
       </div>
-      <div className="cl-scroll">
-        {entries.map((entry, i) => {
-          if (i >= animatedCount) return null;
-          const fd = formatDate(entry.date);
-          const today = isToday(entry.date);
-          return (
-            <div key={i} className={`cl-card${today ? ' today' : ''}`} style={{ animationDelay: `${i * 35}ms` }}>
-              <div className="cl-card-head">
-                <div className={`cl-cal${today ? ' today' : ''}`}>
-                  <span className="cl-cal-d">{fd.day || '-'}</span>
-                  <span className="cl-cal-m">{fd.month}</span>
+
+      <div className="cl-main">
+        <div className="cl-content">
+          {filter === 'todo' ? (
+            todos.length === 0 ? (
+              <div className="cl-empty">{t('changelog_no_todo')}</div>
+            ) : (
+              <div className="cl-section">
+                <div className="cl-section-header">
+                  <span className="cl-date-label">{t('changelog_todo')}</span>
+                  <div className="cl-section-line" />
                 </div>
-                <span className="cl-card-date">{fd.weekday} {entry.date}</span>
-                <span className="cl-card-n">{entry.items.length}</span>
-                {today && <span className="cl-now">Heute</span>}
-              </div>
-              <div className="cl-rows">
-                {entry.items.map((item, j) => {
-                  const t = getItemType(item);
-                  return (
-                    <div key={j} className="cl-row" style={{ animationDelay: `${i * 35 + j * 20}ms` }}>
-                      <span className={`cl-ic ${t}`}>{typeIcon[t]}</span>
-                      <span className="cl-txt">{item}</span>
+                <div className="cl-card">
+                  {todos.map((td, i) => (
+                    <div key={i} className="cl-row">
+                      <span className="cl-circ" />
+                      <span className="cl-row-text dim">{td}</span>
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-        {todos.length > 0 && (
-          <div className="cl-card todo">
-            <div className="cl-card-head">
-              <span className="cl-ic todo-ic">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-              </span>
-              <span className="cl-card-date">To Do</span>
-              <span className="cl-card-n todo-n">{todos.length}</span>
-            </div>
-            <div className="cl-rows">
-              {todos.map((td, i) => (
-                <div key={i} className="cl-row" style={{ animationDelay: `${i * 20}ms` }}>
-                  <span className="cl-circ" />
-                  <span className="cl-txt dim">{td}</span>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </div>
+            )
+          ) : visibleEntries.length === 0 ? (
+            <div className="cl-empty">{t('changelog_no_entries')}</div>
+          ) : (
+            visibleEntries.map((entry, i) => {
+              const fd    = formatDate(entry.date, locale);
+              const today = isToday(entry.date);
+              return (
+                <div key={i} className="cl-section" style={{ animationDelay: `${i * 35}ms` }}>
+                  <div className="cl-section-header">
+                    <div className={`cl-cal${today ? ' today' : ''}`}>
+                      <span className="cl-cal-d">{fd.day || '\u2014'}</span>
+                      <span className="cl-cal-m">{fd.month}</span>
+                    </div>
+                    <span className="cl-date-label">{fd.weekday} {entry.date}</span>
+                    <div className="cl-section-line" />
+                    {today && <span className="cl-today-pill">{t('changelog_today')}</span>}
+                  </div>
+                  <div className="cl-card">
+                    {entry.items.map((item, j) => {
+                      const type = getType(item);
+                      return (
+                        <div key={j} className="cl-row">
+                          <span className={`cl-ic ${type}`}>{Icon[type]}</span>
+                          <span className="cl-row-text">{item}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );
