@@ -105,6 +105,10 @@
 - improved settings page
 - finished settings
 - fixed some small issues
+- changed Design of Popup (music player, etc)
+- Added Finder 
+- Added Trash
+
 
 ## TO DO
 - make every site work

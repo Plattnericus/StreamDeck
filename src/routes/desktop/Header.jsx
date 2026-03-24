@@ -109,6 +109,9 @@ export default function Header({ onOpenApp }) {
   const [ccClosing, setCcClosing] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [ctxMenu, setCtxMenu] = useState(null);
+  const ccGlassRef = useRef(null);
+  const ccGlassDispRef = useRef(null);
+  const ccGlassSpecRef = useRef(null);
 
   const closeMenu = useCallback(() => {
     if (openMenu) {
@@ -193,6 +196,25 @@ export default function Header({ onOpenApp }) {
 
   const prevTrack = () => { setTrackIdx((i) => (i - 1 + tracks.length) % tracks.length); };
   const nextTrack = () => { setTrackIdx((i) => (i + 1) % tracks.length); };
+
+  const handleCCGlassMove = useCallback((e) => {
+    const el = ccGlassRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    if (ccGlassDispRef.current) {
+      ccGlassDispRef.current.setAttribute('scale', Math.min((x / rect.width) * 100, (y / rect.height) * 100));
+    }
+    if (ccGlassSpecRef.current) {
+      ccGlassSpecRef.current.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0) 60%)`;
+    }
+  }, []);
+
+  const handleCCGlassLeave = useCallback(() => {
+    if (ccGlassDispRef.current) ccGlassDispRef.current.setAttribute('scale', '77');
+    if (ccGlassSpecRef.current) ccGlassSpecRef.current.style.background = 'none';
+  }, []);
 
   const progressRef = useRef(null);
 
@@ -494,105 +516,122 @@ export default function Header({ onOpenApp }) {
 
       {showCC && (
         <div className="cc-overlay" onClick={closeCC}>
-          <div className={`cc-panel${ccClosing ? ' closing' : ''}`} onClick={(e) => e.stopPropagation()}>
-            <div className="cc-section cc-toggles">
-              <div className="cc-toggle-grid">
-                <button className={`cc-toggle-btn${settings.wifi ? ' on' : ''}`} onClick={() => toggle('wifi')}>
-                  <img src="/icons/wifi.png" alt="" className="cc-toggle-icon" />
-                  <span>{t('cc_wifi')}</span>
-                </button>
-                <button className={`cc-toggle-btn${settings.bluetooth ? ' on' : ''}`} onClick={() => toggle('bluetooth')}>
-                  <img src="/icons/bluetooth.png" alt="" className="cc-toggle-icon" />
-                  <span>{t('cc_bluetooth')}</span>
-                </button>
-                <button className={`cc-toggle-btn cc-airplane${settings.airplane ? ' on' : ''}`} onClick={() => toggle('airplane')}>
-                  <img src="/icons/flugmodus.png" alt="" className="cc-toggle-icon" />
-                  <span>{t('cc_airplane')}</span>
-                </button>
-                <button className={`cc-toggle-btn cc-cellular${settings.cellular ? ' on' : ''}`} onClick={() => toggle('cellular')}>
-                  <img src="/icons/mobile-Daten.png" alt="" className="cc-toggle-icon" />
-                  <span>{t('cc_cellular')}</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="cc-section cc-music">
-              <div className="cc-music-info">
-                <img
-                  className="cc-music-cover"
-                  src={currentTrack.cover}
-                  alt={currentTrack.title}
-                  onError={(e) => { e.target.src = '/songs/no-song-found.png'; }}
-                />
-                <div className="cc-music-text">
-                  <span className="cc-music-title">{currentTrack.title}</span>
-                  <span className="cc-music-artist">{currentTrack.artist}</span>
+          <div
+            className={`cc-panel${ccClosing ? ' closing' : ''}`}
+            ref={ccGlassRef}
+            onClick={(e) => e.stopPropagation()}
+            onMouseMove={handleCCGlassMove}
+            onMouseLeave={handleCCGlassLeave}
+          >
+            <svg style={{ display: 'none' }}>
+              <filter id="cc-glass-dist">
+                <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
+                <feDisplacementMap ref={ccGlassDispRef} in="SourceGraphic" in2="noise" scale="77" />
+              </filter>
+            </svg>
+            <div className="cc-glass-filter" />
+            <div className="cc-glass-overlay" />
+            <div className="cc-glass-specular" ref={ccGlassSpecRef} />
+            <div className="cc-glass-content">
+              <div className="cc-section cc-toggles">
+                <div className="cc-toggle-grid">
+                  <button className={`cc-toggle-btn${settings.wifi ? ' on' : ''}`} onClick={() => toggle('wifi')}>
+                    <img src="/icons/wifi.png" alt="" className="cc-toggle-icon" />
+                    <span>{t('cc_wifi')}</span>
+                  </button>
+                  <button className={`cc-toggle-btn${settings.bluetooth ? ' on' : ''}`} onClick={() => toggle('bluetooth')}>
+                    <img src="/icons/bluetooth.png" alt="" className="cc-toggle-icon" />
+                    <span>{t('cc_bluetooth')}</span>
+                  </button>
+                  <button className={`cc-toggle-btn cc-airplane${settings.airplane ? ' on' : ''}`} onClick={() => toggle('airplane')}>
+                    <img src="/icons/flugmodus.png" alt="" className="cc-toggle-icon" />
+                    <span>{t('cc_airplane')}</span>
+                  </button>
+                  <button className={`cc-toggle-btn cc-cellular${settings.cellular ? ' on' : ''}`} onClick={() => toggle('cellular')}>
+                    <img src="/icons/mobile-Daten.png" alt="" className="cc-toggle-icon" />
+                    <span>{t('cc_cellular')}</span>
+                  </button>
                 </div>
               </div>
-              <div className="cc-music-progress" ref={progressRef} onMouseDown={onProgressDown}>
-                <div className="cc-music-progress-bar" style={{ width: `${progress}%` }} />
-              </div>
-              <div className="cc-music-controls">
-                <button onClick={prevTrack}>
-                  <img src="/icons/skip-backwards.png" alt="Previous" />
-                </button>
-                <button onClick={() => setPlaying(!playing)}>
-                  <img src={playing ? '/icons/pause.png' : '/icons/play.png'} alt={playing ? 'Pause' : 'Play'} />
-                </button>
-                <button onClick={nextTrack}>
-                  <img src="/icons/skip-forwards.png" alt="Next" />
-                </button>
-              </div>
-            </div>
 
-            <div className="cc-section cc-slider-section">
-              <div className="cc-slider-label">
-                <img src="/icons/bright.png" alt="" className="cc-slider-icon" />
-                <span>{t('cc_brightness')}</span>
+              <div className="cc-section cc-music">
+                <div className="cc-music-info">
+                  <img
+                    className="cc-music-cover"
+                    src={currentTrack.cover}
+                    alt={currentTrack.title}
+                    onError={(e) => { e.target.src = '/songs/no-song-found.png'; }}
+                  />
+                  <div className="cc-music-text">
+                    <span className="cc-music-title">{currentTrack.title}</span>
+                    <span className="cc-music-artist">{currentTrack.artist}</span>
+                  </div>
+                </div>
+                <div className="cc-music-progress" ref={progressRef} onMouseDown={onProgressDown}>
+                  <div className="cc-music-progress-bar" style={{ width: `${progress}%` }} />
+                </div>
+                <div className="cc-music-controls">
+                  <button onClick={prevTrack}>
+                    <img src="/icons/skip-backwards.png" alt="Previous" />
+                  </button>
+                  <button onClick={() => setPlaying(!playing)}>
+                    <img src={playing ? '/icons/pause.png' : '/icons/play.png'} alt={playing ? 'Pause' : 'Play'} />
+                  </button>
+                  <button onClick={nextTrack}>
+                    <img src="/icons/skip-forwards.png" alt="Next" />
+                  </button>
+                </div>
               </div>
-              <input
-                type="range"
-                min={10}
-                max={100}
-                value={settings.brightness}
-                onChange={(e) => setSettings((s) => ({ ...s, brightness: Number(e.target.value) }))}
-                className="cc-slider"
-              />
-            </div>
 
-            <div className="cc-section cc-slider-section">
-              <div className="cc-slider-label">
-                <img src="/icons/volume.png" alt="" className="cc-slider-icon" />
-                <span>{t('cc_volume')}</span>
+              <div className="cc-section cc-slider-section">
+                <div className="cc-slider-label">
+                  <img src="/icons/bright.png" alt="" className="cc-slider-icon" />
+                  <span>{t('cc_brightness')}</span>
+                </div>
+                <input
+                  type="range"
+                  min={10}
+                  max={100}
+                  value={settings.brightness}
+                  onChange={(e) => setSettings((s) => ({ ...s, brightness: Number(e.target.value) }))}
+                  className="cc-slider"
+                />
               </div>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={settings.volume}
-                onChange={(e) => setSettings((s) => ({ ...s, volume: Number(e.target.value) }))}
-                className="cc-slider"
-              />
-            </div>
 
-            <div className="cc-section cc-extra-toggles">
-              <button className={`cc-toggle-sm cc-lock${settings.lock ? ' on' : ''}`} onClick={() => toggle('lock')}>
-                <img src="/icons/lock.png" alt="" />
-                <span>{t('cc_lock')}</span>
-              </button>
-              <button className={`cc-toggle-sm${settings.mirror ? ' on' : ''}`} onClick={() => toggle('mirror')}>
-                <img src="/icons/airplay.png" alt="" />
-                <span>{t('cc_mirror')}</span>
-              </button>
-            </div>
+              <div className="cc-section cc-slider-section">
+                <div className="cc-slider-label">
+                  <img src="/icons/volume.png" alt="" className="cc-slider-icon" />
+                  <span>{t('cc_volume')}</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={settings.volume}
+                  onChange={(e) => setSettings((s) => ({ ...s, volume: Number(e.target.value) }))}
+                  className="cc-slider"
+                />
+              </div>
 
-            <div className="cc-section cc-shortcuts">
-              {shortcuts.map((s, i) => (
-                <button key={i} className="cc-shortcut-btn">
-                  <img src={s.icon} alt="" />
-                  <span>{s.label}</span>
+              <div className="cc-section cc-extra-toggles">
+                <button className={`cc-toggle-sm cc-lock${settings.lock ? ' on' : ''}`} onClick={() => toggle('lock')}>
+                  <img src="/icons/lock.png" alt="" />
+                  <span>{t('cc_lock')}</span>
                 </button>
-              ))}
+                <button className={`cc-toggle-sm${settings.mirror ? ' on' : ''}`} onClick={() => toggle('mirror')}>
+                  <img src="/icons/airplay.png" alt="" />
+                  <span>{t('cc_mirror')}</span>
+                </button>
+              </div>
+
+              <div className="cc-section cc-shortcuts">
+                {shortcuts.map((s, i) => (
+                  <button key={i} className="cc-shortcut-btn">
+                    <img src={s.icon} alt="" />
+                    <span>{s.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>

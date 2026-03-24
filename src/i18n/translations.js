@@ -234,6 +234,9 @@ const T = {
     trash_title: 'Papierkorb',
     trash_empty: 'Der Papierkorb ist leer',
     trash_zero_items: '0 Objekte',
+
+    /* ── Music Menu ── */
+    music_playlist: 'Wiedergabeliste',
   },
 
   en: {
@@ -471,6 +474,9 @@ const T = {
     trash_title: 'Trash',
     trash_empty: 'Trash is empty',
     trash_zero_items: '0 items',
+
+    /* ── Music Menu ── */
+    music_playlist: 'Playlist',
   },
 
   it: {
@@ -708,6 +714,9 @@ const T = {
     trash_title: 'Cestino',
     trash_empty: 'Il cestino è vuoto',
     trash_zero_items: '0 elementi',
+
+    /* ── Music Menu ── */
+    music_playlist: 'Playlist',
   },
 };
 
