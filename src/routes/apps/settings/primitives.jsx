@@ -4,7 +4,7 @@ export function IosToggle({ checked, onChange, disabled }) {
   return (
     <button
       className={`st-ios-toggle${checked ? ' on' : ''}`}
-      onClick={disabled ? undefined : onChange}
+      onClick={disabled ? undefined : (e) => { e.stopPropagation(); onChange && onChange(); }}
       role="switch"
       aria-checked={checked}
       disabled={disabled}
@@ -29,7 +29,7 @@ export function IosRow({ icon, iconClass = 'gray', label, value, chevron, onClic
       {icon && <span className={`st-ios-icon ${iconClass}`}>{icon}</span>}
       <span className="st-ios-label">{label}</span>
       <div className="st-ios-right">
-        {value && <span className="st-ios-value">{value}</span>}
+        {value != null && value !== '' && <span className="st-ios-value">{value}</span>}
         {children}
         {chevron && <span className="st-ios-chevron" />}
       </div>

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import CookiesInfo from './Cookies-info';
 import Datenschutz from './Datenschutz';
 import './Cookies.css';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function Cookies({ onConsent, onDecline }) {
+  const t = useTranslation();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
   const [showCookiesInfo, setShowCookiesInfo] = useState(false);
@@ -38,17 +40,17 @@ export default function Cookies({ onConsent, onDecline }) {
             <div className="glass-caustic" />
             <div className="cookie-icon"><img style={{width:70,height:70}} src="/icons/cookies.png" alt="Cookie Icon" /></div>
             <div className="cookie-content">
-              <h3 className="cookie-title">Cookies &amp; Datenschutz</h3>
-              <p className="cookie-text">Wir verwenden Cookies, um Ihnen das beste Erlebnis auf unserer Website zu bieten. Sie können wählen, ob Sie alle Cookies akzeptieren oder nur die notwendigen zulassen möchten.</p>
+              <h3 className="cookie-title">{t('cookies_title')}</h3>
+              <p className="cookie-text">{t('cookies_text')}</p>
             </div>
             <div className="cookie-actions">
-              <button className="btn btn-decline" onClick={decline}>Ablehnen</button>
-              <button className="btn btn-accept" onClick={accept}>Alle akzeptieren</button>
+              <button className="btn btn-decline" onClick={decline}>{t('cookies_decline')}</button>
+              <button className="btn btn-accept" onClick={accept}>{t('cookies_accept')}</button>
             </div>
             <div className="cookie-links">
-              <button className="link-btn" onClick={() => setShowCookiesInfo(true)}>Mehr erfahren</button>
+              <button className="link-btn" onClick={() => setShowCookiesInfo(true)}>{t('cookies_learn_more')}</button>
               <span className="link-sep">·</span>
-              <button className="link-btn" onClick={() => setShowDatenschutz(true)}>Datenschutzerklärung</button>
+              <button className="link-btn" onClick={() => setShowDatenschutz(true)}>{t('cookies_privacy_policy')}</button>
             </div>
           </div>
         </div>

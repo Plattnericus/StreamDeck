@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from './apps/Cookies';
 import './LoginPage.css';
-import { useSEO } from '../hooks/useSEO'
+import { useSEO } from '../hooks/useSEO';
+import { useTranslation } from '../i18n/LanguageContext';
 
 
 export default function LoginPage() {
+  const t = useTranslation();
     useSEO({
       title: 'MacOS Tahoe Desktop',
       description: 'Erlebe das macOS Tahoe Liquid Glass Interface auf deinem Stream Deck DIY. Voll funktionsfähig, mit Echtzeit-Updates und anpassbaren Widgets.  ',
@@ -73,7 +75,7 @@ export default function LoginPage() {
       }, 900);
       return;
     }
-    setErrorText('Falsches Kennwort');
+    setErrorText(t('login_wrong_password'));
     setPassword('');
   }, []);
 
@@ -101,7 +103,7 @@ export default function LoginPage() {
       setIsUnlocking(false);
       isUnlockingRef.current = false;
       setSlideProgress(0);
-      setErrorText('Es wäre vorteilhaft die Cookies zu akzeptieren');
+      setErrorText(t('login_accept_cookies'));
       return next;
     });
   }
@@ -198,7 +200,7 @@ export default function LoginPage() {
             <div className="password-row">
               <input
                 type="password"
-                placeholder="Password"
+                placeholder={t('login_password')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={handleKeydown}
@@ -207,7 +209,7 @@ export default function LoginPage() {
                 ↵
               </button>
             </div>
-            <div className="hint">(or swipe finger across reader)</div>
+            <div className="hint">{t('login_hint')}</div>
             {errorText && <div className="error">{errorText}</div>}
           </div>
         </div>

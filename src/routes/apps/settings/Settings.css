@@ -781,3 +781,76 @@
 }
 .st-search-clear:hover { background: rgba(255,255,255,0.25); }
 .light-mode .st-search-clear { background: rgba(0,0,0,0.12); color: rgba(0,0,0,0.6); }
+
+/* ─── iOS Select ─── */
+.st-ios-select {
+  background: rgba(255, 255, 255, 0.1);
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.st-ios-select option {
+  background: #1c1c1e;
+  color: #fff;
+}
+.light-mode .st-ios-select {
+  background: rgba(0, 0, 0, 0.06);
+  color: #000;
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+/* ─── Page transition ─── */
+@keyframes stPageIn {
+  from { opacity: 0; transform: translateX(14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes stPageBack {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.st-page-in   { animation: stPageIn  0.24s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+.st-page-back { animation: stPageBack 0.24s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+
+@keyframes stSheetIn {
+  from { transform: translateY(48px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Reduce motion ─── */
+.reduce-motion .st-page-in,
+.reduce-motion .st-page-back,
+.reduce-motion .st-ios-group,
+.reduce-motion .st-confirm-overlay {
+  animation: none !important;
+}
+.reduce-motion * {
+  transition-duration: 0.01ms !important;
+}
+
+/* ─── Tappable row hover state ─── */
+.st-ios-row.tappable:hover { background: rgba(255,255,255,0.03); }
+.light-mode .st-ios-row.tappable:hover { background: rgba(0,0,0,0.03); }
+
+/* ─── Profile row ─── */
+.st-profile-row.tappable { cursor: pointer; }
+
+/* ─── Improved confirm dialog ─── */
+.st-confirm-box {
+  animation: stSheetIn 0.22s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+.st-confirm-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.95);
+  text-align: center;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.light-mode .st-confirm-title { color: #000; }

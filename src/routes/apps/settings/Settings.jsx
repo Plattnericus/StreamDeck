@@ -38,6 +38,7 @@ const SEARCHABLE_ROWS = [
   { sectionId: 'sound',         labelKey: 'startup_sound' },
   { sectionId: 'sound',         labelKey: 'mute' },
   { sectionId: 'general',       labelKey: 'language' },
+  { sectionId: 'general',       labelKey: 'auto_language' },
   { sectionId: 'general',       labelKey: 'clock_24h' },
   { sectionId: 'general',       labelKey: 'show_seconds' },
   { sectionId: 'general',       labelKey: 'date_format' },
@@ -74,9 +75,12 @@ function ConfirmDialog({ message, onConfirm, onCancel, cancelLabel, confirmLabel
   );
 }
 
+
 export default function Settings() {
   const [settings, setSettings] = useState(() => loadSettings());
   const [activePage, setActivePage] = useState(null);
+  const [pageDir, setPageDir] = useState('in');
+  const [animKey, setAnimKey] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [cookieConsent, setCookieConsent] = useState(() => {
     try { return localStorage.getItem('cookie-consent'); } catch { return null; }
@@ -135,6 +139,18 @@ export default function Settings() {
     if (settings.fontSize === 'large') document.documentElement.classList.add('font-large');
   }, [settings.fontSize]);
 
+  // Auto-detect browser language when autoLanguage is enabled
+  useEffect(() => {
+    if (settings.autoLanguage) {
+      const nav = (navigator.language || '').slice(0, 2).toLowerCase();
+      const supported = ['de', 'en', 'it'];
+      const detected = supported.includes(nav) ? nav : 'de';
+      if (detected !== settings.language) {
+        update('language', detected);
+      }
+    }
+  }, [settings.autoLanguage]);
+
   function update(key, value) {
     setSettings(prev => ({ ...prev, [key]: value }));
   }
@@ -149,6 +165,18 @@ export default function Settings() {
 
   function showConfirm(message, onConfirm, danger = false) {
     setConfirm({ message, onConfirm, danger });
+  }
+
+  function navigateTo(id) {
+    setPageDir('in');
+    setAnimKey(k => k + 1);
+    setActivePage(id);
+  }
+
+  function goBack() {
+    setPageDir('back');
+    setAnimKey(k => k + 1);
+    setActivePage(null);
   }
 
   function handleReset() {
@@ -190,7 +218,9 @@ export default function Settings() {
     if (specularRef.current) specularRef.current.style.background = 'none';
   }
 
-  const sectionProps = { settings, update, toggle, batch };
+  const sectionProps = {
+    settings, update, toggle, batch,
+  };
   const fontClass = settings.fontSize === 'small' ? 'font-small' : settings.fontSize === 'large' ? 'font-large' : '';
 
   function renderSection(id) {
@@ -236,7 +266,7 @@ export default function Settings() {
         <div className={`st-root ${fontClass}`}>
           {confirmDialog}
           <div className="st-sub-header">
-            <button className="st-back-btn" onClick={() => setActivePage(null)}>
+            <button className="st-back-btn" onClick={goBack}>
               <svg viewBox="0 0 24 24" width="10" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="15 18 9 12 15 6"/>
               </svg>
@@ -244,7 +274,7 @@ export default function Settings() {
             </button>
             <div className="st-sub-title">{section ? t(section.labelKey) : ''}</div>
           </div>
-          <div className="st-scroll">
+          <div key={animKey} className={`st-scroll st-page-${pageDir}`}>
             {renderSection(activePage)}
           </div>
         </div>
@@ -259,10 +289,16 @@ export default function Settings() {
         {confirmDialog}
         <div className="st-page-title">{t('settings')}</div>
 
-        <div className="st-scroll">
+        <div key={animKey} className={`st-scroll st-page-${pageDir}`}>
           <div className="st-profile-card" style={{ margin: '0 16px 16px' }}>
-            <div className="st-profile-row">
-              <div className="st-profile-avatar">FP</div>
+            <div
+              className="st-profile-row tappable"
+              onClick={() => navigateTo('about')}
+              role="button"
+              tabIndex={0}
+              onKeyDown={e => e.key === 'Enter' && navigateTo('about')}
+            >
+            <img src="/logo.jpg" alt="PFP Picture" className="st-profile-avatar"/>
               <div className="st-profile-info">
                 <div className="st-profile-name">Felix Plattner</div>
                 <div className="st-profile-sub">{t('profile_sub')}</div>
@@ -298,7 +334,7 @@ export default function Settings() {
                     iconClass={s.iconClass}
                     label={t(s.labelKey)}
                     chevron
-                    onClick={() => setActivePage(s.id)}
+                    onClick={() => navigateTo(s.id)}
                   />
                 ))}
               </div>

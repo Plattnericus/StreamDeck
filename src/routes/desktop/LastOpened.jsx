@@ -1,7 +1,14 @@
 import React from 'react';
 import './LastOpened.css';
+import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
+
+const LOCALE_MAP = { de: 'de-DE', en: 'en-US', it: 'it-IT' };
 
 export default function LastOpened({ lastOpened = [] }) {
+  const t = useTranslation();
+  const lang = useLanguage();
+  const locale = LOCALE_MAP[lang] ?? 'de-DE';
+
   function formatDate(timestamp) {
     const date = new Date(timestamp);
     const now = new Date();
@@ -9,20 +16,20 @@ export default function LastOpened({ lastOpened = [] }) {
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-    if (minutes < 1) return 'just now';
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
-    return date.toLocaleDateString();
+    if (minutes < 1) return t('time_just_now');
+    if (minutes < 60) return lang === 'de' ? `vor ${minutes}m` : lang === 'it' ? `${minutes}m fa` : `${minutes}m ago`;
+    if (hours < 24) return lang === 'de' ? `vor ${hours}h` : lang === 'it' ? `${hours}h fa` : `${hours}h ago`;
+    if (days < 7) return lang === 'de' ? `vor ${days}T` : lang === 'it' ? `${days}g fa` : `${days}d ago`;
+    return date.toLocaleDateString(locale);
   }
 
   return (
     <div className="last-opened">
       <div className="lo-header">
-        <h3>Recently Opened</h3>
+        <h3>{t('recently_opened')}</h3>
       </div>
       {lastOpened.length === 0 ? (
-        <div className="empty">No recently opened apps</div>
+        <div className="empty">{t('no_recently_opened')}</div>
       ) : (
         <div className="list">
           {lastOpened.map((app) => (

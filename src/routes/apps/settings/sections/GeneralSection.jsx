@@ -15,9 +15,9 @@ export default function GeneralSection({ settings, update, toggle, onReset }) {
           label={t('language')}
           value={settings.language}
           options={[
-            { value: 'de', label: t('lang_de') },
-            { value: 'en', label: t('lang_en') },
-            { value: 'it', label: t('lang_it') },
+            { value: 'de', label: '🇩🇪  Deutsch' },
+            { value: 'en', label: '🇬🇧  English' },
+            { value: 'it', label: '🇮🇹  Italiano' },
           ]}
           onChange={v => update('language', v)}
         />
@@ -57,10 +57,7 @@ export default function GeneralSection({ settings, update, toggle, onReset }) {
 
       <IosGroup>
         <div className="st-ios-row-center">
-          <button
-            className="st-ios-btn danger"
-            onClick={onReset}
-          >
+          <button className="st-ios-btn danger" onClick={onReset}>
             <ResetIcon /> {t('reset_settings')}
           </button>
         </div>

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useCallback } from 'react';
 import { interpolate } from 'popmotion';
 import './DockItemMagnified.css';
 
-const baseWidth = 76;
+const baseWidth = 83;
 const distanceLimit = baseWidth * 6;
 const distanceInput = [
   -distanceLimit,

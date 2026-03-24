@@ -7,6 +7,7 @@ export const DEFAULT_SETTINGS = {
   startupSound: true,
   muted: false,
   language: 'de',
+  autoLanguage: false,
   use24hClock: true,
   showSeconds: false,
   dateFormat: 'de',
@@ -46,7 +47,7 @@ export const ACCENT_COLORS = {
 const APP_KEYS = [
   'darkMode', 'accentColor', 'fontSize', 'reduceTransparency',
   'soundEffects', 'startupSound', 'muted',
-  'language', 'use24hClock', 'showSeconds', 'dateFormat', 'reduceMotion', 'autoLock',
+  'language', 'autoLanguage', 'use24hClock', 'showSeconds', 'dateFormat', 'reduceMotion', 'autoLock',
   'notifications', 'appBadges', 'notificationSound', 'showPreviews', 'doNotDisturb',
   'allowCamera', 'allowMicrophone', 'analyticsEnabled', 'vpn',
 ];

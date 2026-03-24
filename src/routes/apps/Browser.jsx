@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import './Browser.css';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 function proxyUrl(url) {
   if (!url) return '';
@@ -7,7 +8,8 @@ function proxyUrl(url) {
 }
 
 export default function Browser({ onClose }) {
-  const [tabs, setTabs] = useState([{ id: 1, title: 'Neuer Tab', url: '' }]);
+  const t = useTranslation();
+  const [tabs, setTabs] = useState(() => [{ id: 1, title: t('browser_new_tab'), url: '' }]);
   const [activeTabId, setActiveTabId] = useState(1);
   const [nextId, setNextId] = useState(2);
   const [query, setQuery] = useState('');
@@ -35,7 +37,7 @@ export default function Browser({ onClose }) {
 
   const navigateTo = useCallback((tabId, url, title) => {
     pushHistory(tabId, url);
-    setTabs((p) => p.map((t) => (t.id === tabId ? { ...t, url, title } : t)));
+    setTabs((p) => p.map((tab) => (tab.id === tabId ? { ...tab, url, title } : tab)));
     setQuery(url);
     setLoading(true);
     setLoadError(false);
@@ -46,17 +48,17 @@ export default function Browser({ onClose }) {
     if (h.index <= 0) return;
     h.index--;
     const url = h.entries[h.index];
-    setTabs((p) => p.map((t) => (t.id === activeTabId ? { ...t, url, title: url || 'Neuer Tab' } : t)));
+    setTabs((p) => p.map((tab) => (tab.id === activeTabId ? { ...tab, url, title: url || t('browser_new_tab') } : tab)));
     setQuery(url);
     if (url) { setLoading(true); setLoadError(false); }
-  }, [activeTabId]);
+  }, [activeTabId, t]);
 
   const goForward = useCallback(() => {
     const h = getHistory(activeTabId);
     if (h.index >= h.entries.length - 1) return;
     h.index++;
     const url = h.entries[h.index];
-    setTabs((p) => p.map((t) => (t.id === activeTabId ? { ...t, url, title: url || 'Neuer Tab' } : t)));
+    setTabs((p) => p.map((tab) => (tab.id === activeTabId ? { ...tab, url, title: url || t('browser_new_tab') } : tab)));
     setQuery(url);
     if (url) { setLoading(true); setLoadError(false); }
   }, [activeTabId]);
@@ -64,7 +66,7 @@ export default function Browser({ onClose }) {
   const reload = useCallback(() => { setLoading(true); setLoadError(false); setReloadKey((k) => k + 1); }, []);
 
   const addTab = () => {
-    setTabs((p) => [...p, { id: nextId, title: 'Neuer Tab', url: '' }]);
+    setTabs((p) => [...p, { id: nextId, title: t('browser_new_tab'), url: '' }]);
     setActiveTabId(nextId);
     setQuery('');
     setLoading(false);
@@ -118,8 +120,8 @@ export default function Browser({ onClose }) {
         </div>
         <form className="address-bar" onSubmit={submitSearch}>
           <span className="brand-icon" />
-          <input className="url-input" type="text" placeholder="Mit Google suchen oder eine URL eingeben" value={query} onChange={(e) => setQuery(e.target.value)} />
-          <button className="go" type="submit">Suchen</button>
+          <input className="url-input" type="text" placeholder={t('browser_search_placeholder')} value={query} onChange={(e) => setQuery(e.target.value)} />
+          <button className="go" type="submit">{t('browser_search')}</button>
         </form>
       </div>
 
@@ -130,10 +132,10 @@ export default function Browser({ onClose }) {
               {loadError && (
                 <div className="browser-error">
                   <div className="error-icon">⚠️</div>
-                  <div className="error-title">Seite kann nicht geladen werden</div>
+                  <div className="error-title">{t('browser_page_error')}</div>
                   <div className="error-sub">{activeTab.url}</div>
-                  <button className="error-retry" onClick={reload}>Erneut versuchen</button>
-                  <button className="error-open-external" onClick={() => window.open(activeTab.url, '_blank')}>In neuem Tab öffnen ↗</button>
+                  <button className="error-retry" onClick={reload}>{t('browser_retry')}</button>
+                  <button className="error-open-external" onClick={() => window.open(activeTab.url, '_blank')}>{t('browser_open_external')}</button>
                 </div>
               )}
               <iframe
@@ -155,8 +157,8 @@ export default function Browser({ onClose }) {
               <div className="wip-label">
                 <span className="wip-icon" />
                 <div>
-                  <div className="wip-title">WIP</div>
-                  <div className="wip-sub">Work in Progress</div>
+                  <div className="wip-title">{t('browser_wip')}</div>
+                  <div className="wip-sub">{t('browser_wip_sub')}</div>
                 </div>
               </div>
             </div>

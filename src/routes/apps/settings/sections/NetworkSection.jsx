@@ -14,9 +14,27 @@ export default function NetworkSection({ settings, update, toggle, batch }) {
     }
   }
 
+  function toggleWifi() {
+    if (!settings.wifi) update('airplane', false);
+    toggle('wifi');
+  }
+
+  function toggleBluetooth() {
+    toggle('bluetooth');
+  }
+
+  function toggleCellular() {
+    if (!settings.cellular) update('airplane', false);
+    toggle('cellular');
+  }
+
+  function toggleVpn() {
+    toggle('vpn');
+  }
+
   return (
     <IosGroup>
-      <IosRow icon={<AirplaneIcon />} iconClass="orange" label={t('airplane')}>
+      <IosRow icon={<AirplaneIcon />} iconClass="orange" label={t('airplane')} onClick={handleAirplane}>
         <IosToggle checked={settings.airplane} onChange={handleAirplane} />
       </IosRow>
 
@@ -26,14 +44,9 @@ export default function NetworkSection({ settings, update, toggle, batch }) {
         label={t('wifi')}
         value={settings.wifi ? t('connected') : t('off')}
         chevron
+        onClick={toggleWifi}
       >
-        <IosToggle
-          checked={settings.wifi}
-          onChange={() => {
-            if (!settings.wifi) update('airplane', false);
-            toggle('wifi');
-          }}
-        />
+        <IosToggle checked={settings.wifi} onChange={toggleWifi} />
       </IosRow>
 
       <IosRow
@@ -42,22 +55,17 @@ export default function NetworkSection({ settings, update, toggle, batch }) {
         label={t('bluetooth')}
         value={settings.bluetooth ? t('on') : t('off')}
         chevron
+        onClick={toggleBluetooth}
       >
-        <IosToggle checked={settings.bluetooth} onChange={() => toggle('bluetooth')} />
+        <IosToggle checked={settings.bluetooth} onChange={toggleBluetooth} />
       </IosRow>
 
-      <IosRow icon={<CellularIcon />} iconClass="green" label={t('cellular')} chevron>
-        <IosToggle
-          checked={settings.cellular}
-          onChange={() => {
-            if (!settings.cellular) update('airplane', false);
-            toggle('cellular');
-          }}
-        />
+      <IosRow icon={<CellularIcon />} iconClass="green" label={t('cellular')} chevron onClick={toggleCellular}>
+        <IosToggle checked={settings.cellular} onChange={toggleCellular} />
       </IosRow>
 
-      <IosRow icon={<VpnIcon />} iconClass="indigo" label={t('vpn')} chevron>
-        <IosToggle checked={settings.vpn} onChange={() => toggle('vpn')} />
+      <IosRow icon={<VpnIcon />} iconClass="indigo" label={t('vpn')} chevron onClick={toggleVpn}>
+        <IosToggle checked={settings.vpn} onChange={toggleVpn} />
       </IosRow>
     </IosGroup>
   );

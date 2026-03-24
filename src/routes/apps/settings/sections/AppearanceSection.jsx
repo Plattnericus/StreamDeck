@@ -1,5 +1,5 @@
 import React from 'react';
-import { IosGroup, IosRow, IosToggle, IosSlider } from '../primitives';
+import { IosGroup, IosRow, IosToggle, IosSlider, IosSelect } from '../primitives';
 import { SunIcon, PaletteIcon, TextIcon, GlassIcon } from '../icons';
 import { ACCENT_COLORS } from '../settingsStore';
 import { useTranslation } from '../../../../i18n/LanguageContext';
@@ -50,17 +50,18 @@ export default function AppearanceSection({ settings, update, toggle }) {
           </div>
         </IosRow>
 
-        <IosRow icon={<TextIcon />} iconClass="blue" label={t('font_size')}>
-          <select
-            className="st-ios-select"
-            value={settings.fontSize}
-            onChange={e => update('fontSize', e.target.value)}
-          >
-            <option value="small">{t('font_small')}</option>
-            <option value="medium">{t('font_medium')}</option>
-            <option value="large">{t('font_large')}</option>
-          </select>
-        </IosRow>
+        <IosSelect
+          icon={<TextIcon />}
+          iconClass="blue"
+          label={t('font_size')}
+          value={settings.fontSize}
+          options={[
+            { value: 'small',  label: t('font_small') },
+            { value: 'medium', label: t('font_medium') },
+            { value: 'large',  label: t('font_large') },
+          ]}
+          onChange={v => update('fontSize', v)}
+        />
 
         <IosRow icon={<GlassIcon />} iconClass="indigo" label={t('reduce_transparency')}>
           <IosToggle checked={settings.reduceTransparency} onChange={() => toggle('reduceTransparency')} />

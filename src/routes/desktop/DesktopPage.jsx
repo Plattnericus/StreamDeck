@@ -5,8 +5,10 @@ import DesktopMarquee from './DesktopMarquee';
 import { AppStoreProvider } from '../../lib/appStore';
 import { LastOpenedProvider } from '../../lib/lastOpened';
 import './DesktopPage.css';
+import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function DesktopPage() {
+  const t = useTranslation();
   const handleOpenApp = (appName) => {
   };
 
@@ -31,13 +33,9 @@ export default function DesktopPage() {
                 <circle cx="230" cy="215" r="30" fill="none" stroke="#fff" strokeWidth="22"/>
               </svg>
             </div>
-            <h1 className="mobile-lockscreen-title">Desktop Only</h1>
-            <p className="mobile-lockscreen-text">
-              Diese Seite ist nicht für Mobilgeräte optimiert!
-            </p>
-            <p className="mobile-lockscreen-subtext">
-              Bitte öffne diese Seite auf einem Desktop-Computer.
-            </p>
+            <h1 className="mobile-lockscreen-title">{t('desktop_only')}</h1>
+            <p className="mobile-lockscreen-text">{t('mobile_not_optimized')}</p>
+            <p className="mobile-lockscreen-subtext">{t('mobile_open_desktop')}</p>
           </div>
         </div>
       </LastOpenedProvider>

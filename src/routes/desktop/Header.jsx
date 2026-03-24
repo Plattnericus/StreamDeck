@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './Header.css';
+import { useLanguage } from '../../i18n/LanguageContext';
+import T from '../../i18n/translations';
 
 const ALL_TRACKS = [
   /*0*/{ title: 'emails i can\'t send', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - emails i cant send - Sabrina Carpenter.mp3' },
@@ -60,16 +62,20 @@ function saveMusicState(trackIdx, playing, currentTime) {
   localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify({ trackIdx, playing, currentTime }));
 }
 
-function formatDate(d) {
-  const days = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
-  const months = ['Jan.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'];
-  return `${days[d.getDay()]} ${d.getDate()}. ${months[d.getMonth()]}`;
+const LOCALE_MAP = { de: 'de-DE', en: 'en-US', it: 'it-IT' };
+
+function formatDate(d, lang) {
+  const locale = LOCALE_MAP[lang] ?? 'de-DE';
+  return d.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
 }
-function formatTime(d) {
-  return d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+function formatTime(d, lang) {
+  const locale = LOCALE_MAP[lang] ?? 'de-DE';
+  return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
 }
 
 export default function Header({ onOpenApp }) {
+  const lang = useLanguage();
+  const t = useCallback((key) => T[lang]?.[key] ?? T.de[key] ?? key, [lang]);
   const [now, setNow] = useState(new Date());
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 10_000);
@@ -283,100 +289,100 @@ export default function Header({ onOpenApp }) {
     {
       id: 'apple', label: '', icon: '/icons/apple.png',
       items: [
-        { label: 'Über diesen Mac', action: () => { setShowAbout(true); closeMenu(); } },
+        { label: t('menu_apple_about'), action: () => { setShowAbout(true); closeMenu(); } },
         { divider: true },
-        { label: 'Systemeinstellungen …', action: () => { onOpenApp?.('Settings'); closeMenu(); } },
-        { label: 'App Store …', action: () => { onOpenApp?.('App Store'); closeMenu(); } },
+        { label: t('menu_apple_syspreferences'), action: () => { onOpenApp?.('Settings'); closeMenu(); } },
+        { label: t('menu_apple_appstore'), action: () => { onOpenApp?.('App Store'); closeMenu(); } },
         { divider: true },
-        { label: 'Ruhezustand', action: () => closeMenu() },
-        { label: 'Neustart …', action: () => window.location.reload() },
-        { label: 'Ausschalten …', action: () => { window.location.href = '/'; } },
+        { label: t('menu_apple_sleep'), action: () => closeMenu() },
+        { label: t('menu_apple_restart'), action: () => window.location.reload() },
+        { label: t('menu_apple_shutdown'), action: () => { window.location.href = '/'; } },
         { divider: true },
-        { label: 'Bildschirm sperren', action: () => { window.location.href = '/'; } },
-        { label: 'Abmelden …', action: () => { window.location.href = '/'; } },
+        { label: t('menu_apple_lock'), action: () => { window.location.href = '/'; } },
+        { label: t('menu_apple_logout'), action: () => { window.location.href = '/'; } },
       ],
     },
     {
-      id: 'finder', label: 'Finder',
+      id: 'finder', label: t('menu_finder'),
       items: [
-        { label: 'Über Finder', action: () => { onOpenApp?.('Finder'); closeMenu(); } },
+        { label: t('menu_finder_about'), action: () => { onOpenApp?.('Finder'); closeMenu(); } },
         { divider: true },
-        { label: 'Einstellungen …' },
-        { label: 'Papierkorb leeren …' },
+        { label: t('menu_finder_prefs') },
+        { label: t('menu_finder_emptytrash') },
       ],
     },
     {
-      id: 'datei', label: 'Datei',
+      id: 'file', label: t('menu_file'),
       items: [
-        { label: 'Neues Fenster', shortcut: '⌘N' },
-        { label: 'Neuer Tab', shortcut: '⌘T' },
+        { label: t('menu_file_newwindow'), shortcut: '⌘N' },
+        { label: t('menu_file_newtab'), shortcut: '⌘T' },
         { divider: true },
-        { label: 'Öffnen', shortcut: '⌘O' },
-        { label: 'Schließen', shortcut: '⌘W' },
+        { label: t('menu_file_open'), shortcut: '⌘O' },
+        { label: t('menu_file_close'), shortcut: '⌘W' },
       ],
     },
     {
-      id: 'bearbeiten', label: 'Bearbeiten',
+      id: 'edit', label: t('menu_edit'),
       items: [
-        { label: 'Widerrufen', shortcut: '⌘Z' },
-        { label: 'Wiederherstellen', shortcut: '⇧⌘Z' },
+        { label: t('menu_edit_undo'), shortcut: '⌘Z' },
+        { label: t('menu_edit_redo'), shortcut: '⇧⌘Z' },
         { divider: true },
-        { label: 'Ausschneiden', shortcut: '⌘X' },
-        { label: 'Kopieren', shortcut: '⌘C' },
-        { label: 'Einfügen', shortcut: '⌘V' },
-        { label: 'Alles auswählen', shortcut: '⌘A' },
+        { label: t('menu_edit_cut'), shortcut: '⌘X' },
+        { label: t('menu_edit_copy'), shortcut: '⌘C' },
+        { label: t('menu_edit_paste'), shortcut: '⌘V' },
+        { label: t('menu_edit_selectall'), shortcut: '⌘A' },
       ],
     },
     {
-      id: 'ansicht', label: 'Ansicht',
+      id: 'view', label: t('menu_view'),
       items: [
-        { label: 'Als Symbole' },
-        { label: 'Als Liste' },
-        { label: 'Als Spalten' },
-        { label: 'Als Galerie' },
+        { label: t('menu_view_icons') },
+        { label: t('menu_view_list') },
+        { label: t('menu_view_columns') },
+        { label: t('menu_view_gallery') },
         { divider: true },
-        { label: 'Symbolleiste ausblenden' },
-        { label: 'Pfadleiste einblenden' },
-        { label: 'Statusleiste einblenden' },
+        { label: t('menu_view_hidetoolbar') },
+        { label: t('menu_view_pathbar') },
+        { label: t('menu_view_statusbar') },
       ],
     },
     {
-      id: 'gehzu', label: 'Gehe zu',
+      id: 'go', label: t('menu_go'),
       items: [
-        { label: 'Zuletzt' },
-        { label: 'Dokumente' },
-        { label: 'Schreibtisch' },
-        { label: 'Downloads' },
-        { label: 'Privat' },
-        { label: 'Computer' },
+        { label: t('menu_go_recent') },
+        { label: t('menu_go_documents') },
+        { label: t('menu_go_desktop') },
+        { label: t('menu_go_downloads') },
+        { label: t('menu_go_private') },
+        { label: t('menu_go_computer') },
         { divider: true },
-        { label: 'AirDrop' },
-        { label: 'Netzwerk' },
+        { label: t('menu_go_airdrop') },
+        { label: t('menu_go_network') },
       ],
     },
     {
-      id: 'fenster', label: 'Fenster',
+      id: 'window', label: t('menu_window'),
       items: [
-        { label: 'Minimieren', shortcut: '⌘M' },
-        { label: 'Zoomen' },
+        { label: t('menu_window_minimize'), shortcut: '⌘M' },
+        { label: t('menu_window_zoom') },
         { divider: true },
-        { label: 'Alle nach vorn' },
+        { label: t('menu_window_allfront') },
       ],
     },
     {
-      id: 'hilfe', label: 'Hilfe',
+      id: 'help', label: t('menu_help'),
       items: [
-        { label: 'macOS-Hilfe' },
-        { label: 'Tipps für den Mac' },
+        { label: t('menu_help_macos') },
+        { label: t('menu_help_tips') },
       ],
     },
-  ], [onOpenApp, closeMenu]);
+  ], [t, onOpenApp, closeMenu]);
 
-  const shortcuts = [
-    { icon: '/icons/moon.png', label: 'Nicht stören' },
-    { icon: '/icons/bright.png', label: 'Nachtmodus' },
-    { icon: '/icons/airplay.png', label: 'AirPlay' },
-  ];
+  const shortcuts = useMemo(() => [
+    { icon: '/icons/moon.png', label: t('cc_dnd') },
+    { icon: '/icons/bright.png', label: t('cc_nightmode') },
+    { icon: '/icons/airplay.png', label: t('cc_airplay') },
+  ], [t]);
 
   return (
     <>
@@ -448,7 +454,7 @@ export default function Header({ onOpenApp }) {
           </button>
 
           <span className="header-datetime">
-            {formatDate(now)}&ensp;{formatTime(now)}
+            {formatDate(now, lang)}&ensp;{formatTime(now, lang)}
           </span>
         </div>
       </header>
@@ -473,13 +479,13 @@ export default function Header({ onOpenApp }) {
               <h2>macOS Tahoe</h2>
               <p className="about-version">Version 26.0</p>
               <div className="about-specs">
-                <div className="about-spec-row"><span>Chip</span><span>Apple M3 Pro</span></div>
-                <div className="about-spec-row"><span>Arbeitsspeicher</span><span>18 GB</span></div>
-                <div className="about-spec-row"><span>Seriennummer</span><span>XXXXXXXXXX</span></div>
+                <div className="about-spec-row"><span>{t('about_chip')}</span><span>Apple M3 Pro</span></div>
+                <div className="about-spec-row"><span>{t('about_memory')}</span><span>18 GB</span></div>
+                <div className="about-spec-row"><span>{t('about_serial')}</span><span>XXXXXXXXXX</span></div>
                 <div className="about-spec-row"><span>macOS</span><span>Tahoe 26.0</span></div>
               </div>
               <button className="about-more-btn" onClick={() => { onOpenApp?.('Settings'); setShowAbout(false); }}>
-                Weitere Informationen …
+                {t('about_more_info')}
               </button>
             </div>
           </div>
@@ -493,19 +499,19 @@ export default function Header({ onOpenApp }) {
               <div className="cc-toggle-grid">
                 <button className={`cc-toggle-btn${settings.wifi ? ' on' : ''}`} onClick={() => toggle('wifi')}>
                   <img src="/icons/wifi.png" alt="" className="cc-toggle-icon" />
-                  <span>WLAN</span>
+                  <span>{t('cc_wifi')}</span>
                 </button>
                 <button className={`cc-toggle-btn${settings.bluetooth ? ' on' : ''}`} onClick={() => toggle('bluetooth')}>
                   <img src="/icons/bluetooth.png" alt="" className="cc-toggle-icon" />
-                  <span>Bluetooth</span>
+                  <span>{t('cc_bluetooth')}</span>
                 </button>
                 <button className={`cc-toggle-btn cc-airplane${settings.airplane ? ' on' : ''}`} onClick={() => toggle('airplane')}>
                   <img src="/icons/flugmodus.png" alt="" className="cc-toggle-icon" />
-                  <span>Flugmodus</span>
+                  <span>{t('cc_airplane')}</span>
                 </button>
                 <button className={`cc-toggle-btn cc-cellular${settings.cellular ? ' on' : ''}`} onClick={() => toggle('cellular')}>
                   <img src="/icons/mobile-Daten.png" alt="" className="cc-toggle-icon" />
-                  <span>Mobilfunk</span>
+                  <span>{t('cc_cellular')}</span>
                 </button>
               </div>
             </div>
@@ -542,7 +548,7 @@ export default function Header({ onOpenApp }) {
             <div className="cc-section cc-slider-section">
               <div className="cc-slider-label">
                 <img src="/icons/bright.png" alt="" className="cc-slider-icon" />
-                <span>Helligkeit</span>
+                <span>{t('cc_brightness')}</span>
               </div>
               <input
                 type="range"
@@ -557,7 +563,7 @@ export default function Header({ onOpenApp }) {
             <div className="cc-section cc-slider-section">
               <div className="cc-slider-label">
                 <img src="/icons/volume.png" alt="" className="cc-slider-icon" />
-                <span>Lautstärke</span>
+                <span>{t('cc_volume')}</span>
               </div>
               <input
                 type="range"
@@ -572,11 +578,11 @@ export default function Header({ onOpenApp }) {
             <div className="cc-section cc-extra-toggles">
               <button className={`cc-toggle-sm cc-lock${settings.lock ? ' on' : ''}`} onClick={() => toggle('lock')}>
                 <img src="/icons/lock.png" alt="" />
-                <span>Sperren</span>
+                <span>{t('cc_lock')}</span>
               </button>
               <button className={`cc-toggle-sm${settings.mirror ? ' on' : ''}`} onClick={() => toggle('mirror')}>
                 <img src="/icons/airplay.png" alt="" />
-                <span>Spiegeln</span>
+                <span>{t('cc_mirror')}</span>
               </button>
             </div>
 
@@ -595,13 +601,13 @@ export default function Header({ onOpenApp }) {
       {ctxMenu && (
         <div className="desktop-ctx-overlay" onClick={() => setCtxMenu(null)}>
           <div className="desktop-ctx" style={{ left: ctxMenu.x, top: ctxMenu.y }} onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => { setCtxMenu(null); }}>Neuer Ordner</button>
+            <button onClick={() => { setCtxMenu(null); }}>{t('ctx_new_folder')}</button>
             <div className="menu-divider" />
-            <button onClick={() => { onOpenApp?.('Info'); setCtxMenu(null); }}>Informationen</button>
-            <button onClick={() => { setCtxMenu(null); }}>Darstellung aufräumen</button>
-            <button onClick={() => { setCtxMenu(null); }}>Hintergrundbild ändern …</button>
+            <button onClick={() => { onOpenApp?.('Info'); setCtxMenu(null); }}>{t('ctx_info')}</button>
+            <button onClick={() => { setCtxMenu(null); }}>{t('ctx_arrange')}</button>
+            <button onClick={() => { setCtxMenu(null); }}>{t('ctx_change_wallpaper')}</button>
             <div className="menu-divider" />
-            <button onClick={() => { setCtxMenu(null); }}>Einfügen</button>
+            <button onClick={() => { setCtxMenu(null); }}>{t('ctx_paste')}</button>
           </div>
         </div>
       )}

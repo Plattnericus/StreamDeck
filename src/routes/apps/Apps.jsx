@@ -29,15 +29,15 @@ function iconUrl(icon) {
 }
 
 const APP_LIST = [
-  { id: 101, name: 'Info', icon: 'info.webp', component: Info, category: 'System', subtitle: 'Produktinformationen', description: 'Informationen zum Produkt StreamDeck und dessen Funktionen.', developer: 'System', version: '1.0.0', width: 720, height: 580 },
-  { id: 102, name: 'About', icon: 'about.webp', component: About, category: 'System', subtitle: 'Über das Projekt', description: 'Allgemeine Informationen über das StreamDeck-Projekt.', developer: 'System', version: '111.0.2g', width: 740, height: 560 },
-  { id: 103, name: '3D-Modell', icon: 'model.webp', component: Model, category: 'System', subtitle: '3D-Modellviewer', description: 'Anzeigen und Interagieren mit 3D-Modellen.', developer: 'System', version: '1.0.0', width: 520, height: 760 },
-  { id: 104, name: 'Galerie', icon: 'fotos.webp', component: Galerie, category: 'System', subtitle: 'Bilder', description: 'Durchsuchen und Anzeigen von Bildern.', developer: 'System', version: '8.0.0', width: 720, height: 560 },
-  { id: 106, name: 'Changelog', icon: 'changelog.webp', component: Changelog, category: 'System', subtitle: 'Änderungen', description: 'Versionsverlauf und Neuerungen des Projekts.', developer: 'System', version: '9.4.2', width: 640, height: 480 },
-  { id: 107, name: 'Datenschutz', icon: 'datenschutz.webp', component: Datenschutz, category: 'System', subtitle: 'Datenschutzrichtlinie', description: 'Informationen zur Verarbeitung und zum Schutz personenbezogener Daten.', developer: 'System', version: '1.20b.0', width: 720, height: 560 },
-  { id: 108, name: 'Impressum', icon: 'impressum.webp', component: Impressum, category: 'System', subtitle: 'Rechtliche Angaben', description: 'Gesetzlich vorgeschriebene Angaben zum Anbieter.', developer: 'System', version: '21.0.0', width: 720, height: 560 },
-  { id: 109, name: 'AGB', icon: 'agb.webp', component: Agb, category: 'System', subtitle: 'Nutzungsbedingungen', description: 'Allgemeine Geschäfts- und Nutzungsbedingungen.', developer: 'System', version: '1.0.0', width: 720, height: 560 },
-  { id: 110, name: 'Cookies', icon: 'cookies.png', component: CookiesInfo, category: 'System', subtitle: 'Cookie-Richtlinie', description: 'Informationen zu Cookies und deren Verwendung.', developer: 'System', version: '1.0.1', width: 720, height: 560 },
+  { id: 101, name: 'Info',        icon: 'info.webp',        component: Info,        subtitleKey: 'app_info_sub',        descKey: 'app_info_desc',        developer: 'System', version: '1.0.0',    width: 720, height: 580 },
+  { id: 102, name: 'About',       icon: 'about.webp',       component: About,       subtitleKey: 'app_about_sub',       descKey: 'app_about_desc',       developer: 'System', version: '111.0.2g', width: 740, height: 560 },
+  { id: 103, name: '3D-Modell',   icon: 'model.webp',       component: Model,       subtitleKey: 'app_model_sub',       descKey: 'app_model_desc',       developer: 'System', version: '1.0.0',    width: 520, height: 760 },
+  { id: 104, name: 'Galerie',     icon: 'fotos.webp',       component: Galerie,     subtitleKey: 'app_galerie_sub',     descKey: 'app_galerie_desc',     developer: 'System', version: '8.0.0',    width: 720, height: 560 },
+  { id: 106, name: 'Changelog',   icon: 'changelog.webp',   component: Changelog,   subtitleKey: 'app_changelog_sub',   descKey: 'app_changelog_desc',   developer: 'System', version: '9.4.2',    width: 640, height: 480 },
+  { id: 107, name: 'Datenschutz', icon: 'datenschutz.webp', component: Datenschutz, subtitleKey: 'app_datenschutz_sub', descKey: 'app_datenschutz_desc', developer: 'System', version: '1.20b.0',  width: 720, height: 560 },
+  { id: 108, name: 'Impressum',   icon: 'impressum.webp',   component: Impressum,   subtitleKey: 'app_impressum_sub',   descKey: 'app_impressum_desc',   developer: 'System', version: '21.0.0',   width: 720, height: 560 },
+  { id: 109, name: 'AGB',         icon: 'agb.webp',         component: Agb,         subtitleKey: 'app_agb_sub',         descKey: 'app_agb_desc',         developer: 'System', version: '1.0.0',    width: 720, height: 560 },
+  { id: 110, name: 'Cookies',     icon: 'cookies.png',      component: CookiesInfo, subtitleKey: 'app_cookies_sub',     descKey: 'app_cookies_desc',     developer: 'System', version: '1.0.1',    width: 720, height: 560 },
 ];
 
 const INSTALLED_KEY = 'appstore_installed_v1';
@@ -70,6 +70,9 @@ export default function Apps({ onOpenApp }) {
   const apps = APP_LIST.map((a) => ({
     ...a,
     icon: iconUrl(a.icon),
+    subtitle: t(a.subtitleKey),
+    description: t(a.descKey),
+    category: t('app_category_system'),
   }));
 
   const filteredApps = searchQuery.trim() === ''
@@ -166,7 +169,7 @@ export default function Apps({ onOpenApp }) {
           spellCheck={false}
         />
         {searchQuery.length > 0 && (
-          <button className="app-store-search-clear" onClick={() => setSearchQuery('')} aria-label="Suche löschen">
+          <button className="app-store-search-clear" onClick={() => setSearchQuery('')} aria-label={t('search_placeholder')}>
             <svg viewBox="0 0 20 20">
               <line x1="5" y1="5" x2="15" y2="15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
               <line x1="15" y1="5" x2="5" y2="15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />

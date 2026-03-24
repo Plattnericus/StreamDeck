@@ -100,6 +100,12 @@
 - added Languages
 - addded many settings and Iphone like Design
 
+# 24.03.2026
+- added settings page
+- improved settings page
+- finished settings
+- fixed some small issues
+
 ## TO DO
 - make every site work
 - add desktop icons
@@ -119,8 +125,8 @@
 - fix Dock bug, that it is aligned correctly
 - add all Apps and functions!
 
-- add toSetings taht every Object and file is translated automatically
+- add to Settings taht every Object and file is translated automatically
 - change in settings that there is a better Designed popup (change language)
-- Fix alle Bugs
+- Fix all Bugs
 - Try to make every button clickable
 - Animatinos like Fade in Fade out
