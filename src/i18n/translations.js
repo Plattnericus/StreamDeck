@@ -210,6 +210,30 @@ const T = {
     app_agb_desc: 'Allgemeine Geschäfts- und Nutzungsbedingungen.',
     app_cookies_sub: 'Cookie-Richtlinie',
     app_cookies_desc: 'Informationen zu Cookies und deren Verwendung.',
+
+    /* ── Finder ── */
+    finder_back: 'Zurück', finder_forward: 'Vor',
+    finder_search: 'Suchen',
+    finder_favorites: 'Favoriten', finder_locations: 'Orte',
+    finder_airdrop: 'AirDrop', finder_recents: 'Zuletzt benutzt',
+    finder_applications: 'Programme', finder_desktop: 'Schreibtisch',
+    finder_documents: 'Dokumente', finder_downloads: 'Downloads',
+    finder_pictures: 'Bilder', finder_music: 'Musik',
+    finder_computer: "Felix' Mac", finder_network: 'Netzwerk',
+    finder_view_icons: 'Symbole', finder_view_list: 'Liste',
+    finder_view_columns: 'Spalten', finder_view_gallery: 'Galerie',
+    finder_col_name: 'Name', finder_col_modified: 'Änderungsdatum',
+    finder_col_size: 'Größe', finder_col_kind: 'Art',
+    finder_kind_folder: 'Ordner', finder_kind_file: 'Dokument',
+    finder_item: 'Objekt', finder_items: 'Objekte',
+    finder_empty_folder: 'Dieser Ordner ist leer',
+    finder_no_results: 'Keine Ergebnisse',
+    finder_gallery_hint: 'Objekt auswählen für Vorschau',
+
+    /* ── Trash ── */
+    trash_title: 'Papierkorb',
+    trash_empty: 'Der Papierkorb ist leer',
+    trash_zero_items: '0 Objekte',
   },
 
   en: {
@@ -423,6 +447,30 @@ const T = {
     app_agb_desc: 'General terms and conditions of use.',
     app_cookies_sub: 'Cookie Policy',
     app_cookies_desc: 'Information about cookies and their use.',
+
+    /* ── Finder ── */
+    finder_back: 'Back', finder_forward: 'Forward',
+    finder_search: 'Search',
+    finder_favorites: 'Favorites', finder_locations: 'Locations',
+    finder_airdrop: 'AirDrop', finder_recents: 'Recents',
+    finder_applications: 'Applications', finder_desktop: 'Desktop',
+    finder_documents: 'Documents', finder_downloads: 'Downloads',
+    finder_pictures: 'Pictures', finder_music: 'Music',
+    finder_computer: "Felix's Mac", finder_network: 'Network',
+    finder_view_icons: 'Icons', finder_view_list: 'List',
+    finder_view_columns: 'Columns', finder_view_gallery: 'Gallery',
+    finder_col_name: 'Name', finder_col_modified: 'Date Modified',
+    finder_col_size: 'Size', finder_col_kind: 'Kind',
+    finder_kind_folder: 'Folder', finder_kind_file: 'Document',
+    finder_item: 'item', finder_items: 'items',
+    finder_empty_folder: 'This folder is empty',
+    finder_no_results: 'No results',
+    finder_gallery_hint: 'Select an item to preview',
+
+    /* ── Trash ── */
+    trash_title: 'Trash',
+    trash_empty: 'Trash is empty',
+    trash_zero_items: '0 items',
   },
 
   it: {
@@ -636,6 +684,30 @@ const T = {
     app_agb_desc: 'Termini e condizioni generali di utilizzo.',
     app_cookies_sub: 'Informativa sui cookie',
     app_cookies_desc: 'Informazioni sui cookie e il loro utilizzo.',
+
+    /* ── Finder ── */
+    finder_back: 'Indietro', finder_forward: 'Avanti',
+    finder_search: 'Cerca',
+    finder_favorites: 'Preferiti', finder_locations: 'Posizioni',
+    finder_airdrop: 'AirDrop', finder_recents: 'Recenti',
+    finder_applications: 'Applicazioni', finder_desktop: 'Scrivania',
+    finder_documents: 'Documenti', finder_downloads: 'Download',
+    finder_pictures: 'Immagini', finder_music: 'Musica',
+    finder_computer: 'Mac di Felix', finder_network: 'Rete',
+    finder_view_icons: 'Icone', finder_view_list: 'Elenco',
+    finder_view_columns: 'Colonne', finder_view_gallery: 'Galleria',
+    finder_col_name: 'Nome', finder_col_modified: 'Data modifica',
+    finder_col_size: 'Dimensione', finder_col_kind: 'Tipo',
+    finder_kind_folder: 'Cartella', finder_kind_file: 'Documento',
+    finder_item: 'elemento', finder_items: 'elementi',
+    finder_empty_folder: 'Questa cartella è vuota',
+    finder_no_results: 'Nessun risultato',
+    finder_gallery_hint: "Seleziona un elemento per l'anteprima",
+
+    /* ── Cestino ── */
+    trash_title: 'Cestino',
+    trash_empty: 'Il cestino è vuoto',
+    trash_zero_items: '0 elementi',
   },
 };
 

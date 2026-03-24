@@ -50,10 +50,6 @@ export default function AboutSection() {
         <IosRow icon={<InfoIcon />} iconClass="gray" label={t('buttons')} value="15 + Encoder" />
         <IosRow icon={<InfoIcon />} iconClass="brown" label={t('case_hw')} value="PLA 3D-Druck" />
       </IosGroup>
-
-      <IosGroup>
-        <IosRow icon={<MacIcon />} iconClass="gray" label={t('about_mac')} chevron onClick={() => setShowMac(true)} />
-      </IosGroup>
     </>
   );
 }

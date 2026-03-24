@@ -1,0 +1,214 @@
+/* ─── macOS Trash ─── */
+
+.tr-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: #1e1e1e;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #fff;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ─── Toolbar ─── */
+.tr-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: #2d2d2d;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  gap: 12px;
+  min-height: 38px;
+}
+
+.tr-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tr-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.tr-toolbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+/* ─── Navigation Buttons ─── */
+.tr-nav-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.tr-nav-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.1s, color 0.1s;
+}
+.tr-nav-btn:disabled {
+  color: rgba(255, 255, 255, 0.15);
+  cursor: default;
+}
+
+/* ─── View Mode Buttons ─── */
+.tr-view-modes {
+  display: flex;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.tr-view-btn {
+  width: 28px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.12s;
+  position: relative;
+}
+.tr-view-btn:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 0.5px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.tr-view-btn.active {
+  background: rgba(0, 122, 255, 0.15);
+  color: #007aff;
+}
+.tr-view-btn:disabled {
+  color: rgba(255, 255, 255, 0.15);
+  cursor: default;
+}
+
+/* ─── Body ─── */
+.tr-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* ─── Empty State ─── */
+.tr-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 32px;
+}
+
+.tr-empty-icon {
+  width: 80px;
+  height: 80px;
+  opacity: 0.6;
+}
+
+.tr-empty-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.25);
+  margin: 0;
+}
+
+/* ─── Status Bar ─── */
+.tr-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 12px;
+  background: #2a2a2a;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.04);
+  flex-shrink: 0;
+}
+
+.tr-statusbar span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Light Mode ─── */
+.light-mode .tr-root {
+  background: #fff;
+  color: #000;
+}
+.light-mode .tr-toolbar {
+  background: #f6f6f6;
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+.light-mode .tr-toolbar-title {
+  color: rgba(0, 0, 0, 0.85);
+}
+.light-mode .tr-nav-btn {
+  color: rgba(0, 0, 0, 0.5);
+}
+.light-mode .tr-nav-btn:disabled {
+  color: rgba(0, 0, 0, 0.15);
+}
+.light-mode .tr-view-modes {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+.light-mode .tr-view-btn {
+  color: rgba(0, 0, 0, 0.4);
+}
+.light-mode .tr-view-btn:not(:last-child)::after {
+  background: rgba(0, 0, 0, 0.08);
+}
+.light-mode .tr-view-btn.active {
+  background: rgba(0, 122, 255, 0.1);
+}
+.light-mode .tr-view-btn:disabled {
+  color: rgba(0, 0, 0, 0.12);
+}
+.light-mode .tr-empty-icon path,
+.light-mode .tr-empty-icon rect,
+.light-mode .tr-empty-icon line {
+  stroke: rgba(0, 0, 0, 0.12);
+  fill: rgba(0, 0, 0, 0.03);
+}
+.light-mode .tr-empty-icon path:first-child {
+  fill: rgba(0, 0, 0, 0.05);
+}
+.light-mode .tr-empty-text {
+  color: rgba(0, 0, 0, 0.25);
+}
+.light-mode .tr-statusbar {
+  background: #f0f0f0;
+  border-top-color: rgba(0, 0, 0, 0.06);
+}
+.light-mode .tr-statusbar span {
+  color: rgba(0, 0, 0, 0.35);
+}

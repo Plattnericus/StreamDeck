@@ -10,20 +10,6 @@ export default function AppearanceSection({ settings, update, toggle }) {
   return (
     <>
       <IosGroup>
-        <div className="st-ios-mode-row">
-          <button
-            className={`st-ios-mode-thumb dark-preview${!settings.darkMode ? ' selected' : ''}`}
-            onClick={() => update('darkMode', false)}
-          >
-            {t('mode_dark')}
-          </button>
-          <button
-            className={`st-ios-mode-thumb light-preview${settings.darkMode ? ' selected' : ''}`}
-            onClick={() => update('darkMode', true)}
-          >
-            {t('mode_light')}
-          </button>
-        </div>
         <IosSlider
           icon={<SunIcon />}
           iconClass="yellow"
