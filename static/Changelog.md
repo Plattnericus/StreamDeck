@@ -116,3 +116,5 @@
 - animations
 - Design
 - Quality of life
+- Impressum, AGB, datenschutz und Cookies rictige Daten hineinschreiben!!
+- Bilder erstellen für Galerie
