@@ -2,7 +2,7 @@
 
 <br/>
 
-<img src="https://streamdeck.plattnericus.dev/preview.jpg" alt="Stream Deck DIY — macOS Tahoe Liquid Glass in React" width="100%" style="border-radius:12px"/>
+<img src="static/MAC.png" alt="Stream Deck DIY — macOS Tahoe Liquid Glass in React" width="100%" style="border-radius:12px"/>
 
 <br/>
 <br/>
