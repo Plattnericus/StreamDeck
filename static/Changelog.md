@@ -2,7 +2,7 @@
 
 
 ## 27.12.2025
-- Deleted everything
+- Deleted everything (changed from HTML to Svelte)
 - made booting sequence
 - started Desktop enviroment
 - open Apps
@@ -47,6 +47,7 @@
 - made some small changes
 
 # 28.01.2026
+- Changed from Svelte to React
 - added drag (windwos Desktop feature)
 
 # 25.02.2026
