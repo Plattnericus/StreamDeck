@@ -108,25 +108,7 @@
 
 ## TO DO
 - make every site work
-- add desktop icons
 - make it more interactive
 - animations
 - Design
 - Quality of life
-- Finder
-    - Suchfunktion
-- 3D Modell, when clicked out, modell disappears, flexbox doesnt work, fix it make it better
-- beim terminal sollte es bei uname das richtige Betriebsystem erkennen und browser und ausgeben
-- Manche commands die ich nicht weiß löschen im Terminal
-- Beim finder ein Dateisysem /static Folder, dort sollten Dateien von Cloud (Felix Kiste) sein und man kann die anschauen und viewen wie bei einem richtigen viewer, kann sie löschen --> Papierkorb und dann endgültig löschen(localstorage)
-- Fix taskbar (Css) LINK:https://snipzy.dev/snippets/liquid-glass-card.html
-- Fix APP. 3D Model (Fullscreen escape/Layout)
-- change Design (PopUp musicplayer) to liquid glass
-- fix Dock bug, that it is aligned correctly
-- add all Apps and functions!
-
-- add to Settings taht every Object and file is translated automatically
-- change in settings that there is a better Designed popup (change language)
-- Fix all Bugs
-- Try to make every button clickable
-- Animatinos like Fade in Fade out
