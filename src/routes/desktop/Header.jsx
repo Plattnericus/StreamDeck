@@ -132,7 +132,6 @@ export default function Header({ onOpenApp }) {
   const [playing, setPlaying] = useState(() => savedMusic.current.playing);
   const [progress, setProgress] = useState(0);
 
-  // Save full state (incl. currentTime) periodically
   useEffect(() => {
     const a = audioRef.current;
     saveMusicState(trackIdx, playing, a ? a.currentTime : 0);
@@ -148,7 +147,6 @@ export default function Header({ onOpenApp }) {
 
   const currentTrack = tracks[trackIdx];
 
-  // When track changes, load src and restore saved time on first load
   const isFirstLoad = useRef(true);
   useEffect(() => {
     const a = audioRef.current;
@@ -611,26 +609,6 @@ export default function Header({ onOpenApp }) {
                   onChange={(e) => setSettings((s) => ({ ...s, volume: Number(e.target.value) }))}
                   className="cc-slider"
                 />
-              </div>
-
-              <div className="cc-section cc-extra-toggles">
-                <button className={`cc-toggle-sm cc-lock${settings.lock ? ' on' : ''}`} onClick={() => toggle('lock')}>
-                  <img src="/icons/lock.png" alt="" />
-                  <span>{t('cc_lock')}</span>
-                </button>
-                <button className={`cc-toggle-sm${settings.mirror ? ' on' : ''}`} onClick={() => toggle('mirror')}>
-                  <img src="/icons/airplay.png" alt="" />
-                  <span>{t('cc_mirror')}</span>
-                </button>
-              </div>
-
-              <div className="cc-section cc-shortcuts">
-                {shortcuts.map((s, i) => (
-                  <button key={i} className="cc-shortcut-btn">
-                    <img src={s.icon} alt="" />
-                    <span>{s.label}</span>
-                  </button>
-                ))}
               </div>
             </div>
           </div>
