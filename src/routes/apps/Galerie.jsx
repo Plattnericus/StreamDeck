@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 import "./galerie.css";
 
 const DEMO = {
@@ -61,8 +62,10 @@ const IcoWarn = () => (
   </svg>
 );
 
-const datumFormatieren = (s, lang = false) =>
-  s ? new Date(s).toLocaleDateString("de-DE", lang
+const LOCALE_MAP = { de: 'de-DE', en: 'en-US', it: 'it-IT' };
+
+const datumFormatieren = (s, lang = false, locale = 'de') =>
+  s ? new Date(s).toLocaleDateString(LOCALE_MAP[locale] ?? 'de-DE', lang
     ? { weekday: "long", day: "2-digit", month: "long", year: "numeric" }
     : { day: "2-digit", month: "short", year: "numeric" })
   : null;
@@ -119,7 +122,7 @@ function Kachel({ eintrag, index, onClick }) {
   );
 }
 
-function FotoViewer({ eintraege, startIndex, onClose }) {
+function FotoViewer({ eintraege, startIndex, onClose, t, locale }) {
   const [index,      setIndex]      = useState(startIndex);
   const [geladen,    setGeladen]    = useState(false);
   const [fehler,     setFehler]     = useState(false);
@@ -207,7 +210,7 @@ function FotoViewer({ eintraege, startIndex, onClose }) {
       <div className={`foto-viewer-kopf${versteckt ? " foto-viewer-kopf-versteckt" : ""}`}>
         <button className="foto-viewer-zurueck" onClick={e => { e.stopPropagation(); zumachen(); }}>
           <IcoChevronLinks />
-          Zurück
+          {t('galerie_back')}
         </button>
         <span className="foto-viewer-zaehler">{index + 1} / {eintraege.length}</span>
       </div>
@@ -251,7 +254,7 @@ function FotoViewer({ eintraege, startIndex, onClose }) {
         <div className="foto-viewer-meta-zeile">
           {anzeigedatum && (
             <time className={istExif ? "foto-viewer-datum-exif" : "foto-viewer-datum"}>
-              {datumFormatieren(anzeigedatum, true)}{istExif ? " (EXIF)" : ""}
+              {datumFormatieren(anzeigedatum, true, locale)}{istExif ? " (EXIF)" : ""}
             </time>
           )}
           {eintrag.kategorie && (
@@ -267,11 +270,13 @@ function FotoViewer({ eintraege, startIndex, onClose }) {
 }
 
 export default function GaleriePage() {
+  const t = useTranslation();
+  const locale = useLanguage();
   const [daten,   setDaten]   = useState(null);
   const [laedt,   setLaedt]   = useState(true);
   const [hinweis, setHinweis] = useState(null);
   const [viewer,  setViewer]  = useState(null);
-  const [filter,  setFilter]  = useState("Alle");
+  const [filter,  setFilter]  = useState(null);
   const [suche,   setSuche]   = useState("");
 
   useEffect(() => {
@@ -280,17 +285,19 @@ export default function GaleriePage() {
       .then(d => { setDaten(d); setLaedt(false); })
       .catch(() => {
         setDaten(DEMO);
-        setHinweis("Demo-Modus — galerie.json nicht gefunden");
+        setHinweis("demo");
         setLaedt(false);
       });
   }, []);
 
   const kategorien = daten
-    ? ["Alle", ...new Set(daten.eintraege.map(e => e.kategorie).filter(Boolean))]
-    : ["Alle"];
+    ? [t('galerie_all'), ...new Set(daten.eintraege.map(e => e.kategorie).filter(Boolean))]
+    : [t('galerie_all')];
+
+  const activeFilter = filter ?? t('galerie_all');
 
   const gefiltert = (daten?.eintraege ?? []).filter(e =>
-    (filter === "Alle" || e.kategorie === filter) &&
+    (activeFilter === t('galerie_all') || e.kategorie === activeFilter) &&
     (!suche || [e.titel, e.text].some(t => t?.toLowerCase().includes(suche.toLowerCase())))
   );
 
@@ -304,11 +311,11 @@ export default function GaleriePage() {
       <header className="galerie-kopf">
         <div className="galerie-kopf-oben">
           <h1 className="galerie-kopf-titel">
-            {laedt ? "Galerie" : (daten?.titel ?? "Galerie")}
+            {laedt ? t('galerie_title') : (daten?.titel ?? t('galerie_title'))}
           </h1>
           {!laedt && (
             <span className="galerie-kopf-anzahl">
-              {gefiltert.length} {gefiltert.length === 1 ? "Foto" : "Fotos"}
+              {gefiltert.length} {gefiltert.length === 1 ? t('galerie_photo') : t('galerie_photos')}
             </span>
           )}
         </div>
@@ -317,7 +324,7 @@ export default function GaleriePage() {
           <span className="galerie-suchleiste-icon"><IcoSuche /></span>
           <input
             type="text"
-            placeholder="Suchen…"
+            placeholder={t('galerie_search')}
             value={suche}
             onChange={e => setSuche(e.target.value)}
             className="galerie-suchleiste-eingabe"
@@ -334,7 +341,7 @@ export default function GaleriePage() {
             {kategorien.map(k => (
               <button
                 key={k}
-                className={`galerie-filter-knopf${filter === k ? " galerie-filter-knopf-aktiv" : ""}`}
+                className={`galerie-filter-knopf${activeFilter === k ? " galerie-filter-knopf-aktiv" : ""}`}
                 onClick={() => setFilter(k)}
               >
                 {k}
@@ -346,7 +353,7 @@ export default function GaleriePage() {
         {hinweis && (
           <div className="galerie-hinweis">
             <span className="galerie-hinweis-icon"><IcoWarn /></span>
-            {hinweis}
+            {t('galerie_demo_mode')}
           </div>
         )}
       </header>
@@ -365,7 +372,7 @@ export default function GaleriePage() {
         ) : gefiltert.length === 0 ? (
           <div className="galerie-leer">
             <span className="galerie-leer-icon"><IcoBild /></span>
-            Keine Fotos gefunden
+            {t('galerie_no_photos')}
           </div>
         ) : (
           gefiltert.map((e, i) => (
@@ -379,6 +386,8 @@ export default function GaleriePage() {
           eintraege={gefiltert}
           startIndex={viewer}
           onClose={() => setViewer(null)}
+          t={t}
+          locale={locale}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import T from './translations';
 
 const LanguageContext = createContext('de');
@@ -16,9 +16,29 @@ function getStoredLanguage() {
 
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState(getStoredLanguage);
+  const [transitioning, setTransitioning] = useState(false);
+  const prevLangRef = useRef(language);
 
   useEffect(() => {
-    const sync = () => setLanguage(getStoredLanguage());
+    const sync = () => {
+      const next = getStoredLanguage();
+      if (next !== prevLangRef.current) {
+        setTransitioning(true);
+        document.documentElement.classList.add('lang-fade-out');
+
+        setTimeout(() => {
+          prevLangRef.current = next;
+          setLanguage(next);
+          document.documentElement.classList.remove('lang-fade-out');
+          document.documentElement.classList.add('lang-fade-in');
+
+          setTimeout(() => {
+            document.documentElement.classList.remove('lang-fade-in');
+            setTransitioning(false);
+          }, 200);
+        }, 150);
+      }
+    };
     window.addEventListener('streamdeck-settings-sync', sync);
     return () => window.removeEventListener('streamdeck-settings-sync', sync);
   }, []);

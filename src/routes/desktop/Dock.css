@@ -14,18 +14,19 @@
     width 0.35s cubic-bezier(0.25, 1, 0.5, 1),
     height 0.35s cubic-bezier(0.25, 1, 0.5, 1),
     border-radius 0.35s cubic-bezier(0.25, 1, 0.5, 1),
-    box-shadow 0.2s ease;
-  animation: windowOpen 0.25s ease-out;
+    box-shadow 0.25s ease,
+    opacity 0.2s ease;
+  animation: windowOpen 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes windowOpen {
   from {
     opacity: 0;
-    transform: scale(0.92);
+    transform: scale(0.88) translateY(8px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -69,7 +70,11 @@
 }
 
 .app-window.focused {
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.app-window:not(.focused) {
+  filter: brightness(0.92);
 }
 
 .title-bar {
@@ -163,8 +168,13 @@
 }
 
 .controls:hover .ctrl {
-  transform: scale(1.25);
-  filter: brightness(0.92);
+  transform: scale(1.2);
+  filter: brightness(0.95);
+}
+
+.ctrl:hover {
+  transform: scale(1.35) !important;
+  filter: brightness(0.85) !important;
 }
 
 .title-text {
@@ -211,6 +221,7 @@
   display: flex-end;
   justify-content: center;
   padding: 4px 0;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .glass-card {
@@ -221,7 +232,7 @@
   position: relative;
   width: auto;
   min-width: 150px;
-  height: 77px;
+  height: 73px;
   border-radius: 20px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
 }
@@ -313,30 +324,38 @@
 
 .context-menu {
   position: fixed;
-  min-width: 160px;
-  background: rgba(40, 40, 40, 0.95);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border-radius: 8px;
-  padding: 4px 0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  min-width: 180px;
+  background: rgba(40, 40, 40, 0.92);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-radius: 10px;
+  padding: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   z-index: 100000;
+  animation: ctxPop 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes ctxPop {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 .context-menu button {
   display: block;
   width: 100%;
-  padding: 6px 16px;
+  padding: 7px 14px;
   background: none;
   border: none;
   color: #fff;
   font-size: 13px;
+  font-weight: 450;
   text-align: left;
-  cursor: pointer;
+  cursor: default;
+  border-radius: 6px;
+  transition: background 0.1s ease;
 }
 
 .context-menu button:hover {
-  background: rgba(59, 130, 246, 0.7);
-  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.75);
 }

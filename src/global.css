@@ -53,3 +53,26 @@ html, body, button, input, select, textarea {
 ::-webkit-scrollbar-corner {
   background: transparent !important;
 }
+
+/* ── Language switch transition ── */
+.lang-switching * {
+  transition: color 0.25s ease, background-color 0.25s ease !important;
+}
+
+.lang-fade-out {
+  animation: langFadeOut 0.15s ease forwards;
+}
+
+.lang-fade-in {
+  animation: langFadeIn 0.2s ease forwards;
+}
+
+@keyframes langFadeOut {
+  from { opacity: 1; filter: blur(0); }
+  to   { opacity: 0.4; filter: blur(1px); }
+}
+
+@keyframes langFadeIn {
+  from { opacity: 0.4; filter: blur(1px); }
+  to   { opacity: 1; filter: blur(0); }
+}

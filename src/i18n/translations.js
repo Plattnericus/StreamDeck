@@ -237,6 +237,51 @@ const T = {
 
     /* ── Music Menu ── */
     music_playlist: 'Wiedergabeliste',
+
+    /* ── Galerie ── */
+    galerie_title: 'Galerie',
+    galerie_photos: 'Fotos',
+    galerie_photo: 'Foto',
+    galerie_search: 'Suchen…',
+    galerie_all: 'Alle',
+    galerie_back: 'Zurück',
+    galerie_no_photos: 'Keine Fotos gefunden',
+    galerie_demo_mode: 'Demo-Modus — galerie.json nicht gefunden',
+
+    /* ── Github ── */
+    github_view_profile: 'Profil ansehen',
+    github_repos: 'Repos',
+    github_followers: 'Follower',
+    github_following: 'Following',
+    github_repositories: 'Repositories',
+    github_shown: 'angezeigt',
+    github_public: 'Öffentlich',
+    github_no_desc: 'Keine Beschreibung',
+    github_no_bio: 'Keine Bio',
+    github_loading: 'Lade…',
+
+    /* ── 3D Model Viewer ── */
+    model_auto_rotate: 'Auto-Rotation',
+    model_reset_view: 'Ansicht zurücksetzen',
+    model_zoom_in: 'Hineinzoomen',
+    model_zoom_out: 'Herauszoomen',
+    model_download: 'Modell herunterladen',
+    model_fullscreen: 'Vollbild',
+    model_select: 'Modell wählen',
+    model_right: 'RECHTS',
+    model_left: 'LINKS',
+    model_top: 'OBEN',
+    model_bottom: 'UNTEN',
+    model_front: 'VORNE',
+    model_back: 'HINTEN',
+
+    /* ── Dock Context Menu ── */
+    dock_open: 'Öffnen',
+    dock_close: 'Schließen',
+    dock_minimize: 'Minimieren',
+    dock_show: 'Anzeigen',
+    dock_maximize: 'Maximieren',
+    dock_restore: 'Wiederherstellen',
   },
 
   en: {
@@ -477,6 +522,51 @@ const T = {
 
     /* ── Music Menu ── */
     music_playlist: 'Playlist',
+
+    /* ── Galerie ── */
+    galerie_title: 'Gallery',
+    galerie_photos: 'Photos',
+    galerie_photo: 'Photo',
+    galerie_search: 'Search…',
+    galerie_all: 'All',
+    galerie_back: 'Back',
+    galerie_no_photos: 'No photos found',
+    galerie_demo_mode: 'Demo mode — galerie.json not found',
+
+    /* ── Github ── */
+    github_view_profile: 'View Profile',
+    github_repos: 'Repos',
+    github_followers: 'Followers',
+    github_following: 'Following',
+    github_repositories: 'Repositories',
+    github_shown: 'shown',
+    github_public: 'Public',
+    github_no_desc: 'No description',
+    github_no_bio: 'No bio',
+    github_loading: 'Loading…',
+
+    /* ── 3D Model Viewer ── */
+    model_auto_rotate: 'Auto Rotate',
+    model_reset_view: 'Reset View',
+    model_zoom_in: 'Zoom In',
+    model_zoom_out: 'Zoom Out',
+    model_download: 'Download Model',
+    model_fullscreen: 'Fullscreen',
+    model_select: 'Select Model',
+    model_right: 'RIGHT',
+    model_left: 'LEFT',
+    model_top: 'TOP',
+    model_bottom: 'BOTTOM',
+    model_front: 'FRONT',
+    model_back: 'BACK',
+
+    /* ── Dock Context Menu ── */
+    dock_open: 'Open',
+    dock_close: 'Close',
+    dock_minimize: 'Minimize',
+    dock_show: 'Show',
+    dock_maximize: 'Maximize',
+    dock_restore: 'Restore',
   },
 
   it: {
@@ -717,6 +807,51 @@ const T = {
 
     /* ── Music Menu ── */
     music_playlist: 'Playlist',
+
+    /* ── Galerie ── */
+    galerie_title: 'Galleria',
+    galerie_photos: 'Foto',
+    galerie_photo: 'Foto',
+    galerie_search: 'Cerca…',
+    galerie_all: 'Tutti',
+    galerie_back: 'Indietro',
+    galerie_no_photos: 'Nessuna foto trovata',
+    galerie_demo_mode: 'Modalità demo — galerie.json non trovato',
+
+    /* ── Github ── */
+    github_view_profile: 'Vedi profilo',
+    github_repos: 'Repos',
+    github_followers: 'Follower',
+    github_following: 'Following',
+    github_repositories: 'Repository',
+    github_shown: 'mostrati',
+    github_public: 'Pubblico',
+    github_no_desc: 'Nessuna descrizione',
+    github_no_bio: 'Nessuna bio',
+    github_loading: 'Caricamento…',
+
+    /* ── 3D Model Viewer ── */
+    model_auto_rotate: 'Rotazione automatica',
+    model_reset_view: 'Ripristina vista',
+    model_zoom_in: 'Ingrandisci',
+    model_zoom_out: 'Rimpicciolisci',
+    model_download: 'Scarica modello',
+    model_fullscreen: 'Schermo intero',
+    model_select: 'Seleziona modello',
+    model_right: 'DESTRA',
+    model_left: 'SINISTRA',
+    model_top: 'SOPRA',
+    model_bottom: 'SOTTO',
+    model_front: 'DAVANTI',
+    model_back: 'DIETRO',
+
+    /* ── Dock Context Menu ── */
+    dock_open: 'Apri',
+    dock_close: 'Chiudi',
+    dock_minimize: 'Minimizza',
+    dock_show: 'Mostra',
+    dock_maximize: 'Massimizza',
+    dock_restore: 'Ripristina',
   },
 };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { useTranslation } from '../../i18n/LanguageContext';
 import './Model.css';
 
 const models = [
@@ -9,16 +10,17 @@ const models = [
   { name: 'Lid Model', path: '/models/lidModel.stl' },
 ];
 
-const orientationLabels = {
-  RECHTS: [1, 0, 0],
-  LINKS: [-1, 0, 0],
-  OBEN: [0, 1, 0],
-  UNTEN: [0, -1, 0],
-  VORNE: [0, 0, 1],
-  HINTEN: [0, 0, -1],
+const orientationKeys = {
+  model_right: [1, 0, 0],
+  model_left: [-1, 0, 0],
+  model_top: [0, 1, 0],
+  model_bottom: [0, -1, 0],
+  model_front: [0, 0, 1],
+  model_back: [0, 0, -1],
 };
 
 export default function Model() {
+  const t = useTranslation();
   const containerRef = useRef(null);
   const wrapperRef = useRef(null);
   const orientationContainerRef = useRef(null);
@@ -38,7 +40,7 @@ export default function Model() {
   const [selectedModel, setSelectedModel] = useState(models[0].path);
   const [isRotating, setIsRotating] = useState(false);
   const [isZoomedIn, setIsZoomedIn] = useState(false);
-  const [orientationLabel, setOrientationLabel] = useState('VORNE');
+  const [orientationKey, setOrientationKey] = useState('model_front');
 
   const isLidModel = selectedModel === models[1].path;
 
@@ -180,8 +182,9 @@ export default function Model() {
     };
 
     const geo = new THREE.BoxGeometry(60, 60, 60);
-    const mats = ['RECHTS', 'LINKS', 'OBEN', 'UNTEN', 'VORNE', 'HINTEN'].map(
-      t => new THREE.MeshBasicMaterial({ map: createTextTexture(t) })
+    const cubeFaceLabels = ['R', 'L', 'T', 'B', 'F', 'Bk'];
+    const mats = cubeFaceLabels.map(
+      label => new THREE.MeshBasicMaterial({ map: createTextTexture(label) })
     );
     const cube = new THREE.Mesh(geo, mats);
     oScene.add(cube);
@@ -302,13 +305,13 @@ export default function Model() {
 
         const forward = new THREE.Vector3(0, 0, 1);
         forward.applyQuaternion(camera.quaternion);
-        let closestLabel = 'VORNE';
+        let closestKey = 'model_front';
         let closestDot = -2;
-        Object.entries(orientationLabels).forEach(([label, dir]) => {
+        Object.entries(orientationKeys).forEach(([key, dir]) => {
           const d = forward.dot(new THREE.Vector3(...dir));
-          if (d > closestDot) { closestDot = d; closestLabel = label; }
+          if (d > closestDot) { closestDot = d; closestKey = key; }
         });
-        setOrientationLabel(closestLabel);
+        setOrientationKey(closestKey);
       }
       oRenderer.render(oScene, oCamera);
     };
@@ -413,7 +416,7 @@ export default function Model() {
 
         <div className="orientation-display">
           <div ref={orientationContainerRef} className="orientation-cube" />
-          <div className="orientation-label">{orientationLabel}</div>
+          <div className="orientation-label">{t(orientationKey)}</div>
         </div>
 
         <div className="model-selector-bottom">
@@ -426,14 +429,14 @@ export default function Model() {
                   <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
                   <path d="M3 21v-5h5" />
                 </svg>
-                <span className="tooltip">Auto Rotate</span>
+                <span className="tooltip">{t('model_auto_rotate')}</span>
               </button>
               <button className="toolbar-btn" onClick={resetView}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M0 0h24v24H0z" fill="none" />
                   <path d="M4 12a8 8 0 0 0 8 8a8.006 8.006 0 0 0 5.93-2.614m2.828-4.95A8 8 0 0 0 12 4m0-2v4m0 12v4" />
                 </svg>
-                <span className="tooltip">Reset View</span>
+                <span className="tooltip">{t('model_reset_view')}</span>
               </button>
               <button className={`toolbar-btn${isZoomedIn ? ' active' : ''}`} onClick={toggleZoom}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -441,7 +444,7 @@ export default function Model() {
                   <path d="m21 21-4.35-4.35" />
                   {isZoomedIn ? <path d="M8 11h6" /> : <><path d="M11 8v6" /><path d="M8 11h6" /></>}
                 </svg>
-                <span className="tooltip">{isZoomedIn ? 'Zoom Out' : 'Zoom In'}</span>
+                <span className="tooltip">{isZoomedIn ? t('model_zoom_out') : t('model_zoom_in')}</span>
               </button>
             </div>
             <div className="toolbar-group">
@@ -451,18 +454,18 @@ export default function Model() {
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-                <span className="tooltip">Download Model</span>
+                <span className="tooltip">{t('model_download')}</span>
               </button>
               <button className="toolbar-btn" onClick={toggleFullscreen}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
                 </svg>
-                <span className="tooltip">Fullscreen</span>
+                <span className="tooltip">{t('model_fullscreen')}</span>
               </button>
             </div>
           </div>
           <div className="model-selector">
-            <div className="selector-label">Select Model</div>
+            <div className="selector-label">{t('model_select')}</div>
             <div className="toggle-switch">
               <input type="checkbox" id="model-toggle" checked={isLidModel} onChange={handleModelChange} />
               <label htmlFor="model-toggle" className="toggle-label">

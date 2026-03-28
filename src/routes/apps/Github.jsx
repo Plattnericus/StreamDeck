@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../../i18n/LanguageContext';
 import './Github.css';
 
 export default function Github({ username = 'Plattnericus' }) {
+  const t = useTranslation();
   const [user, setUser] = useState(null);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +55,7 @@ export default function Github({ username = 'Plattnericus' }) {
     return () => clearTimeout(timer);
   }, [username]);
 
-  if (loading) return <div className="ghRoot"><div className="stateCard">Lade…</div></div>;
+  if (loading) return <div className="ghRoot"><div className="stateCard">{t('github_loading')}</div></div>;
   if (!user) return null;
 
   return (
@@ -67,28 +69,28 @@ export default function Github({ username = 'Plattnericus' }) {
             <div className="gh-name">{user.name ?? user.login}</div>
             <div className="login">@{user.login}</div>
           </div>
-          <div className="bio">{user.bio || <span className="muted">No bio</span>}</div>
-          <a className="gh-btn" href={user.html_url} target="_blank" rel="noopener noreferrer">View Profile</a>
+          <div className="bio">{user.bio || <span className="muted">{t('github_no_bio')}</span>}</div>
+          <a className="gh-btn" href={user.html_url} target="_blank" rel="noopener noreferrer">{t('github_view_profile')}</a>
           <div className="stats">
-            <span><b>{user.public_repos}</b> Repos</span>
-            <span><b>{user.followers}</b> Followers</span>
-            <span><b>{user.following}</b> Following</span>
+            <span><b>{user.public_repos}</b> {t('github_repos')}</span>
+            <span><b>{user.followers}</b> {t('github_followers')}</span>
+            <span><b>{user.following}</b> {t('github_following')}</span>
           </div>
         </aside>
 
         <main className="gh-right">
           <div className="gh-topbar">
-            <div className="gh-title">Repositories</div>
-            <div className="sub">{repos.length} shown</div>
+            <div className="gh-title">{t('github_repositories')}</div>
+            <div className="sub">{repos.length} {t('github_shown')}</div>
           </div>
           <div className="gh-grid">
             {repos.map((r) => (
               <a key={r.name} className="gh-card" href={r.html_url} target="_blank" rel="noopener noreferrer">
                 <div className="cardTop">
                   <div className="repoName">{r.name}</div>
-                  <div className="badge">Public</div>
+                  <div className="badge">{t('github_public')}</div>
                 </div>
-                <div className="desc">{r.description ?? 'No description'}</div>
+                <div className="desc">{r.description ?? t('github_no_desc')}</div>
                 <div className="meta">
                   {r.language && <span className="lang">{r.language}</span>}
                   <span className="stat">★ {r.stargazers_count}</span>

@@ -18,6 +18,7 @@ import Datenschutz from '../apps/Datenschutz';
 import Model from '../apps/Model';
 import CookiesInfo from '../apps/Cookies-info';
 import { openTab, getCenterPosition } from '../../lib/openTab';
+import { useTranslation } from '../../i18n/LanguageContext';
 import './Dock.css';
 
 const COMPONENT_MAP = {
@@ -91,6 +92,7 @@ function buildInitialApps() {
 }
 
 export default function Dock({ onOpenApp }) {
+  const t = useTranslation();
   const [apps, setApps] = useState(() => buildInitialApps());
   const [contextMenu, setContextMenu] = useState(null);
   const [headerHeight] = useState(28);
@@ -441,6 +443,7 @@ export default function Dock({ onOpenApp }) {
               <div
                 className="title-bar"
                 onMouseDown={(e) => !app.maximized && startDrag(e, app.id)}
+                onDoubleClick={() => toggleMaximize(app.id)}
               >
                 <div className="controls">
                   <button
@@ -532,16 +535,16 @@ export default function Dock({ onOpenApp }) {
               return (
                 <>
                   {!app.open && (
-                    <button onClick={() => handleContextAction('open')}>Open</button>
+                    <button onClick={() => handleContextAction('open')}>{t('dock_open')}</button>
                   )}
                   {app.open && (
                     <>
-                      <button onClick={() => handleContextAction('close')}>Close</button>
+                      <button onClick={() => handleContextAction('close')}>{t('dock_close')}</button>
                       <button onClick={() => handleContextAction('minimize')}>
-                        {app.minimized ? 'Show' : 'Minimize'}
+                        {app.minimized ? t('dock_show') : t('dock_minimize')}
                       </button>
                       <button onClick={() => handleContextAction('maximize')}>
-                        {app.maximized ? 'Restore' : 'Maximize'}
+                        {app.maximized ? t('dock_restore') : t('dock_maximize')}
                       </button>
                     </>
                   )}

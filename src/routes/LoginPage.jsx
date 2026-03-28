@@ -4,6 +4,24 @@ import './LoginPage.css';
 import { useSEO } from '../hooks/useSEO';
 import { useTranslation } from '../i18n/LanguageContext';
 
+const PRELOAD_ASSETS = [
+  { type: 'icon', label: 'Finder', src: '/icons/finder.webp' },
+  { type: 'icon', label: 'Safari', src: '/icons/safari.webp' },
+  { type: 'icon', label: 'Settings', src: '/icons/settings.webp' },
+  { type: 'icon', label: 'Terminal', src: '/icons/terminal.webp' },
+  { type: 'icon', label: 'App Store', src: '/icons/app-store.webp' },
+  { type: 'icon', label: 'Github', src: '/icons/github.webp' },
+  { type: 'icon', label: 'Trash', src: '/icons/trash.webp' },
+  { type: 'font', label: 'Inter', src: '/fonts/Inter.woff2' },
+  { type: 'image', label: 'Wallpaper', src: '/lake-tahoe.webp' },
+  { type: 'icon', label: 'Wi-Fi', src: '/icons/wifi.png' },
+  { type: 'icon', label: 'Battery', src: '/icons/battery.png' },
+  { type: 'icon', label: 'Control Center', src: '/icons/control-center.png' },
+  { type: 'icon', label: 'Bluetooth', src: '/icons/bluetooth.png' },
+  { type: 'image', label: 'Avatar', src: '/logo.jpg' },
+  { type: 'icon', label: 'Apple Logo', src: '/icons/apple.png' },
+];
+
 
 export default function LoginPage() {
   const t = useTranslation();
@@ -117,6 +135,17 @@ export default function LoginPage() {
       });
     }
 
+    const preloadTimer = setTimeout(() => {
+      PRELOAD_ASSETS.forEach((asset) => {
+        if (asset.type === 'font') {
+          fetch(asset.src).catch(() => {});
+        } else {
+          const img = new Image();
+          img.src = asset.src;
+        }
+      });
+    }, 2000);
+
     const bootTimer = setTimeout(() => {
       setShowLogin(true);
       setShowBoot(false);
@@ -153,6 +182,7 @@ export default function LoginPage() {
     window.addEventListener('wheel', wheelHandler, { passive: false });
 
     return () => {
+      clearTimeout(preloadTimer);
       clearTimeout(bootTimer);
       clearInterval(clockTimer);
       if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);

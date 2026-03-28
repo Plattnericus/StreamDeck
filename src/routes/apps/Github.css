@@ -68,6 +68,12 @@
   border: 1px solid rgba(48, 54, 61, 0.95);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
   object-fit: cover;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
 }
 
 .who {
@@ -113,11 +119,19 @@
   text-decoration: none;
   font-weight: 700;
   box-shadow: 0 8px 14px rgba(0, 0, 0, 0.25);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 
 .gh-btn:hover {
   background: var(--btnHover);
   border-color: rgba(88, 166, 255, 0.35);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.gh-btn:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.08s;
 }
 
 .stats {
@@ -188,13 +202,19 @@
   text-decoration: none;
   color: var(--text);
   box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
-  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s;
 }
 
 .gh-card:hover {
   border-color: rgba(88, 166, 255, 0.45);
-  box-shadow: 0 14px 24px rgba(0, 0, 0, 0.28);
-  transform: translateY(-1px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(88, 166, 255, 0.15);
+  transform: translateY(-3px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+}
+
+.gh-card:active {
+  transform: translateY(-1px) scale(0.99);
+  transition-duration: 0.08s;
 }
 
 .cardTop {
