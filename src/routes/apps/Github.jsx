@@ -1,3 +1,5 @@
+// GitHub profile viewer — shows a user profile with avatar, bio, stats,
+// and a list of repositories. Uses hardcoded demo data instead of the real API.
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../../i18n/LanguageContext';
 import './Github.css';

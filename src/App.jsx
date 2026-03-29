@@ -1,3 +1,4 @@
+// Root app component — sets up routing and language support
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './routes/LoginPage';
@@ -6,6 +7,7 @@ import ErrorPage from './routes/ErrorPage';
 import { LanguageProvider } from './i18n/LanguageContext';
 import './global.css';
 
+// Guard: redirects to login if user hasn't accepted cookies yet
 function RequireCookieConsent({ children }) {
   const consent = localStorage.getItem('cookie-consent');
   if (!consent) return <Navigate to="/" replace />;

@@ -1,3 +1,5 @@
+// Privacy policy page (Datenschutz = data protection).
+// Can be shown as a standalone page or as a closable popup overlay.
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

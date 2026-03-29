@@ -1,3 +1,5 @@
+// Cookie information page — explains what cookies are used, their purpose,
+// and user rights. Can be shown as a popup or embedded.
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

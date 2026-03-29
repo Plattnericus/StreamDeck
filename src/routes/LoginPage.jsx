@@ -1,9 +1,13 @@
+// Login page — shows a macOS-style boot animation, then a lock screen with
+// password input and slide-to-unlock. Also handles cookie consent before
+// redirecting to the desktop.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from './apps/Cookies';
 import './LoginPage.css';
 import { useSEO } from '../hooks/useSEO';
 import { useTranslation } from '../i18n/LanguageContext';
 
+// Critical assets preloaded during the boot animation (visible on first frame)
 const PRELOAD_ASSETS = [
   { type: 'icon', label: 'Finder', src: '/icons/finder.webp' },
   { type: 'icon', label: 'Safari', src: '/icons/safari.webp' },
@@ -20,6 +24,53 @@ const PRELOAD_ASSETS = [
   { type: 'icon', label: 'Bluetooth', src: '/icons/bluetooth.png' },
   { type: 'image', label: 'Avatar', src: '/logo.jpg' },
   { type: 'icon', label: 'Apple Logo', src: '/icons/apple.png' },
+];
+
+// All remaining desktop images — loaded 3s after page load so PageSpeed stays 100%
+const DEFERRED_ASSETS = [
+  // Header / Control Center icons
+  '/icons/flugmodus.png',
+  '/icons/mobile-Daten.png',
+  '/icons/skip-backwards.png',
+  '/icons/skip-forwards.png',
+  '/icons/pause.png',
+  '/icons/play.png',
+  '/icons/bright.png',
+  '/icons/volume.png',
+  '/icons/moon.png',
+  '/icons/airplay.png',
+  '/icons/search.png',
+  '/icons/lock.png',
+  // Window control icons
+  '/icons/close.png',
+  '/icons/minimize.png',
+  '/icons/maximize.png',
+  // App icons (App Store / Dock)
+  '/icons/about.webp',
+  '/icons/agb.webp',
+  '/icons/changelog.webp',
+  '/icons/datenschutz.webp',
+  '/icons/erinnerungen.webp',
+  '/icons/fotos.webp',
+  '/icons/impressum.webp',
+  '/icons/info.webp',
+  '/icons/mail.webp',
+  '/icons/maps.webp',
+  '/icons/model.webp',
+  '/icons/notepad.webp',
+  '/icons/word.webp',
+  '/icons/cookies.png',
+  '/icons/docker.png',
+  '/icons/fallback.png',
+  // Other images used on desktop
+  '/MAC.png',
+  '/logos/apple-logo.png',
+  // Album covers for the music player
+  '/songs/emails i cant send.jpg',
+  '/songs/Short n Sweet (Deluxe).jpg',
+  '/songs/Mans Best Friend (Bonus Track Version).jpg',
+  '/songs/Mans Best Friend.jpg',
+  '/songs/no-song-found.png',
 ];
 
 
@@ -44,6 +95,7 @@ export default function LoginPage() {
   const [timeText, setTimeText] = useState('');
   const [declineCount, setDeclineCount] = useState(0);
 
+  // The simulated login password (shown as a hint on screen)
   const correctPassword = 'Kennwort0';
 
   const wheelAccumRef = useRef(0);
@@ -75,6 +127,7 @@ export default function LoginPage() {
     return passwordRef.current === '' || passwordRef.current === correctPassword;
   }
 
+  // Finish the unlock: if password is valid, redirect to desktop (or show cookie consent)
   const completeUnlock = useCallback(() => {
     if (isUnlockingRef.current) return;
     if (canSlide()) {
@@ -109,6 +162,7 @@ export default function LoginPage() {
     window.location.href = '/desktop';
   }
 
+  // After declining cookies twice, force-accept and proceed anyway
   function handleCookieDecline() {
     setDeclineCount((prev) => {
       const next = prev + 1;
@@ -135,6 +189,7 @@ export default function LoginPage() {
       });
     }
 
+    // Preload critical assets during boot animation
     const preloadTimer = setTimeout(() => {
       PRELOAD_ASSETS.forEach((asset) => {
         if (asset.type === 'font') {
@@ -146,6 +201,17 @@ export default function LoginPage() {
       });
     }, 2000);
 
+    // Preload all other desktop images 3s after page load (keeps PageSpeed at 100%)
+    const deferredTimer = setTimeout(() => {
+      const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 50));
+      idle(() => {
+        DEFERRED_ASSETS.forEach((src) => {
+          const img = new Image();
+          img.src = src;
+        });
+      });
+    }, 3000);
+
     const bootTimer = setTimeout(() => {
       setShowLogin(true);
       setShowBoot(false);
@@ -154,6 +220,7 @@ export default function LoginPage() {
     updateClock();
     const clockTimer = setInterval(updateClock, 1000);
 
+    // Scroll wheel drives the slide-to-unlock gesture
     const wheelHandler = (e) => {
       if (!showLogin && !document.querySelector('.login-screen')) return;
       if (isUnlockingRef.current) return;
@@ -183,6 +250,7 @@ export default function LoginPage() {
 
     return () => {
       clearTimeout(preloadTimer);
+      clearTimeout(deferredTimer);
       clearTimeout(bootTimer);
       clearInterval(clockTimer);
       if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);

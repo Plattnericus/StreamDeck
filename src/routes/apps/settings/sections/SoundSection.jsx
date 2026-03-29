@@ -1,3 +1,4 @@
+// Sound settings — volume slider, mute toggle, sound effects, and startup sound
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSlider } from '../primitives';
 import { VolumeIcon, VolumeMuteIcon, SoundFxIcon, LightbulbIcon } from '../icons';

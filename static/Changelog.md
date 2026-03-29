@@ -120,6 +120,10 @@
 - Translated every Site (took too long)
 - made Dock smaller
 
+# 29.03.2026
+- added comments (took waaaaay to long)
+- tried to optimize loading time!
+
 ## TO DO
 - Impressum, AGB, datenschutz und Cookies rictige Daten hineinschreiben!!
 - Bilder erstellen für Galerie

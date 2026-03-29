@@ -1,8 +1,10 @@
+// Finder — a macOS-style file browser with icons, list, columns, and gallery
+// view modes, a sidebar with favorites/locations, and a virtual file system.
 import React, { useState, useMemo, useCallback } from 'react';
 import './finder.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
-/* ── Virtual File System ── */
+/* ── Virtual File System (all data is in-memory, nothing touches the real disk) ── */
 const FS = {
   '/': {
     type: 'folder',
@@ -94,6 +96,7 @@ function getChildren(path) {
   });
 }
 
+// Recursively collect all files under a given folder
 function getAllFiles(path = '/') {
   const results = [];
   const node = getNode(path);
@@ -110,6 +113,7 @@ function getAllFiles(path = '/') {
   return results;
 }
 
+// Get the 10 most recently modified files across the whole file system
 function getRecents() {
   return getAllFiles('/')
     .sort((a, b) => b.modified.localeCompare(a.modified))

@@ -1,3 +1,4 @@
+// Privacy settings — cookie consent status, camera/mic permissions, analytics, and data deletion
 import React from 'react';
 import { IosGroup, IosRow, IosToggle } from '../primitives';
 import { CookieIcon, CameraIcon, MicIcon, BarChartIcon, TrashIcon } from '../icons';

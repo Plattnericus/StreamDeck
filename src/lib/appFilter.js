@@ -1,3 +1,4 @@
+// Helpers to identify and filter out built-in system apps from user-installed ones
 const STANDARD_APPS = [
   'apps.jsx',
   'finder.jsx',

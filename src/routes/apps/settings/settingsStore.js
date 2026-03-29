@@ -1,3 +1,6 @@
+// Settings store — handles loading, saving, and resetting user preferences.
+// Settings are split between app settings and Control Center settings in localStorage.
+
 export const DEFAULT_SETTINGS = {
   darkMode: false,
   accentColor: 'blue',
@@ -44,6 +47,7 @@ export const ACCENT_COLORS = {
   red:    '#ff3b30',
 };
 
+// Keys that belong to app settings vs Control Center settings (stored separately)
 const APP_KEYS = [
   'darkMode', 'accentColor', 'fontSize', 'reduceTransparency',
   'soundEffects', 'startupSound', 'muted',
@@ -54,6 +58,7 @@ const APP_KEYS = [
 
 const CC_KEYS = ['wifi', 'bluetooth', 'airplane', 'cellular', 'lock', 'mirror', 'brightness', 'volume'];
 
+// Merge app + control center settings from localStorage into one object
 export function loadSettings() {
   let app = { ...DEFAULT_SETTINGS };
   let cc = { ...DEFAULT_CC };
@@ -68,6 +73,7 @@ export function loadSettings() {
   return { ...app, ...cc };
 }
 
+// Split settings back into app and CC parts, then save each to localStorage
 export function saveSettings(next) {
   try {
     const appPart = {};
@@ -85,6 +91,7 @@ export function resetAppSettings() {
   } catch {}
 }
 
+// Notify other components (e.g. Header) that settings changed
 export function broadcastSettingsChange() {
   try {
     window.dispatchEvent(new CustomEvent('streamdeck-settings-sync'));

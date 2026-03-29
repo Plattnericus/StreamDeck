@@ -1,8 +1,10 @@
+// Language context — provides the current language and translation helpers to the app
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import T from './translations';
 
 const LanguageContext = createContext('de');
 
+// Read saved language from localStorage, default to German
 function getStoredLanguage() {
   try {
     const raw = localStorage.getItem('streamdeck_settings_v2');
@@ -19,6 +21,7 @@ export function LanguageProvider({ children }) {
   const [transitioning, setTransitioning] = useState(false);
   const prevLangRef = useRef(language);
 
+  // Listen for settings changes and animate a fade transition when language switches
   useEffect(() => {
     const sync = () => {
       const next = getStoredLanguage();
@@ -54,6 +57,7 @@ export function useLanguage() {
   return useContext(LanguageContext);
 }
 
+// Returns a t() function that looks up a translation key, falling back to German then the raw key
 export function useTranslation() {
   const lang = useContext(LanguageContext);
   return (key) => T[lang]?.[key] ?? T.de[key] ?? key;

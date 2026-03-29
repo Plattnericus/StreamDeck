@@ -1,3 +1,4 @@
+// Appearance settings — brightness, accent color, font size, and transparency
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSlider, IosSelect } from '../primitives';
 import { SunIcon, PaletteIcon, TextIcon, GlassIcon } from '../icons';

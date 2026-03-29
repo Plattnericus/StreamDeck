@@ -1,3 +1,4 @@
+// Vite config — includes a local dev proxy for fetching external pages in the in-app browser
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -6,6 +7,7 @@ export default defineConfig({
   plugins: [
     react(),
     {
+      // Dev-only proxy that fetches external URLs and injects a <base> tag so relative links work
       name: 'browser-proxy',
       configureServer(server) {
         server.middlewares.use('/api/proxy', async (req, res) => {

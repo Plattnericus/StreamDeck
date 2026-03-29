@@ -1,3 +1,5 @@
+// Main desktop page — assembles the header, dock, and marquee selection.
+// Also shows a lock screen message on mobile devices.
 import React from 'react';
 import Header from './Header';
 import Dock from './Dock';
@@ -20,7 +22,7 @@ export default function DesktopPage() {
           <Dock onOpenApp={handleOpenApp} />
         </DesktopMarquee>
 
-        {}
+        {/* Mobile-only: shown instead of the desktop on small screens */}
         <div className="mobile-lockscreen">
           <div className="mobile-lockscreen-content">
             <div className="mobile-lockscreen-icon">

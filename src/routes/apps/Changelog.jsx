@@ -1,7 +1,11 @@
+// Changelog viewer — fetches and parses a Markdown changelog, displays entries
+// grouped by date with icons for added/fixed/updated/removed items. Polls for
+// live updates every 5 seconds.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Changelog.css';
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 
+// Parse a Markdown changelog into structured date-grouped entries and TODO items
 function parseChangelog(raw) {
   const lines = raw.split('\n');
   const result = [];
@@ -58,6 +62,7 @@ function isToday(dateStr) {
   return +p[1] === n.getDate() && +p[2] === n.getMonth() + 1 && +p[3] === n.getFullYear();
 }
 
+// Classify a changelog item by keywords in its text
 function getType(text) {
   const l = text.toLowerCase();
   if (l.includes('fix') || l.includes('bug'))                                               return 'fix';
@@ -117,6 +122,7 @@ export default function Changelog() {
   const lang = useLanguage();
   const locale = lang === 'de' ? 'de-DE' : lang === 'it' ? 'it-IT' : 'en-US';
 
+  // Fetch the changelog file and only re-parse if its content hash changed
   const fetchChangelog = useCallback(async () => {
     try {
       const res = await fetch('/Changelog.md?t=' + Date.now());

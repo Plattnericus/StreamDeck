@@ -1,3 +1,4 @@
+// All UI strings for each supported language (German, English, Italian)
 const T = {
   de: {
     /* ── Settings core ── */

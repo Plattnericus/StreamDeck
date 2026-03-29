@@ -1,13 +1,15 @@
+// Tracks recently opened apps in localStorage so they can be shown in a "recent" list
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const STORAGE_KEY = 'streamdeck_last_opened_v1';
-const MAX_ITEMS = 10;
+const MAX_ITEMS = 10; // only keep the 10 most recent apps
 
 const LastOpenedContext = createContext(null);
 
 export function LastOpenedProvider({ children }) {
   const [lastOpened, setLastOpened] = useState([]);
 
+  // Load saved recent apps from localStorage (strip out React components since they can't be serialized)
   const loadLastOpened = useCallback(() => {
     if (typeof localStorage === 'undefined') return;
     try {
@@ -23,6 +25,7 @@ export function LastOpenedProvider({ children }) {
     }
   }, []);
 
+  // Record that an app was opened — moves it to the top and bumps its open count
   const trackOpenedApp = useCallback((app) => {
     setLastOpened((items) => {
       const existing = items.findIndex(

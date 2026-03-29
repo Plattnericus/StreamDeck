@@ -1,3 +1,4 @@
+// App store — manages the list of open/running apps using React context
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const AppStoreContext = createContext(null);
@@ -5,8 +6,10 @@ const AppStoreContext = createContext(null);
 export function AppStoreProvider({ children }) {
   const [apps, setApps] = useState([]);
 
+  // Open an existing app (bring to front) or add a new one to the list
   const addOrOpenApp = useCallback((app) => {
     setApps((prev) => {
+      // Try to find the app by id first, then by name
       let existingIndex = prev.findIndex((a) => a.id === app.id);
       if (existingIndex === -1) {
         existingIndex = prev.findIndex(
@@ -14,6 +17,7 @@ export function AppStoreProvider({ children }) {
         );
       }
 
+      // If found, reopen it and bring it to the front
       if (existingIndex !== -1) {
         const updated = [...prev];
         updated[existingIndex] = {

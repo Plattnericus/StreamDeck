@@ -1,3 +1,5 @@
+// Network settings — Wi-Fi, Bluetooth, Airplane Mode, Cellular, and VPN toggles.
+// Airplane mode automatically disables Wi-Fi and Cellular.
 import React from 'react';
 import { IosGroup, IosRow, IosToggle } from '../primitives';
 import { WifiIcon, BluetoothIcon, AirplaneIcon, CellularIcon, VpnIcon } from '../icons';
@@ -6,6 +8,7 @@ import { useTranslation } from '../../../../i18n/LanguageContext';
 export default function NetworkSection({ settings, update, toggle, batch }) {
   const t = useTranslation();
 
+  // Turning on airplane mode disables wifi and cellular at the same time
   function handleAirplane() {
     if (!settings.airplane) {
       batch({ wifi: false, cellular: false, airplane: true });
@@ -14,6 +17,7 @@ export default function NetworkSection({ settings, update, toggle, batch }) {
     }
   }
 
+  // Enabling wifi or cellular turns off airplane mode
   function toggleWifi() {
     if (!settings.wifi) update('airplane', false);
     toggle('wifi');

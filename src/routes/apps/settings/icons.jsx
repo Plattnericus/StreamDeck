@@ -1,3 +1,4 @@
+// SVG icon components used throughout the Settings app
 import React from 'react';
 
 export const WifiIcon = () => (

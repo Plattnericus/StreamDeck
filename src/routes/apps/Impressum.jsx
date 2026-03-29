@@ -1,3 +1,6 @@
+// Legal notice / Impressum page — required by German/Italian law.
+// Shows operator info, contact details, copyright, and disclaimers.
+// Can be shown as a standalone page or as a closable popup overlay.
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

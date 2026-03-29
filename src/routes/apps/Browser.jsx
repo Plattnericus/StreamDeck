@@ -1,7 +1,10 @@
+// Browser app — a tabbed web browser with address bar, back/forward navigation,
+// and iframe-based page loading via a server-side proxy.
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import './Browser.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
+// Route external URLs through our proxy to avoid CORS issues in the iframe
 function proxyUrl(url) {
   if (!url) return '';
   return `/api/proxy?url=${encodeURIComponent(url)}`;
@@ -87,6 +90,7 @@ export default function Browser({ onClose }) {
     if (sel) { setQuery(sel.url); setLoadError(false); setLoading(false); }
   };
 
+  // If the input looks like a URL, navigate directly; otherwise Google it
   const submitSearch = (e) => {
     e.preventDefault();
     const term = query.trim();

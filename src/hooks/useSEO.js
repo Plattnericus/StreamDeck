@@ -1,8 +1,5 @@
-// ═══════════════════════════════════════════════════════════
-// useSEO.js — wiederverwendbarer Hook für alle Seiten
-// Verwendung: useSEO({ title, description, path })
-// Datei: src/hooks/useSEO.js
-// ═══════════════════════════════════════════════════════════
+// SEO hook — dynamically sets page title, meta tags, and Open Graph / Twitter cards
+// Usage: useSEO({ title, description, path })
 
 import { useEffect } from 'react'
 
@@ -18,10 +15,9 @@ export function useSEO({ title, description, path = '/', image = DEFAULT_IMAGE }
   const fullUrl = `${BASE_URL}${path}`
 
   useEffect(() => {
-    // Titel setzen
     document.title = fullTitle
 
-    // Helper: Meta-Tag setzen oder erstellen
+    // Find an existing meta tag or create a new one, then set its content
     const setMeta = (selector, attr, content) => {
       let el = document.querySelector(selector)
       if (!el) {
@@ -33,7 +29,7 @@ export function useSEO({ title, description, path = '/', image = DEFAULT_IMAGE }
       el.setAttribute('content', content)
     }
 
-    // Helper: Link-Tag setzen
+    // Find an existing link tag or create a new one
     const setLink = (rel, href) => {
       let el = document.querySelector(`link[rel="${rel}"]`)
       if (!el) {
@@ -44,7 +40,6 @@ export function useSEO({ title, description, path = '/', image = DEFAULT_IMAGE }
       el.setAttribute('href', href)
     }
 
-    // Standard Meta
     setMeta('meta[name="description"]', 'name=description', description)
     setLink('canonical', fullUrl)
 
@@ -61,17 +56,3 @@ export function useSEO({ title, description, path = '/', image = DEFAULT_IMAGE }
   }, [fullTitle, description, fullUrl, image])
 }
 
-// ═══════════════════════════════════════════════════════════
-// VERWENDUNG IN DEINEN KOMPONENTEN / SEITEN:
-//
-// import { useSEO } from '../hooks/useSEO'
-//
-// export default function MeineSeite() {
-//   useSEO({
-//     title: 'Setup Guide',
-//     description: 'Schritt-für-Schritt Setup für Stream Deck DIY mit React und macOS Tahoe Liquid Glass.',
-//     path: '/setup',
-//   })
-//   return <div>...</div>
-// }
-// ═══════════════════════════════════════════════════════════

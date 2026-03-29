@@ -1,3 +1,5 @@
+// macOS-style dock — manages app windows (open, close, minimize, maximize, drag, resize)
+// and renders the bottom dock bar with magnification on hover.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import DockItemMagnified from './DockItemMagnified';
 import Settings from '../apps/settings/Settings';
@@ -21,6 +23,7 @@ import { openTab, getCenterPosition } from '../../lib/openTab';
 import { useTranslation } from '../../i18n/LanguageContext';
 import './Dock.css';
 
+// Maps component names (strings) to actual components for restoring pinned apps from localStorage
 const COMPONENT_MAP = {
   Finder, Apps, Settings, Browser, Terminal, Github, Papierkorb,
   About, Changelog, Galerie, Impressum, Agb, Info, Datenschutz, Model, CookiesInfo,
@@ -28,6 +31,7 @@ const COMPONENT_MAP = {
 
 const DOCK_STORAGE_KEY = 'dock_pinned_apps_v1';
 
+// Load user-pinned apps from localStorage
 function loadPinnedApps() {
   try {
     const raw = localStorage.getItem(DOCK_STORAGE_KEY);
@@ -36,6 +40,7 @@ function loadPinnedApps() {
   return [];
 }
 
+// Save non-default (user-added) apps to localStorage
 function savePinnedApps(apps) {
   const pinned = apps
     .filter((a) => !a.default)
@@ -60,6 +65,7 @@ const defaultApps = [
   { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 560, height: 360, zIndex: 0 },
 ];
 
+// Merge default dock apps with any user-pinned apps from storage
 function buildInitialApps() {
   const pinned = loadPinnedApps();
   const base = defaultApps.map((a) => ({ ...a }));
@@ -110,6 +116,7 @@ export default function Dock({ onOpenApp }) {
   const glassCardRef = useRef(null);
   const glassSpecularRef = useRef(null);
 
+  // Glass distortion effect — moves the specular highlight to follow the cursor
   const handleGlassMouseMove = useCallback((e) => {
     const card = glassCardRef.current;
     if (!card) return;
@@ -143,6 +150,7 @@ export default function Dock({ onOpenApp }) {
     if (spec) spec.style.background = 'none';
   }, []);
 
+  // Find the topmost visible (non-minimized) window by z-index
   const focusedId = (() => {
     let best = null;
     let bestZ = -Infinity;
@@ -158,6 +166,7 @@ export default function Dock({ onOpenApp }) {
   const dragRef = useRef(null);
   const resizeRef = useRef(null);
 
+  // Handle window dragging and resizing via mouse movement
   const handleMouseMove = useCallback((e) => {
     if (dragRef.current) {
       const { appId, startX, startY, origX, origY } = dragRef.current;
@@ -166,7 +175,7 @@ export default function Dock({ onOpenApp }) {
       setApps((prev) =>
         prev.map((app) => {
           if (app.id !== appId) return app;
-          const minVisible = 100;
+          const minVisible = 100; // keep at least 100px of the window on screen
           const newX = Math.max(-(app.width - minVisible), Math.min(window.innerWidth - minVisible, origX + dx));
           const newY = Math.max(headerHeight, Math.min(window.innerHeight - 50, origY + dy));
           return { ...app, x: newX, y: newY };
@@ -258,6 +267,7 @@ export default function Dock({ onOpenApp }) {
     );
   }, []);
 
+  // Minimize or restore a window with a 350ms animation delay
   const toggleMinimize = useCallback((id) => {
     setApps((prev) => {
       const app = prev.find((a) => a.id === id);
@@ -288,6 +298,7 @@ export default function Dock({ onOpenApp }) {
     );
   }, []);
 
+  // Open an app by name string or by app data object; also handles pinning new apps to the dock
   const handleOpenApp = useCallback(
     (appOrName) => {
       if (typeof appOrName === 'string') {
@@ -415,6 +426,7 @@ export default function Dock({ onOpenApp }) {
     [apps, focusApp]
   );
 
+  // Keep Trash at the end of the dock, everything else in order
   const withoutTrash = apps.filter((a) => a.id !== 10 && (a.default || !a.default));
   const trash = apps.filter((a) => a.id === 10);
   const sortedDockApps = [...withoutTrash, ...trash];

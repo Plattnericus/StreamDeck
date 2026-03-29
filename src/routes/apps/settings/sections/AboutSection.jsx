@@ -1,3 +1,5 @@
+// About section — shows app info (version, developer, license) and hardware specs.
+// Can navigate to an "About This Mac" sub-view.
 import React, { useState } from 'react';
 import { IosGroup, IosRow } from '../primitives';
 import { InfoIcon, CodeIcon, UserIcon, CpuIcon, MonitorIcon, LightbulbIcon, MacIcon } from '../icons';

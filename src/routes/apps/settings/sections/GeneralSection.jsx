@@ -1,3 +1,4 @@
+// General settings — language, clock format, date format, motion, auto-lock, and reset
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSelect } from '../primitives';
 import { GlobeIcon, ClockIcon, CalendarIcon, MotionIcon, LockIcon, ResetIcon } from '../icons';

@@ -1,8 +1,11 @@
+// Top menu bar — includes Apple menu, Finder menus, Control Center panel,
+// music player, brightness/volume controls, date/time, and "About this Mac" dialog.
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './Header.css';
 import { useLanguage } from '../../i18n/LanguageContext';
 import T from '../../i18n/translations';
 
+// Music library for the Control Center player
 const ALL_TRACKS = [
   /*0*/{ title: 'emails i can\'t send', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - emails i cant send - Sabrina Carpenter.mp3' },
   /*1*/{ title: 'Tornado Warnings', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - Tornado Warnings - Sabrina Carpenter.mp3' },
@@ -14,10 +17,10 @@ const ALL_TRACKS = [
   /*7*/{ title: 'We Almost Broke Up Again Last Night', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend.jpg', src: '/songs/SpotiDownloader.com - We Almost Broke Up Again Last Night - Sabrina Carpenter.mp3' },
 ];
 
-const TRACK_ORDER = [4, 1, 5, 6, 2, 7, 0, 3];
-
+const TRACK_ORDER = [4, 1, 5, 6, 2, 7, 0, 3]; // custom playback order
 const tracks = TRACK_ORDER.map((i) => ALL_TRACKS[i]);
 
+// Control Center defaults (persisted to localStorage)
 const DEFAULT_SETTINGS = {
   wifi: true,
   bluetooth: false,
@@ -89,6 +92,7 @@ export default function Header({ onOpenApp }) {
     window.addEventListener('streamdeck-settings-sync', sync);
     return () => window.removeEventListener('streamdeck-settings-sync', sync);
   }, []);
+  // Toggle a setting, with special logic for airplane mode conflicts
   const toggle = (key) => {
     setSettings((s) => {
       const next = { ...s, [key]: !s[key] };
@@ -147,6 +151,7 @@ export default function Header({ onOpenApp }) {
 
   const currentTrack = tracks[trackIdx];
 
+  // Load the track into the audio element; restore saved position on first load
   const isFirstLoad = useRef(true);
   useEffect(() => {
     const a = audioRef.current;
@@ -226,6 +231,7 @@ export default function Header({ onOpenApp }) {
     a.currentTime = pct * a.duration;
   }, []);
 
+  // Click-and-drag seeking on the progress bar
   const onProgressDown = useCallback((e) => {
     e.preventDefault();
     seekingRef.current = true;
@@ -305,6 +311,7 @@ export default function Header({ onOpenApp }) {
     return () => { window.removeEventListener('contextmenu', handler); window.removeEventListener('mousedown', close); };
   }, []);
 
+  // Top menu bar items (Apple, Finder, File, Edit, View, Go, Window, Help)
   const menus = useMemo(() => [
     {
       id: 'apple', label: '', icon: '/icons/apple.png',

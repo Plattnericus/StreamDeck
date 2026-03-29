@@ -1,3 +1,4 @@
+// 404 error page — styled like a classic BSOD with links back to the main pages.
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './ErrorPage.css';

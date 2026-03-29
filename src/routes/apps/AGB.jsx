@@ -1,7 +1,10 @@
+// Terms and Conditions page (AGB = Allgemeine Geschaeftsbedingungen).
+// Can be shown as a standalone page or as a closable popup overlay.
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 
 export default function AGB({ popup = false, onClose }) {
+  // Close popup on Escape key
   useEffect(() => {
     if (!popup) return;
     const handler = (e) => { if (e.key === 'Escape') onClose?.(); };

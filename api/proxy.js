@@ -1,3 +1,4 @@
+// Serverless proxy (Vercel) — fetches external URLs for the in-app browser, injects <base> tag for relative links
 const HIDE_SCROLLBAR = `<style>::-webkit-scrollbar{display:none}html,body{scrollbar-width:none;-ms-overflow-style:none}</style>`;
 
 export default async function handler(req, res) {

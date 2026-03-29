@@ -1,6 +1,10 @@
+// Terminal emulator — a fully interactive shell with a virtual file system,
+// command history, tab completion, aliases, and commands like ls, cd, cat,
+// mkdir, grep, neofetch, cowsay, and more. State is persisted in localStorage.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Terminal.css';
 
+// Color palette for the "color" command (0-f hex codes)
 const colorMap = {
   '0': '#1e1e1e', '1': '#3b82f6', '2': '#22c55e', '3': '#06b6d4',
   '4': '#ef4444', '5': '#a855f7', '6': '#eab308', '7': '#d4d4d4',
@@ -8,6 +12,7 @@ const colorMap = {
   'c': '#f87171', 'd': '#c084fc', 'e': '#fde047', 'f': '#ffffff',
 };
 
+// Default virtual file system — folders are arrays of child names, files are strings
 const defaultFs = {
   '~': ['Documents', 'Downloads', 'Desktop', '.bashrc'],
   '~/Documents': ['notes.txt', 'todo.md'],
@@ -28,6 +33,7 @@ function loadFs() {
   return JSON.parse(JSON.stringify(defaultFs));
 }
 
+// Find the longest common prefix for tab completion suggestions
 function getCommonPrefix(strs) {
   if (strs.length === 0) return '';
   let prefix = strs[0];
@@ -71,6 +77,7 @@ export default function Terminal() {
     try { localStorage.setItem('terminal-fs', JSON.stringify(fsRef.current)); } catch {  }
   };
 
+  // Resolve relative paths (., ..) into an absolute path starting from ~
   const normalizePath = (p) => {
     if (p === '~' || p === '') return '~';
     let full = p;
@@ -598,6 +605,7 @@ export default function Terminal() {
     return commands;
   }, [addLine, addJsxLine, scrollDown]);
 
+  // Simulate apt install with timed output lines (only "opsec" is available)
   const runAptInstall = useCallback((pkg) => {
     if (pkg !== 'opsec') {
       addLine(`E: Paket '${pkg}' nicht gefunden`);
@@ -620,9 +628,11 @@ export default function Terminal() {
     }, 2800);
   }, [addLine, addImageLine]);
 
+  // Parse and execute a command string, with support for aliases and pipes
   const runCommand = useCallback((raw) => {
     let full = raw.trim();
     if (!full) return;
+    // Expand aliases before running
     const firstWord = full.split(/\s+/)[0];
     if (aliasRef.current[firstWord]) full = full.replace(firstWord, aliasRef.current[firstWord]);
 

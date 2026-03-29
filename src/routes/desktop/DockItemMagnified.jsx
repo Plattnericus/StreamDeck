@@ -1,9 +1,12 @@
+// Single dock icon with macOS-style magnification effect on hover.
+// Icons scale up smoothly as the cursor approaches them.
 import React, { useRef, useEffect, useCallback } from 'react';
 import { interpolate } from 'popmotion';
 import './DockItemMagnified.css';
 
-const baseWidth = 79;
-const distanceLimit = baseWidth * 6;
+const baseWidth = 79; // default icon size in pixels
+const distanceLimit = baseWidth * 6; // how far the magnification effect reaches
+// Interpolation curve: maps cursor distance to icon size
 const distanceInput = [
   -distanceLimit,
   -distanceLimit / 1.25,
@@ -50,6 +53,7 @@ export default function DockItemMagnified({
     }
   }, [mouse_x]);
 
+  // Smooth animation loop — lerp toward target size each frame
   useEffect(() => {
     let running = true;
     const lerp = 0.22;

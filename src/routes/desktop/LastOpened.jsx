@@ -1,3 +1,4 @@
+// Displays a list of recently opened apps with relative timestamps (e.g. "5m ago")
 import React from 'react';
 import './LastOpened.css';
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
@@ -9,6 +10,7 @@ export default function LastOpened({ lastOpened = [] }) {
   const lang = useLanguage();
   const locale = LOCALE_MAP[lang] ?? 'de-DE';
 
+  // Format a timestamp as a human-readable relative time string
   function formatDate(timestamp) {
     const date = new Date(timestamp);
     const now = new Date();

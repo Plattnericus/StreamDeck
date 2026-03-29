@@ -1,3 +1,4 @@
+// Translation strings for the Settings app (German and English)
 const T = {
   de: {
     profile_name: 'StreamDeck',
@@ -204,6 +205,7 @@ const T = {
   },
 };
 
+// Create a translator function that falls back to German if a key is missing
 export function createTranslator(language) {
   const lang = T[language] ?? T.de;
   return (key) => lang[key] ?? T.de[key] ?? key;

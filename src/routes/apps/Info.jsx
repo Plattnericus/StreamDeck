@@ -1,3 +1,6 @@
+// Info page — a multi-section reference for the DIY Stream Deck project.
+// Covers overview, hardware specs, wiring, software, 3D print details,
+// build steps, features, and credits. Uses a sidebar for navigation.
 import { useState } from "react";
 import "./Info.css";
 

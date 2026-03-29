@@ -1,3 +1,5 @@
+// Cookie consent banner — shows an accept/decline dialog with links to the
+// full cookie info and privacy policy pages.
 import React, { useState, useEffect } from 'react';
 import CookiesInfo from './Cookies-info';
 import Datenschutz from './Datenschutz';
@@ -11,6 +13,7 @@ export default function Cookies({ onConsent, onDecline }) {
   const [showCookiesInfo, setShowCookiesInfo] = useState(false);
   const [showDatenschutz, setShowDatenschutz] = useState(false);
 
+  // Skip the banner if the user already made a choice
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
     if (consent) {

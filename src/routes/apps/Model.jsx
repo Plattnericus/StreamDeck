@@ -1,3 +1,5 @@
+// 3D model viewer — loads STL files with Three.js, supports orbit controls,
+// auto-rotation, zoom, fullscreen, download, and a clickable orientation cube.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
@@ -10,6 +12,7 @@ const models = [
   { name: 'Lid Model', path: '/models/lidModel.stl' },
 ];
 
+// Maps orientation labels to direction vectors for the ViewCube
 const orientationKeys = {
   model_right: [1, 0, 0],
   model_left: [-1, 0, 0],
@@ -44,6 +47,7 @@ export default function Model() {
 
   const isLidModel = selectedModel === models[1].path;
 
+  // Load an STL file, center it, auto-fit the camera, and fade it in
   const loadModel = useCallback((modelPath) => {
     const scene = sceneRef.current;
     const camera = cameraRef.current;

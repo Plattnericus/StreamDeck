@@ -1,3 +1,4 @@
+// Notifications settings — enable/disable notifications, badges, sounds, previews, and DND
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSelect } from '../primitives';
 import { BellIcon, MessageIcon, SoundFxIcon, DoNotDisturbIcon } from '../icons';
