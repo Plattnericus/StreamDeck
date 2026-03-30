@@ -236,7 +236,7 @@ export default function AGB({ popup = false, onClose }) {
             <p>Bei Fragen zu diesen AGB können Sie sich an den Betreiber wenden:</p>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Straße 12</p>
+              <p>Strange 12</p>
               <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
               <p>E-Mail: <a href="mailto:felix.plattner89@plattnericus.dev">felix.plattner89@plattnericus.dev</a></p>
               <p>Telefon: <a href="tel:+393898806833">+39 389 880 6833</a></p>
