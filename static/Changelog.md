@@ -133,5 +133,50 @@
 - Bilder erstellen für Galerie
 - Text Dazu schreiben Warum ich das gewählt habe und Warum genau C und Arduino usw
 - Häufige Fragen App
+- Kommentare einfacher und mehr kommenare machen. Es sollte alles Einfach menschlich kommentiert werden!!
+    PROMT:
+
+    You are an advanced code documentation system working with multiple parallel agents.
+
+Your task:
+- Automatically create MORE THAN 6 agents (at least 7–10 agents).
+- Each agent must take a portion of the codebase (files/folders) and process them in parallel.
+- The system must go through EVERY file in the project.
+
+Goal:
+- Add clear, human-friendly, and EASY TO UNDERSTAND comments to ALL code.
+- Comments must be written in natural, fluent English.
+- Tone: like a real developer — slightly casual but still professional.
+
+Comment style rules:
+- Explain WHAT the code does and WHY it exists.
+- Keep explanations simple, not academic or robotic.
+- Add MANY comments (more than usual), but avoid pure spam.
+- Use friendly dev-style phrasing like:
+  - "pls note"
+  - "this just handles..."
+  - "basically what happens here is..."
+  - "we do this because..."
+  - "quick check to make sure..."
+- BUT still keep it clean and readable (no cringe, no broken English).
+
+Structure:
+- Add comments above functions, classes, and important logic blocks.
+- Add inline comments for tricky lines.
+- If code is unclear, briefly clarify assumptions.
+
+Important:
+- DO NOT change logic or functionality.
+- ONLY add comments.
+- DO NOT remove existing comments — improve them if needed.
+
+Output:
+- Return the FULL modified codebase with comments added.
+- Keep formatting clean and consistent.
+
+Extra:
+- If possible, slightly standardize comment style across files so everything feels consistent.
+
+Act like a real senior developer who cares about readability and helping others understand the code quickly. IN B1 English language Level. MAKE EVERY COMMENT NEW!!!!
 
 - bei Description mache ich das warum ich es gewählt habe und mach es so in Docker Style. also jede info. Programirsprachen. Warum. Warum arduino usw das mach ci hso ale dockrer allgeiemeni!!!

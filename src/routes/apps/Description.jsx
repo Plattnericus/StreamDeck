@@ -1,4 +1,4 @@
-// Placeholder page for the Description app — just shows "WIP" (work in progress).
+// nothing here yet, just WIP for now lol
 export default function WIP() {
   return (
     <div style={{

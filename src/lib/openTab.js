@@ -1,10 +1,10 @@
-// Window positioning helpers — centers app windows in the usable screen area (between header and dock)
+// puts windows nicley in the center of the screen
 
 export function openTab(app, windowWidth, windowHeight) {
   windowWidth = windowWidth ?? (typeof window !== 'undefined' ? window.innerWidth : 1024);
   windowHeight = windowHeight ?? (typeof window !== 'undefined' ? window.innerHeight : 768);
 
-  // Account for the top menu bar and bottom dock
+  // leave space for header and dock
   const headerHeight = 28;
   const dockHeight = 85;
   const usableTop = headerHeight;
@@ -13,7 +13,7 @@ export function openTab(app, windowWidth, windowHeight) {
   const centerX = windowWidth / 2 - app.width / 2;
   const centerY = usableTop + usableHeight / 2 - app.height / 2;
 
-  // Only reposition if the app isn't already open
+  // only move if not already open
   if (!app.open) {
     app.x = centerX;
     app.y = Math.max(usableTop, centerY);

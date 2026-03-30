@@ -1,7 +1,7 @@
-// Reusable iOS-style UI primitives: toggle switch, grouped cards, rows, sliders, and selects
+// ios style ui components, toggles, rows, sliders etc
 import React from 'react';
 
-// iOS-style toggle switch
+// toggle on/off
 export function IosToggle({ checked, onChange, disabled }) {
   return (
     <button
@@ -16,7 +16,7 @@ export function IosToggle({ checked, onChange, disabled }) {
   );
 }
 
-// Card group with optional label header
+// grouped card with title
 export function IosGroup({ label, children }) {
   return (
     <div className="st-ios-group">
@@ -26,7 +26,7 @@ export function IosGroup({ label, children }) {
   );
 }
 
-// Single settings row with icon, label, optional value, chevron, and custom children
+// one row in the settings list
 export function IosRow({ icon, iconClass = 'gray', label, value, chevron, onClick, children }) {
   return (
     <div className={`st-ios-row${onClick ? ' tappable' : ''}`} onClick={onClick}>
@@ -41,7 +41,7 @@ export function IosRow({ icon, iconClass = 'gray', label, value, chevron, onClic
   );
 }
 
-// Range slider row with label and current value display
+// slider row with number
 export function IosSlider({ icon, iconClass = 'gray', label, value, min, max, onChange, unit = '%' }) {
   return (
     <div className="st-ios-slider-row">
@@ -64,7 +64,7 @@ export function IosSlider({ icon, iconClass = 'gray', label, value, min, max, on
   );
 }
 
-// Dropdown select inside a settings row
+// dropdown picker
 export function IosSelect({ icon, iconClass = 'gray', label, value, options, onChange }) {
   return (
     <IosRow icon={icon} iconClass={iconClass} label={label}>

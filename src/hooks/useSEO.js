@@ -1,5 +1,4 @@
-// SEO hook — dynamically sets page title, meta tags, and Open Graph / Twitter cards
-// Usage: useSEO({ title, description, path })
+// makes google happy with meta tags n stuff
 
 import { useEffect } from 'react'
 
@@ -17,7 +16,7 @@ export function useSEO({ title, description, path = '/', image = DEFAULT_IMAGE }
   useEffect(() => {
     document.title = fullTitle
 
-    // Find an existing meta tag or create a new one, then set its content
+    // find meta tag or make a new one
     const setMeta = (selector, attr, content) => {
       let el = document.querySelector(selector)
       if (!el) {
@@ -29,7 +28,7 @@ export function useSEO({ title, description, path = '/', image = DEFAULT_IMAGE }
       el.setAttribute('content', content)
     }
 
-    // Find an existing link tag or create a new one
+    // same thing but for link tags
     const setLink = (rel, href) => {
       let el = document.querySelector(`link[rel="${rel}"]`)
       if (!el) {
@@ -43,13 +42,13 @@ export function useSEO({ title, description, path = '/', image = DEFAULT_IMAGE }
     setMeta('meta[name="description"]', 'name=description', description)
     setLink('canonical', fullUrl)
 
-    // Open Graph
+    // og tags
     setMeta('meta[property="og:title"]', 'property=og:title', fullTitle)
     setMeta('meta[property="og:description"]', 'property=og:description', description)
     setMeta('meta[property="og:url"]', 'property=og:url', fullUrl)
     setMeta('meta[property="og:image"]', 'property=og:image', image)
 
-    // Twitter
+    // twitter cards
     setMeta('meta[name="twitter:title"]', 'name=twitter:title', fullTitle)
     setMeta('meta[name="twitter:description"]', 'name=twitter:description', description)
     setMeta('meta[name="twitter:image"]', 'name=twitter:image', image)

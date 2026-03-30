@@ -1,4 +1,4 @@
-// 404 error page — styled like a classic BSOD with links back to the main pages.
+// classic blue screen of deth, very scary 404
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './ErrorPage.css';

@@ -1,5 +1,4 @@
-// App Store — lists installable apps with search, simulated download progress,
-// and the ability to open apps once installed.
+// fake app store with downlods and evrything
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './Apps.css';
 import { useTranslation } from '../../i18n/LanguageContext';
@@ -23,7 +22,7 @@ const CFG = {
   cardMinWidth: 320,
 };
 
-// Resolve an icon name to a full URL (supports absolute, data URIs, or relative paths)
+// get the icon url, handles all the weird formats
 function iconUrl(icon) {
   const s = (icon || '').trim();
   if (!s) return CFG.iconBase + CFG.fallbackIcon;
@@ -45,7 +44,7 @@ const APP_LIST = [
   { id: 110, name: 'Cookies',     icon: 'cookies.png',      component: CookiesInfo, subtitleKey: 'app_cookies_sub',     descKey: 'app_cookies_desc',     developer: 'System', version: '1.0.1',    width: 720, height: 560 },
 ];
 
-// Persist installed app IDs in localStorage so they survive page reloads
+// save wich apps are instaleld so they stay after reload
 const INSTALLED_KEY = 'appstore_installed_v1';
 
 function loadInstalled() {
@@ -89,7 +88,7 @@ export default function Apps({ onOpenApp }) {
           (a.description ?? '').toLowerCase().includes(q) || a.category.toLowerCase().includes(q);
       });
 
-  // Fake a download with animated progress bar, then mark app as installed
+  // pretend to download the app lol
   const simulateDownload = useCallback((app) => {
     setDownloading((prev) => new Set(prev).add(app.id));
     setDownloadProgress((prev) => ({ ...prev, [app.id]: 0 }));

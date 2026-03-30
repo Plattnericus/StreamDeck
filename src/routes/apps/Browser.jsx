@@ -1,10 +1,9 @@
-// Browser app — a tabbed web browser with address bar, back/forward navigation,
-// and iframe-based page loading via a server-side proxy.
+// mini browser with tabs, loads pages thru a proxy
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import './Browser.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
-// Route external URLs through our proxy to avoid CORS issues in the iframe
+// proxy so cors dosnt ruin our day
 function proxyUrl(url) {
   if (!url) return '';
   return `/api/proxy?url=${encodeURIComponent(url)}`;

@@ -1,10 +1,9 @@
-// Finder — a macOS-style file browser with icons, list, columns, and gallery
-// view modes, a sidebar with favorites/locations, and a virtual file system.
+// finder app, browses fake files and looks prety real
 import React, { useState, useMemo, useCallback } from 'react';
 import './finder.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
-/* ── Virtual File System (all data is in-memory, nothing touches the real disk) ── */
+/* fake file system, all in memory */
 const FS = {
   '/': {
     type: 'folder',
@@ -96,7 +95,7 @@ function getChildren(path) {
   });
 }
 
-// Recursively collect all files under a given folder
+// grab all files inside a folder
 function getAllFiles(path = '/') {
   const results = [];
   const node = getNode(path);
@@ -113,7 +112,7 @@ function getAllFiles(path = '/') {
   return results;
 }
 
-// Get the 10 most recently modified files across the whole file system
+// last 10 changed files
 function getRecents() {
   return getAllFiles('/')
     .sort((a, b) => b.modified.localeCompare(a.modified))
@@ -142,7 +141,7 @@ function pathSegments(path) {
   return segs;
 }
 
-/* ── Icon Components ── */
+/* icons */
 function FolderIcon({ className }) {
   return (
     <svg className={className} viewBox="0 0 32 32" fill="none">
@@ -181,7 +180,7 @@ function ItemIcon({ item, size }) {
   return <FileIcon icon={item.icon} className={cls} />;
 }
 
-/* ── Sidebar Icons ── */
+/* sidebar icons */
 function SidebarIcon({ type }) {
   const s = { width: 16, height: 16, flexShrink: 0 };
   switch (type) {
@@ -210,7 +209,7 @@ function SidebarIcon({ type }) {
   }
 }
 
-/* ── View Mode Icons for Toolbar ── */
+/* view mode icons */
 function ViewIcon({ mode, active }) {
   const color = active ? '#007AFF' : 'currentColor';
   switch (mode) {
@@ -227,7 +226,7 @@ function ViewIcon({ mode, active }) {
   }
 }
 
-/* ── Sidebar favorites definition ── */
+/* sidebar favs */
 const SIDEBAR_FAVORITES = [
   { id: 'airdrop', path: '/AirDrop', iconType: 'airdrop', labelKey: 'finder_airdrop' },
   { id: 'recents', path: '/Recents', iconType: 'recents', labelKey: 'finder_recents' },
@@ -244,7 +243,7 @@ const SIDEBAR_LOCATIONS = [
   { id: 'network', path: '/', iconType: 'network', labelKey: 'finder_network' },
 ];
 
-/* ── Main Finder Component ── */
+/* the actual finder component */
 export default function Finder() {
   const t = useTranslation();
   const [currentPath, setCurrentPath] = useState('/Desktop');

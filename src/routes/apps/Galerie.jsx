@@ -1,10 +1,9 @@
-// Photo gallery app — shows a grid of images with category filters, search,
-// and a fullscreen photo viewer with swipe/keyboard navigation.
+// photo gallery with filters and fullscreen viewer
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 import "./galerie.css";
 
-// Fallback demo data used when the gallery JSON file can't be loaded
+// backup data if the json dosnt load
 const DEMO = {
   titel: "Stream Deck",
   eintraege: [
@@ -73,7 +72,7 @@ const datumFormatieren = (s, lang = false, locale = 'de') =>
     : { day: "2-digit", month: "short", year: "numeric" })
   : null;
 
-// Try to extract the date from an image's EXIF data by drawing it to a canvas
+// try to read exif date from the image
 function exifAuslesen(imgEl) {
   return new Promise((resolve) => {
     try {
@@ -97,7 +96,7 @@ function exifAuslesen(imgEl) {
   });
 }
 
-// Single image tile in the gallery grid
+// one photo card in the grid
 function Kachel({ eintrag, index, onClick }) {
   const [geladen, setGeladen] = useState(false);
   const [fehler,  setFehler]  = useState(false);
@@ -127,7 +126,7 @@ function Kachel({ eintrag, index, onClick }) {
   );
 }
 
-// Fullscreen photo viewer with left/right navigation and auto-hiding UI
+// big photo viewer, swipe left and right
 function FotoViewer({ eintraege, startIndex, onClose, t, locale }) {
   const [index,      setIndex]      = useState(startIndex);
   const [geladen,    setGeladen]    = useState(false);

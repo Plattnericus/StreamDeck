@@ -1,4 +1,4 @@
-// "About This Mac" dialog — shows hardware specs like a real macOS about screen
+// the "about this mac" popup with fake specs
 import React from 'react';
 import './AboutMac.css';
 

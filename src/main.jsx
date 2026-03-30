@@ -1,4 +1,4 @@
-// Entry point — mounts the React app into the DOM
+// here we go, app starts here lol
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';

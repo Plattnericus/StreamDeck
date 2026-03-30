@@ -1,5 +1,4 @@
-// Settings app — iOS-style settings panel with navigation, search, and section pages.
-// Manages all user preferences (appearance, sound, network, privacy, etc.)
+// settings app, looks like ios. has all the preferances
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './Settings.css';
 import { loadSettings, saveSettings, resetAppSettings, DEFAULT_SETTINGS, DEFAULT_CC, ACCENT_COLORS, broadcastSettingsChange } from './settingsStore';
@@ -14,7 +13,7 @@ import PrivacySection from './sections/PrivacySection';
 import AboutSection from './sections/AboutSection';
 import { WifiIcon, SunIcon, VolumeIcon, GlobeIcon, BellIcon, ShieldIcon, InfoIcon } from './icons';
 
-// Sidebar navigation items for the settings page
+// sidebar nav items
 const SECTION_NAV = [
   { id: 'network',       icon: <WifiIcon />,   iconClass: 'blue',   labelKey: 'nav_network' },
   { id: 'appearance',    icon: <SunIcon />,    iconClass: 'purple', labelKey: 'nav_appearance' },
@@ -25,7 +24,7 @@ const SECTION_NAV = [
   { id: 'about',         icon: <InfoIcon />,   iconClass: 'blue',   labelKey: 'nav_about' },
 ];
 
-// All searchable setting rows — used to filter sections when the user types in the search bar
+// all the things you can search for
 const SEARCHABLE_ROWS = [
   { sectionId: 'network',       labelKey: 'wifi' },
   { sectionId: 'network',       labelKey: 'bluetooth' },
@@ -65,7 +64,7 @@ const SEARCHABLE_ROWS = [
   { sectionId: 'about',          labelKey: 'hardware' },
 ];
 
-// Modal confirmation dialog for destructive actions (reset, delete)
+// scary confirm popup for reset and delete
 function ConfirmDialog({ message, onConfirm, onCancel, cancelLabel, confirmLabel, danger }) {
   return (
     <div className="st-confirm-overlay" onClick={onCancel}>
@@ -144,7 +143,7 @@ export default function Settings() {
     if (settings.fontSize === 'large') document.documentElement.classList.add('font-large');
   }, [settings.fontSize]);
 
-  // Auto-detect browser language and switch to it if supported
+  // auto detect browser langauge
   useEffect(() => {
     if (settings.autoLanguage) {
       const nav = (navigator.language || '').slice(0, 2).toLowerCase();
@@ -204,7 +203,7 @@ export default function Settings() {
     }, true);
   }
 
-  // Glass distortion effect on the search bar
+  // glass efect on search bar
   function handleMouseMove(e) {
     const el = searchBarRef.current;
     if (!el) return;

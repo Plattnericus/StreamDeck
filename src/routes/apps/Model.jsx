@@ -1,5 +1,4 @@
-// 3D model viewer — loads STL files with Three.js, supports orbit controls,
-// auto-rotation, zoom, fullscreen, download, and a clickable orientation cube.
+// 3d viewer for STL files, spin it around and stuff
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
@@ -12,7 +11,7 @@ const models = [
   { name: 'Lid Model', path: '/models/lidModel.stl' },
 ];
 
-// Maps orientation labels to direction vectors for the ViewCube
+// wich way each cube face looks
 const orientationKeys = {
   model_right: [1, 0, 0],
   model_left: [-1, 0, 0],
@@ -47,7 +46,7 @@ export default function Model() {
 
   const isLidModel = selectedModel === models[1].path;
 
-  // Load an STL file, center it, auto-fit the camera, and fade it in
+  // load a model and fade it in nicley
   const loadModel = useCallback((modelPath) => {
     const scene = sceneRef.current;
     const camera = cameraRef.current;
@@ -203,7 +202,7 @@ export default function Model() {
       orientationContainerRef.current.appendChild(oRenderer.domElement);
     }
 
-    // --- ViewCube click → rotate camera to that face ---
+    // click on the cube to rotate camera there
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -234,13 +233,13 @@ export default function Model() {
       const ctrl = controlsRef.current;
       if (!cam || !ctrl) return;
 
-      // stop auto-rotate while animating
+      // pause rotation while moving
       ctrl.autoRotate = false;
       setIsRotating(false);
 
       const dist = cam.position.length(); // keep current distance
       const targetPos = dir.clone().multiplyScalar(dist);
-      // for top/bottom views, nudge the camera slightly so "up" stays coherent
+      // litle nudge so up stays up
       if (Math.abs(dir.y) > 0.9) {
         targetPos.z += 0.001;
       }

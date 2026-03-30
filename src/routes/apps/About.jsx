@@ -1,5 +1,4 @@
-// About page — shows app info, hardware specs, developer details, and system info
-// in a macOS "About This Mac" style layout.
+// about page, looks like the real mac one hehe
 import "./About.css";
 import { useTranslation } from '../../i18n/LanguageContext';
 

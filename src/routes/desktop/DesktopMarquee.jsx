@@ -1,4 +1,4 @@
-// Desktop marquee selection — lets users click and drag to draw a selection rectangle
+// click and drag to make that cool selecton box
 import React, { useState, useRef, useCallback } from 'react';
 import './DesktopMarquee.css';
 
@@ -8,12 +8,12 @@ export default function DesktopMarquee({ children, className, onEnd }) {
   const [rect, setRect] = useState({ x: 0, y: 0, w: 0, h: 0 });
   const startRef = useRef({ x: 0, y: 0 });
 
-  // Keep a value within a min/max range
+  // dont go outside the boundries
   function clamp(n, min, max) {
     return Math.max(min, Math.min(max, n));
   }
 
-  // Convert screen coordinates to coordinates relative to the host element
+  // turn screen coords into local coords
   function toHostXY(clientX, clientY) {
     const r = hostRef.current.getBoundingClientRect();
     return {
@@ -22,7 +22,7 @@ export default function DesktopMarquee({ children, className, onEnd }) {
     };
   }
 
-  // Calculate the selection rectangle from start point to current point
+  // update the blue selecton rectangle
   function updateRect(currX, currY) {
     const x1 = Math.min(startRef.current.x, currX);
     const y1 = Math.min(startRef.current.y, currY);
@@ -32,8 +32,8 @@ export default function DesktopMarquee({ children, className, onEnd }) {
   }
 
   const onPointerDown = useCallback((e) => {
-    if (e.target !== hostRef.current) return; // only start from background
-    if (e.pointerType === 'mouse' && e.button !== 0) return; // left-click only
+    if (e.target !== hostRef.current) return; // only from background
+    if (e.pointerType === 'mouse' && e.button !== 0) return; // left click pls
     hostRef.current.setPointerCapture(e.pointerId);
     const p = toHostXY(e.clientX, e.clientY);
     setDragging(true);
