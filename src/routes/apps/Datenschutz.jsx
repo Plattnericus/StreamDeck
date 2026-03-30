@@ -42,8 +42,8 @@ export default function Datenschutz({ popup = false, onClose }) {
             <h3>1.1 Kontaktdaten des Verantwortlichen</h3>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Stramge 12</p>
-              <p>39040 Vahrn, Südtirol – Italien</p>
+              <p>Strange 12</p>
+              <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
               <p>E-Mail: <a href="mailto:felix.plattner89@plattnericus.dev">felix.plattner89@plattnericus.dev</a></p>
             </div>
           </section>
@@ -175,10 +175,14 @@ export default function Datenschutz({ popup = false, onClose }) {
           <section>
             <h3>2.3 Webhosting</h3>
             <p>
-              Diese Website wird bei einem externen Hosting-Dienstleister betrieben. Personenbezogene Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters gespeichert. Hierbei kann es sich um IP-Adressen, Kontaktanfragen, Meta- und Kommunikationsdaten, Vertragsdaten, Kontaktdaten, Namen und sonstige Daten handeln, die über eine Website generiert werden.
+              Diese Website wird bei <strong>Vercel Inc.</strong> (340 S Lemon Ave #4133, Walnut, CA 91789, USA) gehostet. Beim Aufruf unserer Website erfasst Vercel automatisch technische Daten in Server-Log-Dateien, die Ihr Browser übermittelt (z. B. IP-Adresse, Zeitpunkt des Zugriffs, Browsertyp). Diese Daten werden auf Servern von Vercel gespeichert, die sich auch außerhalb des EWR befinden können.
             </p>
             <p>
-              Die Nutzung des Hosters erfolgt zum Zweck der Vertragserfüllung gegenüber unseren potenziellen und bestehenden Nutzern (Art. 6 Abs. 1 lit. b DSGVO) und im Interesse einer sicheren, schnellen und effizienten Bereitstellung unseres Online-Angebots durch einen professionellen Anbieter (Art. 6 Abs. 1 lit. f DSGVO). Sofern eine Einwilligung eingeholt wurde, erfolgt die Verarbeitung auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO.
+              Vercel hat sich zur Einhaltung der DSGVO verpflichtet und setzt EU-Standardvertragsklauseln (Standard Contractual Clauses, SCC) ein, um ein angemessenes Datenschutzniveau zu gewährleisten. Weitere Informationen finden Sie in der Datenschutzerklärung von Vercel:{' '}
+              <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">vercel.com/legal/privacy-policy</a>.
+            </p>
+            <p>
+              Die Nutzung von Vercel erfolgt zum Zweck der sicheren, schnellen und effizienten Bereitstellung unseres Online-Angebots (Art. 6 Abs. 1 lit. f DSGVO – berechtigtes Interesse).
             </p>
           </section>
 
@@ -211,19 +215,19 @@ export default function Datenschutz({ popup = false, onClose }) {
             <div className="legal-cookie-type">
               <div className="legal-type-header">
                 <span className="legal-dot green" />
-                <strong>installed-apps</strong>
+                <strong>streamdeck_settings_v2</strong>
                 <span className="legal-badge active">Funktional</span>
               </div>
-              <p>Speichert, welche Anwendungen vom Nutzer installiert wurden, um den persönlichen Desktop-Zustand wiederherzustellen.</p>
+              <p>Speichert die vom Nutzer gewählten Einstellungen der Anwendung, z. B. Sprache, Erscheinungsbild und weitere Präferenzen.</p>
               <div className="legal-cookie-detail"><span className="legal-detail-label">Speicherdauer:</span><span>Bis zur manuellen Löschung</span></div>
             </div>
             <div className="legal-cookie-type">
               <div className="legal-type-header">
                 <span className="legal-dot green" />
-                <strong>header-config</strong>
+                <strong>control_center_settings_v1</strong>
                 <span className="legal-badge active">Funktional</span>
               </div>
-              <p>Speichert die vom Nutzer gewählte Konfiguration der Kopfzeile (Header), z. B. Anordnung oder Sichtbarkeit von Elementen.</p>
+              <p>Speichert die Konfiguration des Kontrollzentrums (z. B. Helligkeit, Lautstärke und weitere Schnelleinstellungen).</p>
               <div className="legal-cookie-detail"><span className="legal-detail-label">Speicherdauer:</span><span>Bis zur manuellen Löschung</span></div>
             </div>
             <p>

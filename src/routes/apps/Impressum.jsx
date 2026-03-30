@@ -41,8 +41,8 @@ export default function Impressum({ popup = false, onClose }) {
             </p>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Stramge 12</p>
-              <p>39040 Vahrn, Südtirol – Italien</p>
+              <p>Strange 12</p>
+              <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
             </div>
             <p>
               Diese Website ist ein privates, nicht-kommerzielles Projekt. Es handelt sich weder um ein Gewerbe noch um eine freiberufliche Tätigkeit. Eine Umsatzsteuer-Identifikationsnummer ist daher nicht vorhanden.
@@ -82,8 +82,8 @@ export default function Impressum({ popup = false, onClose }) {
             </p>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Stramge 12</p>
-              <p>39040 Vahrn, Südtirol – Italien</p>
+              <p>Strange 12</p>
+              <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
             </div>
           </section>
 
@@ -153,6 +153,11 @@ export default function Impressum({ popup = false, onClose }) {
             </p>
             <p>
               Für die Darstellung des 3D-Modells wird Three.js verwendet. Das Modell wird lokal geladen – es erfolgt keine Verbindung zu externen Servern oder CDNs.
+            </p>
+            <p>
+              Die Website ist unter der Domain{' '}
+              <a href="https://streamdeck.plattnericus.dev" target="_blank" rel="noopener noreferrer">streamdeck.plattnericus.dev</a>{' '}
+              erreichbar und wird über Vercel Inc. (340 S Lemon Ave #4133, Walnut, CA 91789, USA) gehostet.
             </p>
           </section>
 

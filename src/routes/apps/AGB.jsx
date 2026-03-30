@@ -37,7 +37,7 @@ export default function AGB({ popup = false, onClose }) {
           <section className="section-hero">
             <h3>§ 1 Allgemeines</h3>
             <p>
-              1.1 Diese Allgemeinen Geschäftsbedingungen (nachfolgend „AGB") regeln die Nutzung der Website von Felix Plattner (nachfolgend „Betreiber"). Die Website ist unter der Domain plattnericus.dev erreichbar.
+              1.1 Diese Allgemeinen Geschäftsbedingungen (nachfolgend „AGB") regeln die Nutzung der Website von Felix Plattner (nachfolgend „Betreiber"). Die Website ist unter der Domain streamdeck.plattnericus.dev erreichbar.
             </p>
             <p>
               1.2 Die Website ist ein privates, nicht-kommerzielles Portfolio- und Showcase-Projekt. Sie dient ausschließlich der Präsentation persönlicher Arbeiten, dem Experimentieren mit Webtechnologien sowie zu Lern- und Demonstrationszwecken.
@@ -236,8 +236,8 @@ export default function AGB({ popup = false, onClose }) {
             <p>Bei Fragen zu diesen AGB können Sie sich an den Betreiber wenden:</p>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Stramge 12</p>
-              <p>39040 Vahrn, Südtirol – Italien</p>
+              <p>Straße 12</p>
+              <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
               <p>E-Mail: <a href="mailto:felix.plattner89@plattnericus.dev">felix.plattner89@plattnericus.dev</a></p>
               <p>Telefon: <a href="tel:+393898806833">+39 389 880 6833</a></p>
               <p>GitHub: <a href="https://github.com/Plattnericus" target="_blank" rel="noopener noreferrer">github.com/Plattnericus</a></p>

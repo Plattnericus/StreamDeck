@@ -45,22 +45,17 @@ export default function CookiesInfo({ popup = false, onClose }) {
             </div>
             <div className="legal-cookie-type">
               <div className="legal-type-header">
-                <span className="legal-dot blue" />
-                <strong>Analyse &amp; Performance</strong>
+                <span className="legal-dot green" />
+                <strong>Funktionale localStorage-Einträge</strong>
+                <span className="legal-badge active">Funktional</span>
               </div>
-              <p>Diese Cookies ermöglichen es uns, nachzuvollziehen, wie Besucher die Website nutzen. Die gewonnenen Informationen – etwa Seitenaufrufe, Verweildauer oder genutzte Funktionen – werden ausschließlich in anonymisierter Form erhoben und dienen der kontinuierlichen Verbesserung des Nutzererlebnisses sowie der technischen Leistungsfähigkeit.</p>
-              <div className="legal-cookie-detail"><span className="legal-detail-label">Rechtsgrundlage:</span><span>Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</span></div>
-              <div className="legal-cookie-detail"><span className="legal-detail-label">Speicherdauer:</span><span>Maximal 12 Monate</span></div>
+              <p>Zusätzlich speichert die Website funktionale Daten im localStorage Ihres Browsers, um Ihre Einstellungen und den Zustand der simulierten Desktop-Oberfläche zu erhalten. Diese Daten verlassen niemals Ihren Browser und werden nicht an Server übertragen.</p>
+              <div className="legal-cookie-detail"><span className="legal-detail-label">Beispiele:</span><span>terminal-fs, streamdeck_settings_v2, control_center_settings_v1</span></div>
+              <div className="legal-cookie-detail"><span className="legal-detail-label">Speicherdauer:</span><span>Bis zur manuellen Löschung durch den Nutzer</span></div>
             </div>
-            <div className="legal-cookie-type">
-              <div className="legal-type-header">
-                <span className="legal-dot pink" />
-                <strong>Marketing &amp; Personalisierung</strong>
-              </div>
-              <p>Marketing-Cookies dienen dazu, Besuchern über verschiedene Websites hinweg relevante Inhalte anzuzeigen. Sie werden eingesetzt, um das Nutzungserlebnis zu personalisieren und die Wirksamkeit von Kampagnen oder Inhalten zu messen. Diese Cookies können von uns oder von Drittanbietern gesetzt werden.</p>
-              <div className="legal-cookie-detail"><span className="legal-detail-label">Rechtsgrundlage:</span><span>Art. 6 Abs. 1 lit. a DSGVO (Einwilligung)</span></div>
-              <div className="legal-cookie-detail"><span className="legal-detail-label">Speicherdauer:</span><span>Maximal 12 Monate</span></div>
-            </div>
+            <p style={{marginTop: '1rem'}}>
+              <strong>Hinweis:</strong> Diese Website verwendet <strong>keine</strong> Analyse-, Tracking- oder Marketing-Cookies. Es werden keine Daten an Drittanbieter wie Google Analytics, Facebook Pixel oder vergleichbare Dienste übermittelt. Sämtliche gespeicherten Daten dienen ausschließlich der Funktionalität der Website.
+            </p>
           </section>
           <div className="legal-major-divider" />
           <section>

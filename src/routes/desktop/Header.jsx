@@ -67,28 +67,56 @@ function saveMusicState(trackIdx, playing, currentTime) {
 
 const LOCALE_MAP = { de: 'de-DE', en: 'en-US', it: 'it-IT' };
 
-function formatDate(d, lang) {
+function formatDate(d, lang, dateFormat) {
+  if (dateFormat === 'iso') {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
   const locale = LOCALE_MAP[lang] ?? 'de-DE';
   return d.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
 }
-function formatTime(d, lang) {
+
+function formatTime(d, lang, use24h, showSec) {
   const locale = LOCALE_MAP[lang] ?? 'de-DE';
-  return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleTimeString(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    ...(showSec ? { second: '2-digit' } : {}),
+    hour12: !use24h,
+  });
+}
+
+function loadAppSettings() {
+  try {
+    const raw = localStorage.getItem('streamdeck_settings_v2');
+    if (raw) {
+      const p = JSON.parse(raw);
+      return {
+        use24hClock: p.use24hClock ?? true,
+        showSeconds: p.showSeconds ?? false,
+        dateFormat: p.dateFormat ?? 'de',
+      };
+    }
+  } catch {}
+  return { use24hClock: true, showSeconds: false, dateFormat: 'de' };
 }
 
 export default function Header({ onOpenApp }) {
   const lang = useLanguage();
   const t = useCallback((key) => T[lang]?.[key] ?? T.de[key] ?? key, [lang]);
   const [now, setNow] = useState(new Date());
+  const [appCfg, setAppCfg] = useState(loadAppSettings);
   useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 10_000);
+    const id = setInterval(() => setNow(new Date()), appCfg.showSeconds ? 1_000 : 10_000);
     return () => clearInterval(id);
-  }, []);
+  }, [appCfg.showSeconds]);
 
   const [settings, setSettings] = useState(loadSettings);
   useEffect(() => saveSettings(settings), [settings]);
   useEffect(() => {
-    const sync = () => setSettings(loadSettings());
+    const sync = () => { setSettings(loadSettings()); setAppCfg(loadAppSettings()); };
     window.addEventListener('streamdeck-settings-sync', sync);
     return () => window.removeEventListener('streamdeck-settings-sync', sync);
   }, []);
@@ -481,7 +509,7 @@ export default function Header({ onOpenApp }) {
           </button>
 
           <span className="header-datetime">
-            {formatDate(now, lang)}&ensp;{formatTime(now, lang)}
+            {formatDate(now, lang, appCfg.dateFormat)}&ensp;{formatTime(now, lang, appCfg.use24hClock, appCfg.showSeconds)}
           </span>
         </div>
       </header>
