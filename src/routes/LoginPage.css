@@ -1,3 +1,7 @@
+/* ─── Login Page Styles ───
+   macOS boot animation, lock screen, password input, slide-to-unlock,
+   and the cookie consent integration */
+
 body { margin: 0; padding: 0; background: #000; overflow: hidden; }
 
 .body-mock {

@@ -1,4 +1,8 @@
-// settings app, looks like ios. has all the preferances
+// ─── Settings App ───
+// this is the main Settings app — it looks like the iOS/macOS Settings
+// it has a sidebar with navigation and sections for Network, Appearance, Sound,
+// General, Notifications, Privacy, and About
+// all settings are saved to localStorage and synced across components via custom events
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './Settings.css';
 import { loadSettings, saveSettings, resetAppSettings, DEFAULT_SETTINGS, DEFAULT_CC, ACCENT_COLORS, broadcastSettingsChange } from './settingsStore';

@@ -1,6 +1,9 @@
-// Terminal emulator — a fully interactive shell with a virtual file system,
-// command history, tab completion, aliases, and commands like ls, cd, cat,
-// mkdir, grep, neofetch, cowsay, and more. State is persisted in localStorage.
+// ─── Terminal Emulator ───
+// this is a fully working terminal with a virtual file system
+// it supports real commands like ls, cd, cat, mkdir, grep, neofetch, cowsay and more
+// it has command history (arrow keys), tab completion, and aliases
+// the file system and history are saved to localStorage so they persist between sessions
+// basically one of the coolest components in the whole app
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Terminal.css';
 

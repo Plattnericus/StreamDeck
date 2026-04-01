@@ -1,3 +1,6 @@
+/* ─── About Page Styles ───
+   two-column layout with a sidebar and content area for the About page */
+
 .about {
   display: flex;
   flex-direction: row;

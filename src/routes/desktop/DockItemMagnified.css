@@ -1,3 +1,7 @@
+/* ─── Dock Item Styles ───
+   styles for individual dock icons — hover tooltip, open dot indicator,
+   and the bounce-in animation when a new app is added to the dock */
+
 .dock-item {
   display: flex;
   justify-content: center;

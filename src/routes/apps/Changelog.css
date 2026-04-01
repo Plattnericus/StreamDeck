@@ -1,3 +1,6 @@
+/* ─── Changelog Styles ───
+   styles for the changelog entries, filter tabs, version badges, and TO DO section */
+
 .changelog {
   display: flex;
   height: 100%;

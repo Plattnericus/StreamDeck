@@ -1,3 +1,7 @@
+/* ─── Global Styles ───
+   base styles for the whole app — fonts, colors, scrollbar, and utility classes
+   also handles light mode overrides and the smooth font rendering */
+
 :root {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;

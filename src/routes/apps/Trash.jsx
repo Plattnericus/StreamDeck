@@ -1,5 +1,7 @@
-// Trash app — a Finder-like window that always shows an empty trash can.
-// Purely decorative; no actual delete functionality.
+// ─── Trash (Recycle Bin) ───
+// this is the Trash app — it looks like a Finder window but always shows empty
+// its purely decorative, no actual delete functionality
+// just there to make the desktop feel more like a real macOS
 import React from 'react';
 import './trash.css';
 import { useTranslation } from '../../i18n/LanguageContext';

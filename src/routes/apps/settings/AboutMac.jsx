@@ -1,4 +1,7 @@
-// the "about this mac" popup with fake specs
+// ─── About This Mac ───
+// this shows the "About this Mac" dialog with fake hardware specs
+// it shows the macOS version, chip, memory, and serial number
+// purely decorative — just makes it feel like a real Mac
 import React from 'react';
 import './AboutMac.css';
 

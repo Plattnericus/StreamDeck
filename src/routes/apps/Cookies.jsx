@@ -1,4 +1,7 @@
-// the anoying cookie popup, sorry about that
+// ─── Cookie Consent Banner ───
+// this is the cookie popup that shows up on the login page
+// the user has to accept or decline cookies before they can use the app
+// it also links to the Cookie Info page and Privacy Policy for more details
 import React, { useState, useEffect } from 'react';
 import CookiesInfo from './Cookies-info';
 import Datenschutz from './Datenschutz';

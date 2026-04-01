@@ -1,5 +1,7 @@
-// Network settings — Wi-Fi, Bluetooth, Airplane Mode, Cellular, and VPN toggles.
-// Airplane mode automatically disables Wi-Fi and Cellular.
+// ─── Network Settings Section ───
+// this has all the network toggles: Wi-Fi, Bluetooth, Airplane Mode, Cellular, and VPN
+// pls note: turning on Airplane Mode automatically turns off Wi-Fi and Cellular
+// and turning on Wi-Fi or Cellular turns off Airplane Mode
 import React from 'react';
 import { IosGroup, IosRow, IosToggle } from '../primitives';
 import { WifiIcon, BluetoothIcon, AirplaneIcon, CellularIcon, VpnIcon } from '../icons';

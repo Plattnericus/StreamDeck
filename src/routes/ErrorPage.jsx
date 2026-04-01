@@ -1,4 +1,7 @@
-// classic blue screen of deth, very scary 404
+// ─── Error Page (404) ───
+// this shows when the user navigates to a page that doesnt exist
+// it looks like the classic Windows "Blue Screen of Death" — just for fun
+// has a link back to the homepage
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './ErrorPage.css';

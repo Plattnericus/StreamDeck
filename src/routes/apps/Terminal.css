@@ -1,3 +1,7 @@
+/* ─── Terminal Styles ───
+   dark terminal with monospace font, colored output, cursor blinking,
+   tab completion suggestions, and neofetch ASCII art */
+
 .terminal-wrap {
   display: flex;
   width: 100%;

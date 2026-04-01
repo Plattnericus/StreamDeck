@@ -1,4 +1,7 @@
-// ios style ui components, toggles, rows, sliders etc
+// ─── Settings UI Primitives ───
+// these are the reusable iOS-style UI components for the Settings app
+// includes: toggle switches, rows, groups, sliders, select dropdowns
+// they all follow the iOS/macOS design language with rounded corners and clean look
 import React from 'react';
 
 // toggle on/off

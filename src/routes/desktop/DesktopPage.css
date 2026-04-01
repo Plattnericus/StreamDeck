@@ -1,3 +1,7 @@
+/* ─── Desktop Page Styles ───
+   the main desktop background with the wallpaper image
+   also handles the mobile lock screen when viewed on small devices */
+
 .desktop {
   position: fixed;
   inset: 0;

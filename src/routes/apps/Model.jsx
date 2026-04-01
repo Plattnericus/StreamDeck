@@ -1,4 +1,8 @@
-// 3d viewer for STL files, spin it around and stuff
+// ─── 3D Model Viewer ───
+// this shows 3D models of the StreamDeck parts using Three.js
+// you can rotate, zoom, and switch between different STL files
+// has auto-rotation, preset camera views (front, back, top, etc.)
+// and a download button to save the STL file
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';

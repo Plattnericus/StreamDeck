@@ -1,3 +1,6 @@
+/* ─── Info Page Styles ───
+   styles for the product info page with sidebar navigation and content sections */
+
 .info {
   display: flex;
   flex-direction: row;

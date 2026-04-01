@@ -1,4 +1,8 @@
-// shows the changelog, updates itself every 5 sec
+// ─── Changelog App ───
+// this shows the project changelog with version entries and a TO DO section
+// it reads a markdown file and parses it into nice grouped entries
+// auto-refreshes every 5 seconds to pick up changes
+// supports filters: All, Added, Fixed, Updated, Removed, To Do
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Changelog.css';
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';

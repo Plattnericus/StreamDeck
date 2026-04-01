@@ -1,3 +1,8 @@
+/* ─── Dock and Window Styles ───
+   styles for the dock bar at the bottom, the glass effect,
+   all app windows (title bar, controls, resize handle),
+   and window animations (minimize, restore, maximize) */
+
 .app-window {
   position: absolute;
   display: flex;

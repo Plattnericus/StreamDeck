@@ -1,9 +1,13 @@
-// mini browser with tabs, loads pages thru a proxy
+// ─── Browser (Safari Clone) ───
+// this is a mini browser with tabs that loads real websites through a proxy
+// it has back/forward navigation, tab management, and a search bar
+// pages are loaded in an iframe via the proxy to avoid CORS issues
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import './Browser.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
-// proxy so cors dosnt ruin our day
+// wrap URLs through our proxy so CORS doesnt block the request
+// the proxy fetches the page server-side and passes it back to us
 function proxyUrl(url) {
   if (!url) return '';
   return `/api/proxy?url=${encodeURIComponent(url)}`;
@@ -89,7 +93,9 @@ export default function Browser({ onClose }) {
     if (sel) { setQuery(sel.url); setLoadError(false); setLoading(false); }
   };
 
-  // If the input looks like a URL, navigate directly; otherwise Google it
+  // when the user presses Enter in the address bar
+  // if it looks like a URL (has a dot, no spaces), go there directly
+  // otherwise search Google for the query
   const submitSearch = (e) => {
     e.preventDefault();
     const term = query.trim();

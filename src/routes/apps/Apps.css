@@ -1,3 +1,7 @@
+/* ─── App Store Styles ───
+   styles for the App Store cards, search bar, download button with progress ring,
+   and the responsive grid layout */
+
 .app-store-glass {
   border-radius: 18px;
   overflow: hidden;

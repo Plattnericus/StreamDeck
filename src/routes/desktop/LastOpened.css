@@ -1,3 +1,6 @@
+/* ─── Last Opened Panel Styles ───
+   styles for the recently opened apps list with glass effect background */
+
 .last-opened {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);

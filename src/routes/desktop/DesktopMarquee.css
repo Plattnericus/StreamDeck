@@ -1,3 +1,6 @@
+/* ─── Desktop Selection Box Styles ───
+   the blue selection rectangle that appears when you click and drag on the desktop */
+
 .marquee-host {
   user-select: none;
   -webkit-user-select: none;

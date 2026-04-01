@@ -1,4 +1,8 @@
-// finder app, browses fake files and looks prety real
+// ─── Finder ───
+// this is a macOS Finder clone with a fake file system
+// it supports 4 view modes: icons, list, columns, and gallery
+// the file system is all in memory — no real files, just looks realistic
+// has a sidebar, toolbar, breadcrumb path bar, and status bar
 import React, { useState, useMemo, useCallback } from 'react';
 import './finder.css';
 import { useTranslation } from '../../i18n/LanguageContext';

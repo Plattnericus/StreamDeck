@@ -1,4 +1,6 @@
-// Notifications settings — enable/disable notifications, badges, sounds, previews, and DND
+// ─── Notifications Settings Section ───
+// this handles: notifications on/off, app badges, notification sounds,
+// preview mode (always/when unlocked/never), and Do Not Disturb toggle
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSelect } from '../primitives';
 import { BellIcon, MessageIcon, SoundFxIcon, DoNotDisturbIcon } from '../icons';

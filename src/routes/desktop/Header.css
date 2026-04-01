@@ -1,3 +1,8 @@
+/* ─── Header (Menu Bar) Styles ───
+   styles for the top menu bar, dropdown menus, Control Center panel,
+   music player, brightness/volume sliders, About This Mac dialog,
+   and the desktop right-click context menu */
+
 .brightness-overlay {
   position: fixed;
   inset: 0;

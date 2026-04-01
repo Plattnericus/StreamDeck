@@ -1,4 +1,7 @@
-// photo gallery with filters and fullscreen viewer
+// ─── Photo Gallery ───
+// this is an image gallery app with category filters and a fullscreen viewer
+// it loads photo data from a JSON file (/galerie/galerie.json)
+// if the JSON fails to load, it shows demo data instead
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 import "./galerie.css";

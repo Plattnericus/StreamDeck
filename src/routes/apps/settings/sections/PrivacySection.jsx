@@ -1,4 +1,7 @@
-// Privacy settings — cookie consent status, camera/mic permissions, analytics, and data deletion
+// ─── Privacy Settings Section ───
+// this handles: cookie consent status, camera/microphone permissions,
+// analytics toggle, cache clearing, and the "delete all data" button
+// the cookie status reads from localStorage and can be reset here
 import React from 'react';
 import { IosGroup, IosRow, IosToggle } from '../primitives';
 import { CookieIcon, CameraIcon, MicIcon, BarChartIcon, TrashIcon } from '../icons';

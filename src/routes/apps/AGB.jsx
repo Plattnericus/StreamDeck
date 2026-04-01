@@ -1,5 +1,7 @@
-// Terms and Conditions page (AGB = Allgemeine Geschaeftsbedingungen).
-// Can be shown as a standalone page or as a closable popup overlay.
+// ─── Terms and Conditions (AGB) ───
+// this is the AGB page — "Allgemeine Geschaeftsbedingungen" in German
+// it shows all the legal terms of use for the StreamDeck project
+// can be shown as a standalone page or as a closable popup overlay
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

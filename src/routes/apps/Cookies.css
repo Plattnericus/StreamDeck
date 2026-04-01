@@ -1,3 +1,6 @@
+/* ─── Cookie Banner Styles ───
+   the glass-effect cookie consent popup with slide-in animation */
+
 .cookie-overlay{position:fixed;bottom:24px;right:24px;z-index:9999;pointer-events:auto}
 .cookie-banner{position:relative;width:370px;padding:22px 24px 18px;border-radius:22px;color:#fff;display:flex;flex-direction:column;gap:14px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,.08) 40%,rgba(200,220,255,.12) 70%,rgba(255,255,255,.06) 100%);backdrop-filter:blur(32px) saturate(1.6) brightness(1.05);-webkit-backdrop-filter:blur(32px) saturate(1.6) brightness(1.05);border:1px solid rgba(255,255,255,.32);box-shadow:0 24px 80px rgba(0,0,0,.4),0 8px 32px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.1),inset 0 -20px 40px rgba(255,255,255,.06);animation:banner-slide-in 500ms cubic-bezier(.34,1.56,.64,1) forwards;text-shadow:0 1px 8px rgba(0,0,0,.3)}
 .cookie-banner.closing{animation:banner-slide-out 400ms cubic-bezier(.55,0,1,.45) forwards}

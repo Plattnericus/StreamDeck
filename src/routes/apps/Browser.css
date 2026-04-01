@@ -1,3 +1,7 @@
+/* ─── Browser (Safari) Styles ───
+   styles for the browser tabs, toolbar, address bar, navigation buttons,
+   loading bar, and the iframe viewport area */
+
 .brave-shell {
   display: flex;
   flex-direction: column;

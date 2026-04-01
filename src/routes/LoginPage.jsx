@@ -1,6 +1,8 @@
-// Login page — shows a macOS-style boot animation, then a lock screen with
-// password input and slide-to-unlock. Also handles cookie consent before
-// redirecting to the desktop.
+// ─── Login Page ───
+// this is the first thing users see — it shows a macOS-style boot animation
+// then a lock screen with password input and a slide-to-unlock gesture
+// the user also has to accept cookies before they can continue to the desktop
+// the password is just "1234" — its not real security, just for the experience
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from './apps/Cookies';
 import './LoginPage.css';

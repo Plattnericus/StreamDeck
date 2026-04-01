@@ -1,4 +1,9 @@
-// the dock at the bottom, handles all the window stuff too
+// ─── Dock Component ───
+// this is the macOS-style dock at the bottom of the screen
+// it also manages ALL the app windows (open, close, minimize, maximize, drag, resize)
+// basically the biggest and most important component in the whole app
+// it handles: dock icons, window management, context menus, glass effects, and animations
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import DockItemMagnified from './DockItemMagnified';
 import Settings from '../apps/settings/Settings';
@@ -22,27 +27,31 @@ import { openTab, getCenterPosition } from '../../lib/openTab';
 import { useTranslation } from '../../i18n/LanguageContext';
 import './Dock.css';
 
-// string to component lookup for restoring pined apps
+// this maps component names (strings) to actual React components
+// we need this to restore pinned apps from localStorage
+// because you cant save React components as JSON
 const COMPONENT_MAP = {
   Finder, Apps, Settings, Browser, Terminal, Github, Papierkorb,
   About, Changelog, Galerie, Impressum, Agb, Info, Datenschutz, Model, CookiesInfo,
 };
 
+// the key for saving pinned dock apps in localStorage
 const DOCK_STORAGE_KEY = 'dock_pinned_apps_v1';
 
-// load saved dock apps
+// load the user's pinned apps from localStorage
 function loadPinnedApps() {
   try {
     const raw = localStorage.getItem(DOCK_STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch { }
-  return [];
+  return []; // nothing saved or error — return empty list
 }
 
-// save the user added apps
+// save the user's pinned apps to localStorage
+// we only save non-default apps (the ones the user added themselves)
 function savePinnedApps(apps) {
   const pinned = apps
-    .filter((a) => !a.default)
+    .filter((a) => !a.default) // skip default apps, they are always there
     .map((a) => ({
       id: a.id,
       name: a.name,
@@ -54,6 +63,8 @@ function savePinnedApps(apps) {
   localStorage.setItem(DOCK_STORAGE_KEY, JSON.stringify(pinned));
 }
 
+// these are the apps that always show up in the dock
+// each one has a default size, position, and the component to render
 const defaultApps = [
   { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 640, height: 400, zIndex: 0 },
   { id: 2, name: 'App Store', icon: '/icons/app-store.webp', open: false, minimized: false, maximized: false, component: Apps, default: true, x: 0, y: 0, width: 720, height: 480, zIndex: 0 },
@@ -64,21 +75,23 @@ const defaultApps = [
   { id: 10, name: 'Trash', icon: '/icons/trash.webp', open: false, minimized: false, maximized: false, component: Papierkorb, default: true, x: 0, y: 0, width: 560, height: 360, zIndex: 0 },
 ];
 
-// mix default apps with the ones user pined
+// combine default apps with user-pinned apps to build the full dock
 function buildInitialApps() {
   const pinned = loadPinnedApps();
-  const base = defaultApps.map((a) => ({ ...a }));
+  const base = defaultApps.map((a) => ({ ...a })); // make a copy so we dont change the original
 
+  // insert pinned apps after Terminal in the dock order
   const terminalIdx = base.findIndex((a) => a.id === 5);
   const insertIdx = terminalIdx !== -1 ? terminalIdx + 1 : base.length - 1;
 
+  // restore pinned apps with their components
   const restoredApps = pinned
-    .filter((p) => !base.some((b) => b.id === p.id))
+    .filter((p) => !base.some((b) => b.id === p.id)) // skip if already in default apps
     .map((p) => ({
       id: p.id,
       name: p.name,
       icon: p.icon,
-      component: COMPONENT_MAP[p.componentName] || null,
+      component: COMPONENT_MAP[p.componentName] || null, // look up the React component
       componentName: p.componentName,
       default: false,
       open: false,
@@ -90,32 +103,40 @@ function buildInitialApps() {
       height: p.height || 400,
       zIndex: 0,
     }))
-    .filter((a) => a.component);
+    .filter((a) => a.component); // only keep apps where we found the component
 
+  // put restored apps in the right position
   base.splice(insertIdx, 0, ...restoredApps);
   return base;
 }
 
 export default function Dock({ onOpenApp }) {
   const t = useTranslation();
-  const [apps, setApps] = useState(() => buildInitialApps());
-  const [contextMenu, setContextMenu] = useState(null);
-  const [headerHeight] = useState(28);
-  const [dockMouseX, setDockMouseX] = useState(null);
-  const nextZIndex = useRef(10);
-  const [enteringIds, setEnteringIds] = useState(new Set());
-  const [draggingIds, setDraggingIds] = useState(new Set());
-  const [minimizingIds, setMinimizingIds] = useState(new Set());
-  const [restoringIds, setRestoringIds] = useState(new Set());
 
+  // all the state we need to manage windows and the dock
+  const [apps, setApps] = useState(() => buildInitialApps());
+  const [contextMenu, setContextMenu] = useState(null); // right-click menu on dock icons
+  const [headerHeight] = useState(28); // height of the menu bar at the top
+  const [dockMouseX, setDockMouseX] = useState(null); // mouse X position for magnification effect
+  const nextZIndex = useRef(10); // counter for window stacking order
+
+  // animation state trackers
+  const [enteringIds, setEnteringIds] = useState(new Set()); // apps being added to dock with animation
+  const [draggingIds, setDraggingIds] = useState(new Set()); // windows currently being dragged
+  const [minimizingIds, setMinimizingIds] = useState(new Set()); // windows being minimized
+  const [restoringIds, setRestoringIds] = useState(new Set()); // windows being restored from minimized
+
+  // save pinned apps whenever the app list changes
   useEffect(() => {
     savePinnedApps(apps);
   }, [apps]);
 
+  // refs for the glass effect on the dock
   const glassCardRef = useRef(null);
   const glassSpecularRef = useRef(null);
 
-  // shiny glass efect follows your mouse
+  // the shiny glass effect that follows your mouse on the dock
+  // it creates a radial gradient highlight where the cursor is
   const handleGlassMouseMove = useCallback((e) => {
     const card = glassCardRef.current;
     if (!card) return;
@@ -123,6 +144,7 @@ export default function Dock({ onOpenApp }) {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
+    // update the SVG displacement filter for the glass distortion
     const displace = document.querySelector('#glass-distortion feDisplacementMap');
     if (displace) {
       const scaleX = (x / rect.width) * 100;
@@ -130,6 +152,7 @@ export default function Dock({ onOpenApp }) {
       displace.setAttribute('scale', Math.min(scaleX, scaleY));
     }
 
+    // update the specular highlight to follow the mouse
     const spec = glassSpecularRef.current;
     if (spec) {
       spec.style.background = `radial-gradient(
@@ -141,6 +164,7 @@ export default function Dock({ onOpenApp }) {
     }
   }, []);
 
+  // reset the glass effect when the mouse leaves
   const handleGlassMouseLeave = useCallback(() => {
     const displace = document.querySelector('#glass-distortion feDisplacementMap');
     if (displace) displace.setAttribute('scale', '77');
@@ -149,7 +173,8 @@ export default function Dock({ onOpenApp }) {
     if (spec) spec.style.background = 'none';
   }, []);
 
-  // wich window is on top right now?
+  // figure out which window is currently on top (highest zIndex)
+  // we use this to style the focused window differently
   const focusedId = (() => {
     let best = null;
     let bestZ = -Infinity;
@@ -162,11 +187,13 @@ export default function Dock({ onOpenApp }) {
     return best;
   })();
 
+  // refs for tracking window drag and resize operations
   const dragRef = useRef(null);
   const resizeRef = useRef(null);
 
-  // drag and resize windows with mouse
+  // handle mouse movement for dragging and resizing windows
   const handleMouseMove = useCallback((e) => {
+    // window dragging
     if (dragRef.current) {
       const { appId, startX, startY, origX, origY } = dragRef.current;
       const dx = e.clientX - startX;
@@ -174,13 +201,15 @@ export default function Dock({ onOpenApp }) {
       setApps((prev) =>
         prev.map((app) => {
           if (app.id !== appId) return app;
-          const minVisible = 100; // dont let window escape the screen
+          const minVisible = 100; // keep at least 100px visible so the window cant disappear
           const newX = Math.max(-(app.width - minVisible), Math.min(window.innerWidth - minVisible, origX + dx));
           const newY = Math.max(headerHeight, Math.min(window.innerHeight - 50, origY + dy));
           return { ...app, x: newX, y: newY };
         })
       );
     }
+
+    // window resizing
     if (resizeRef.current) {
       const { appId, startX, startY, origW, origH } = resizeRef.current;
       const dx = e.clientX - startX;
@@ -188,13 +217,14 @@ export default function Dock({ onOpenApp }) {
       setApps((prev) =>
         prev.map((app) =>
           app.id === appId
-            ? { ...app, width: Math.max(200, origW + dx), height: Math.max(150, origH + dy) }
+            ? { ...app, width: Math.max(200, origW + dx), height: Math.max(150, origH + dy) } // minimum size 200x150
             : app
         )
       );
     }
   }, [headerHeight]);
 
+  // stop dragging or resizing when mouse button is released
   const handleMouseUp = useCallback(() => {
     if (dragRef.current) {
       const id = dragRef.current.appId;
@@ -208,6 +238,8 @@ export default function Dock({ onOpenApp }) {
     resizeRef.current = null;
   }, []);
 
+  // listen for mouse move and mouse up globally
+  // we do this on the window so dragging works even if the mouse leaves the window area
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
@@ -217,6 +249,7 @@ export default function Dock({ onOpenApp }) {
     };
   }, [handleMouseMove, handleMouseUp]);
 
+  // close the context menu when clicking anywhere
   useEffect(() => {
     if (!contextMenu) return;
     const handler = () => setContextMenu(null);
@@ -226,6 +259,7 @@ export default function Dock({ onOpenApp }) {
 
 
 
+  // bring a window to the front by giving it the highest zIndex
   const focusApp = useCallback((id) => {
     nextZIndex.current += 1;
     setApps((prev) =>
@@ -235,17 +269,20 @@ export default function Dock({ onOpenApp }) {
     );
   }, []);
 
+  // open an app window and center it on screen
   const openApp = useCallback(
     (id) => {
       nextZIndex.current += 1;
       setApps((prev) =>
         prev.map((app) => {
           if (app.id !== id) return app;
+          // use the openTab helper to calculate the centered position
           const opened = openTab({ ...app }, window.innerWidth, window.innerHeight);
           opened.zIndex = nextZIndex.current;
           return opened;
         })
       );
+      // notify parent component that an app was opened
       if (onOpenApp) {
         const app = apps.find((a) => a.id === id);
         if (app) onOpenApp(app);
@@ -254,7 +291,9 @@ export default function Dock({ onOpenApp }) {
     [apps, onOpenApp]
   );
 
+  // close a window and reset its state
   const closeApp = useCallback((id) => {
+    // clean up any animation states
     setMinimizingIds((s) => { const n = new Set(s); n.delete(id); return n; });
     setRestoringIds((s) => { const n = new Set(s); n.delete(id); return n; });
     setApps((prev) =>
@@ -266,13 +305,14 @@ export default function Dock({ onOpenApp }) {
     );
   }, []);
 
-  // minimize or bring back with a litle animation
+  // minimize a window (with animation) or restore it
   const toggleMinimize = useCallback((id) => {
     setApps((prev) => {
       const app = prev.find((a) => a.id === id);
       if (!app) return prev;
 
       if (!app.minimized) {
+        // start the minimize animation, then actually minimize after 350ms
         setMinimizingIds((s) => new Set(s).add(id));
         setTimeout(() => {
           setMinimizingIds((s) => { const n = new Set(s); n.delete(id); return n; });
@@ -280,6 +320,7 @@ export default function Dock({ onOpenApp }) {
         }, 350);
         return prev;
       } else {
+        // restore from minimized with animation
         setRestoringIds((s) => new Set(s).add(id));
         setTimeout(() => {
           setRestoringIds((s) => { const n = new Set(s); n.delete(id); return n; });
@@ -289,6 +330,7 @@ export default function Dock({ onOpenApp }) {
     });
   }, []);
 
+  // toggle maximize — window fills the whole screen or goes back to normal
   const toggleMaximize = useCallback((id) => {
     setApps((prev) =>
       prev.map((app) =>
@@ -297,9 +339,11 @@ export default function Dock({ onOpenApp }) {
     );
   }, []);
 
-  // open an app, also pins new ones to the dock
+  // open an app from the App Store or another component
+  // also handles pinning new apps to the dock
   const handleOpenApp = useCallback(
     (appOrName) => {
+      // if just a name string, find and open the existing app
       if (typeof appOrName === 'string') {
         const existing = apps.find(
           (a) => a.name.toLowerCase() === appOrName.toLowerCase()
@@ -309,11 +353,14 @@ export default function Dock({ onOpenApp }) {
       }
 
       const appData = appOrName;
-      const pinOnly = !!appData.pinOnly;
+      const pinOnly = !!appData.pinOnly; // sometimes we just want to pin without opening
+
+      // check if this app is already in the dock
       const existing = apps.find((a) => a.id === appData.id);
       if (existing) {
         if (!pinOnly) openApp(existing.id);
       } else {
+        // new app — add it to the dock
         const componentName = Object.keys(COMPONENT_MAP).find(
           (k) => COMPONENT_MAP[k] === appData.component
         ) || appData.name;
@@ -335,25 +382,31 @@ export default function Dock({ onOpenApp }) {
           height: appData.height || 400,
           zIndex: 0,
         };
+
+        // play the entering animation for the new dock icon
         setEnteringIds((prev) => new Set(prev).add(newApp.id));
         setTimeout(() => {
           setEnteringIds((prev) => { const s = new Set(prev); s.delete(newApp.id); return s; });
         }, 500);
 
+        // insert the new app after Terminal in the dock order
         setApps((prev) => {
           const copy = [...prev];
           const termIdx = copy.findIndex((a) => a.id === 5);
           const insertIdx = termIdx !== -1 ? termIdx + 1 : copy.length - 1;
-          if (copy.some((a) => a.id === newApp.id)) return prev;
+          if (copy.some((a) => a.id === newApp.id)) return prev; // already there
           copy.splice(insertIdx, 0, newApp);
           return copy;
         });
+
+        // open the window after adding to dock (unless its pin-only)
         if (!pinOnly) setTimeout(() => openApp(appData.id), 0);
       }
     },
     [apps, openApp]
   );
 
+  // show context menu when right-clicking a dock icon
   const handleDockContextMenu = useCallback((e, appId) => {
     e.preventDefault();
     setContextMenu({ appId, x: e.clientX, y: e.clientY });
@@ -363,6 +416,7 @@ export default function Dock({ onOpenApp }) {
     setContextMenu(null);
   }, []);
 
+  // handle actions from the context menu (open, close, minimize, maximize)
   const handleContextAction = useCallback(
     (action) => {
       if (!contextMenu) return;
@@ -388,10 +442,11 @@ export default function Dock({ onOpenApp }) {
     [contextMenu, openApp, closeApp, toggleMinimize, toggleMaximize, closeContextMenu]
   );
 
+  // start dragging a window by its title bar
   const startDrag = useCallback(
     (e, id) => {
       e.preventDefault();
-      focusApp(id);
+      focusApp(id); // bring window to front
       const app = apps.find((a) => a.id === id);
       if (!app) return;
       setDraggingIds((prev) => new Set(prev).add(id));
@@ -406,10 +461,11 @@ export default function Dock({ onOpenApp }) {
     [apps, focusApp]
   );
 
+  // start resizing a window from its bottom-right corner
   const startResize = useCallback(
     (e, id) => {
       e.preventDefault();
-      e.stopPropagation();
+      e.stopPropagation(); // dont trigger drag at the same time
       focusApp(id);
       const app = apps.find((a) => a.id === id);
       if (!app) return;
@@ -425,14 +481,15 @@ export default function Dock({ onOpenApp }) {
     [apps, focusApp]
   );
 
-  // trash always goes last in the dock
+  // sort the dock so trash is always the last icon
   const withoutTrash = apps.filter((a) => a.id !== 10 && (a.default || !a.default));
   const trash = apps.filter((a) => a.id === 10);
   const sortedDockApps = [...withoutTrash, ...trash];
 
   return (
     <>
-      
+      {/* ── App Windows ── */}
+      {/* render all open (and minimizing) windows */}
       {apps
         .filter((app) => app.open && (!app.minimized || minimizingIds.has(app.id)))
         .map((app) => {
@@ -451,11 +508,13 @@ export default function Dock({ onOpenApp }) {
               }
               onMouseDown={() => focusApp(app.id)}
             >
+              {/* window title bar — drag to move, double-click to maximize */}
               <div
                 className="title-bar"
                 onMouseDown={(e) => !app.maximized && startDrag(e, app.id)}
                 onDoubleClick={() => toggleMaximize(app.id)}
               >
+                {/* traffic light buttons (close, minimize, maximize) */}
                 <div className="controls">
                   <button
                     className="ctrl close"
@@ -475,9 +534,13 @@ export default function Dock({ onOpenApp }) {
                 </div>
                 <span className="title-text">{app.name}</span>
               </div>
+
+              {/* the actual app content goes here */}
               <div className="window-content">
                 <AppComponent onOpenApp={handleOpenApp} onClose={() => closeApp(app.id)} />
               </div>
+
+              {/* resize handle in the bottom-right corner (not shown when maximized) */}
               {!app.maximized && (
                 <div
                   className="resizer"
@@ -488,7 +551,8 @@ export default function Dock({ onOpenApp }) {
           );
         })}
 
-      
+      {/* ── SVG Filter for Glass Effect ── */}
+      {/* this creates the glass distortion effect on the dock */}
       <svg style={{ display: 'none' }}>
         <filter id="glass-distortion">
           <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
@@ -496,12 +560,14 @@ export default function Dock({ onOpenApp }) {
         </filter>
       </svg>
 
-      
+      {/* ── The Dock Bar ── */}
+      {/* the actual dock container at the bottom of the screen */}
       <div
         className="dock-container"
-        onMouseMove={(e) => setDockMouseX(e.clientX)}
+        onMouseMove={(e) => setDockMouseX(e.clientX)} // track mouse for magnification
         onMouseLeave={() => setDockMouseX(null)}
       >
+        {/* glass card background for the dock */}
         <div
           className="glass-card"
           ref={glassCardRef}
@@ -511,6 +577,8 @@ export default function Dock({ onOpenApp }) {
           <div className="glass-filter" />
           <div className="glass-overlay" />
           <div className="glass-specular" ref={glassSpecularRef} />
+
+          {/* the dock icons */}
           <div className="glass-content">
             {sortedDockApps.map((app) => (
               <DockItemMagnified
@@ -529,7 +597,8 @@ export default function Dock({ onOpenApp }) {
         </div>
       </div>
 
-      
+      {/* ── Right-Click Context Menu ── */}
+      {/* shows options like Open, Close, Minimize when right-clicking a dock icon */}
       {contextMenu && (
         <div
           className="context-menu-overlay"
@@ -538,16 +607,18 @@ export default function Dock({ onOpenApp }) {
           <div
             className="context-menu"
             style={{ left: contextMenu.x, top: contextMenu.y }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()} // dont close when clicking inside the menu
           >
             {(() => {
               const app = apps.find((a) => a.id === contextMenu.appId);
               if (!app) return null;
               return (
                 <>
+                  {/* show "Open" if the app is closed */}
                   {!app.open && (
                     <button onClick={() => handleContextAction('open')}>{t('dock_open')}</button>
                   )}
+                  {/* show Close, Minimize, Maximize if the app is open */}
                   {app.open && (
                     <>
                       <button onClick={() => handleContextAction('close')}>{t('dock_close')}</button>

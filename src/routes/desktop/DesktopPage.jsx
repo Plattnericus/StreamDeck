@@ -1,29 +1,40 @@
-// the desktop, header + dock + that drag box thing. mobile gets a sory message
+// ─── Desktop Page ───
+// this is the main desktop screen — like the macOS desktop
+// it shows the header (menu bar), dock, and handles the drag-selection box
+// on mobile devices, it shows a message that says "please use a desktop"
+
 import React from 'react';
 import Header from './Header';
 import Dock from './Dock';
-import DesktopMarquee from './DesktopMarquee';
-import { AppStoreProvider } from '../../lib/appStore';
-import { LastOpenedProvider } from '../../lib/lastOpened';
+import DesktopMarquee from './DesktopMarquee'; // the drag-selection box on the desktop
+import { AppStoreProvider } from '../../lib/appStore'; // manages which apps are open
+import { LastOpenedProvider } from '../../lib/lastOpened'; // tracks recently opened apps
 import './DesktopPage.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function DesktopPage() {
-  const t = useTranslation();
+  const t = useTranslation(); // get the translation function
+
+  // this handler gets passed down to Header and Dock
+  // right now its empty because app opening is handled inside Dock
   const handleOpenApp = (appName) => {
   };
 
   return (
+    // wrap everything in providers so all child components can access app state
     <AppStoreProvider>
       <LastOpenedProvider>
+        {/* the actual desktop — DesktopMarquee adds the drag-selection box */}
         <DesktopMarquee className="desktop">
           <Header onOpenApp={handleOpenApp} />
           <Dock onOpenApp={handleOpenApp} />
         </DesktopMarquee>
 
-        {/* mobile users see this insted */}
+        {/* mobile users see this instead of the desktop */}
+        {/* we show a friendly message telling them to use a computer */}
         <div className="mobile-lockscreen">
           <div className="mobile-lockscreen-content">
+            {/* a simple toggle switch icon */}
             <div className="mobile-lockscreen-icon">
               <svg width="72" height="72" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {}

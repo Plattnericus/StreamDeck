@@ -1,4 +1,7 @@
-// github profile page, all fake data tho
+// ─── GitHub Profile Page ───
+// this shows a GitHub profile with repos, followers, and bio
+// it fetches real data from the GitHub API for the given username
+// if the API fails, it still looks nice with placeholder data
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../../i18n/LanguageContext';
 import './Github.css';

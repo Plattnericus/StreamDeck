@@ -1,5 +1,6 @@
-// Cookie information page — explains what cookies are used, their purpose,
-// and user rights. Can be shown as a popup or embedded.
+// ─── Cookie Information Page ───
+// this explains what cookies are used on the site, what they do, and what rights users have
+// can be shown as a popup from the cookie banner or opened from the App Store
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

@@ -1,4 +1,7 @@
-// saves and loads all the settings from localStorage
+// ─── Settings Store ───
+// this file handles saving and loading all user settings from localStorage
+// it also provides default values and a broadcast function to sync settings across components
+// we use a custom event 'streamdeck-settings-sync' so all components update immediately
 
 export const DEFAULT_SETTINGS = {
   darkMode: false,

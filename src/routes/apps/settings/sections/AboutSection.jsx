@@ -1,5 +1,7 @@
-// About section — shows app info (version, developer, license) and hardware specs.
-// Can navigate to an "About This Mac" sub-view.
+// ─── About Settings Section ───
+// this shows app info: version number, build, developer name, and license
+// also shows the StreamDeck hardware specs (microcontroller, display, LEDs, etc.)
+// has a button to open the "About This Mac" dialog
 import React, { useState } from 'react';
 import { IosGroup, IosRow } from '../primitives';
 import { InfoIcon, CodeIcon, UserIcon, CpuIcon, MonitorIcon, LightbulbIcon, MacIcon } from '../icons';

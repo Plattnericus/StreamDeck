@@ -1,5 +1,12 @@
-// All UI strings for each supported language (German, English, Italian)
+// ─── Main Translation Dictionary ───
+// this is the big file with ALL the text strings for the whole app
+// we support 3 languages: German (de), English (en), and Italian (it)
+// German is the default / fallback language
+// each key maps to a translated string — components use these keys to show the right text
+// the keys are grouped by section so its easier to find what you need
+
 const T = {
+  // ── German translations (this is the main language) ──
   de: {
     /* ── Settings core ── */
     settings: 'Einstellungen', back: 'Zurück', cancel: 'Abbrechen',
@@ -285,6 +292,7 @@ const T = {
     dock_restore: 'Wiederherstellen',
   },
 
+  // ── English translations ──
   en: {
     /* ── Settings core ── */
     settings: 'Settings', back: 'Back', cancel: 'Cancel',
@@ -570,6 +578,7 @@ const T = {
     dock_restore: 'Restore',
   },
 
+  // ── Italian translations ──
   it: {
     /* ── Settings core ── */
     settings: 'Impostazioni', back: 'Indietro', cancel: 'Annulla',
@@ -856,4 +865,5 @@ const T = {
   },
 };
 
+// we export the whole dictionary so other files can import it
 export default T;

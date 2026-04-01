@@ -1,5 +1,10 @@
-// Translation strings for the Settings app (German and English)
+// ─── Settings Translation Strings ───
+// this is a separate translation file just for the Settings page
+// it has German (de) and English (en) — pls note this is different from the main translations.js
+// we keep it separate because the Settings page has a lot of its own strings
+
 const T = {
+  // ── German (default language) ──
   de: {
     profile_name: 'StreamDeck',
     profile_badge: 'v1.0.0',
@@ -102,6 +107,7 @@ const T = {
     disconnected: 'Getrennt',
   },
 
+  // ── English translations ──
   en: {
     profile_name: 'StreamDeck',
     profile_badge: 'v1.0.0',
@@ -205,8 +211,11 @@ const T = {
   },
 };
 
-// Create a translator function that falls back to German if a key is missing
+// this creates a translator function for a given language
+// basically it returns a function that you call with a key and it gives you the right text
+// fallback chain: selected language -> German -> raw key name
+// so nothing ever shows as "undefined" — worst case you see the key itself
 export function createTranslator(language) {
-  const lang = T[language] ?? T.de;
-  return (key) => lang[key] ?? T.de[key] ?? key;
+  const lang = T[language] ?? T.de; // pick the language, fall back to German
+  return (key) => lang[key] ?? T.de[key] ?? key; // look up the key with fallbacks
 }

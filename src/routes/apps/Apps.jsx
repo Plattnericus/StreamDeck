@@ -1,4 +1,7 @@
-// fake app store with downlods and evrything
+// ─── App Store ───
+// this is the fake App Store — it shows a list of apps you can "download"
+// it simulates the download with a progress animation
+// installed apps get pinned to the dock and can be opened from here
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './Apps.css';
 import { useTranslation } from '../../i18n/LanguageContext';
@@ -16,13 +19,15 @@ import CookiesInfo from './Cookies-info';
 import Settings from './settings/Settings';
 import Description from './Description';
 
+// some config values for the App Store
 const CFG = {
-  iconBase: '/icons/',
-  fallbackIcon: 'fallback.png',
-  cardMinWidth: 320,
+  iconBase: '/icons/',       // where all the app icons live
+  fallbackIcon: 'fallback.png', // shown when an icon is missing
+  cardMinWidth: 320,         // minimum width of each app card in the grid
 };
 
-// get the icon url, handles all the weird formats
+// get the icon URL — handles all the different formats
+// the icon can be a full URL, a path starting with /, or just a filename
 function iconUrl(icon) {
   const s = (icon || '').trim();
   if (!s) return CFG.iconBase + CFG.fallbackIcon;
@@ -31,6 +36,8 @@ function iconUrl(icon) {
   return CFG.iconBase + s.replace(/^\.\//, '');
 }
 
+// all the apps available in the store
+// each one has an id, name, icon, component to render, translation keys, and default window size
 const APP_LIST = [
   { id: 101, name: 'Info',        icon: 'info.webp',        component: Info,        subtitleKey: 'app_info_sub',        descKey: 'app_info_desc',        developer: 'System', version: '1.0.0',    width: 720, height: 580 },
   { id: 102, name: 'About',       icon: 'about.webp',       component: About,       subtitleKey: 'app_about_sub',       descKey: 'app_about_desc',       developer: 'System', version: '111.0.2g', width: 740, height: 560 },
@@ -44,7 +51,7 @@ const APP_LIST = [
   { id: 110, name: 'Cookies',     icon: 'cookies.png',      component: CookiesInfo, subtitleKey: 'app_cookies_sub',     descKey: 'app_cookies_desc',     developer: 'System', version: '1.0.1',    width: 720, height: 560 },
 ];
 
-// save wich apps are instaleld so they stay after reload
+// we save which apps are installed to localStorage so they stay installed after reload
 const INSTALLED_KEY = 'appstore_installed_v1';
 
 function loadInstalled() {
@@ -88,7 +95,8 @@ export default function Apps({ onOpenApp }) {
           (a.description ?? '').toLowerCase().includes(q) || a.category.toLowerCase().includes(q);
       });
 
-  // pretend to download the app lol
+  // simulate downloading an app with a progress bar animation
+  // takes about 2-3 seconds, then marks the app as installed and pins it to the dock
   const simulateDownload = useCallback((app) => {
     setDownloading((prev) => new Set(prev).add(app.id));
     setDownloadProgress((prev) => ({ ...prev, [app.id]: 0 }));

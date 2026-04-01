@@ -1,4 +1,7 @@
-// all the settings icons
+// ─── Settings Icons ───
+// this file has all the SVG icons used in the Settings app
+// each icon is a small React component that renders an inline SVG
+// we keep them all in one file so its easy to find and reuse them
 import React from 'react';
 
 export const WifiIcon = () => (

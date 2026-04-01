@@ -1,4 +1,8 @@
-// big info page about the stream deck project, has evrything
+// ─── Info Page ───
+// this is the big info page about the StreamDeck project
+// it has tabs for: Overview, Hardware, Wiring, Software, and 3D Print
+// shows detailed specs about the microcontroller, display, buttons, etc.
+// basically the product documentation page
 import { useState } from "react";
 import "./Info.css";
 
