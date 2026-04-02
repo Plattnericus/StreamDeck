@@ -133,5 +133,6 @@
 - Bilder erstellen für Galerie
 - Text Dazu schreiben Warum ich das gewählt habe und Warum genau C und Arduino usw
 - Häufige Fragen App
+- Kontakt
 
 - bei Description mache ich das warum ich es gewählt habe und mach es so in Docker Style. also jede info. Programirsprachen. Warum. Warum arduino usw das mach ci hso ale dockrer allgeiemeni!!!
