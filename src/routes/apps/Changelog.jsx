@@ -1,13 +1,13 @@
-// ─── Changelog App ───
-// this shows the project changelog with version entries and a TO DO section
-// it reads a markdown file and parses it into nice grouped entries
-// auto-refreshes every 5 seconds to pick up changes
-// supports filters: All, Added, Fixed, Updated, Removed, To Do
+// ─── Changelog-App ───
+// zeigt das Projekt-Changelog mit Versionseinträgen und einem TO DO Bereich
+// liest eine Markdown-Datei und parst sie zu gruppierten Einträgen
+// aktualisiert sich alle 5 Sekunden automatisch
+// unterstützt Filter: Alle, Hinzugefügt, Behoben, Aktualisiert, Entfernt, To Do
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './Changelog.css';
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 
-// turn markdown into nice grouped data
+// Markdown in gruppierte Daten umwandeln
 function parseChangelog(raw) {
   const lines = raw.split('\n');
   const result = [];
@@ -64,7 +64,7 @@ function isToday(dateStr) {
   return +p[1] === n.getDate() && +p[2] === n.getMonth() + 1 && +p[3] === n.getFullYear();
 }
 
-// figure out if its a fix, add, or whatver
+// Typ des Eintrags bestimmen: Fix, Hinzufügen, etc.
 function getType(text) {
   const l = text.toLowerCase();
   if (l.includes('fix') || l.includes('bug'))                                               return 'fix';
@@ -124,7 +124,7 @@ export default function Changelog() {
   const lang = useLanguage();
   const locale = lang === 'de' ? 'de-DE' : lang === 'it' ? 'it-IT' : 'en-US';
 
-  // Fetch the changelog file and only re-parse if its content hash changed
+  // Changelog-Datei laden und nur neu parsen wenn sich der Hash geändert hat
   const fetchChangelog = useCallback(async () => {
     try {
       const res = await fetch('/Changelog.md?t=' + Date.now());

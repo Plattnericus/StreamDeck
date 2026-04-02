@@ -1,13 +1,12 @@
-// ─── Last Opened Panel ───
-// this shows a list of recently opened apps with how long ago they were used
-// like "5m ago" or "2h ago" — displayed in the Apple menu or similar place
-// it uses the language settings to format the time in the right language
+// ─── Zuletzt geöffnet ───
+// zeigt eine Liste zuletzt geöffneter Apps mit Zeitangabe wie "vor 5m" oder "vor 2h"
+// nutzt die Spracheinstellung für die richtige Zeitformatierung
 
 import React from 'react';
 import './LastOpened.css';
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 
-// map our language codes to proper locale strings for date formatting
+// Sprachcodes auf Locale-Strings mappen
 const LOCALE_MAP = { de: 'de-DE', en: 'en-US', it: 'it-IT' };
 
 export default function LastOpened({ lastOpened = [] }) {
@@ -15,8 +14,7 @@ export default function LastOpened({ lastOpened = [] }) {
   const lang = useLanguage();
   const locale = LOCALE_MAP[lang] ?? 'de-DE';
 
-  // turns a timestamp into a human-friendly "time ago" string
-  // like "3m ago", "2h ago", "5d ago" depending on how long ago it was
+  // Timestamp in eine lesbare Zeitangabe umwandeln wie "vor 3m", "vor 2h", "vor 5T"
   function formatDate(timestamp) {
     const date = new Date(timestamp);
     const now = new Date();
@@ -25,34 +23,34 @@ export default function LastOpened({ lastOpened = [] }) {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    // less than a minute — "just now"
+    // weniger als eine Minute
     if (minutes < 1) return t('time_just_now');
 
-    // less than an hour — show minutes
+    // weniger als eine Stunde
     if (minutes < 60) return lang === 'de' ? `vor ${minutes}m` : lang === 'it' ? `${minutes}m fa` : `${minutes}m ago`;
 
-    // less than a day — show hours
+    // weniger als ein Tag
     if (hours < 24) return lang === 'de' ? `vor ${hours}h` : lang === 'it' ? `${hours}h fa` : `${hours}h ago`;
 
-    // less than a week — show days
+    // weniger als eine Woche
     if (days < 7) return lang === 'de' ? `vor ${days}T` : lang === 'it' ? `${days}g fa` : `${days}d ago`;
 
-    // older than a week — show the actual date
+    // älter als eine Woche — echtes Datum zeigen
     return date.toLocaleDateString(locale);
   }
 
   return (
     <div className="last-opened">
-      {/* header with the title */}
+      {/* Kopfzeile mit Titel */}
       <div className="lo-header">
         <h3>{t('recently_opened')}</h3>
       </div>
 
-      {/* show empty message if no apps were opened yet */}
+      {/* Hinweis wenn noch keine Apps geöffnet wurden */}
       {lastOpened.length === 0 ? (
         <div className="empty">{t('no_recently_opened')}</div>
       ) : (
-        /* list of recently opened apps */
+        /* Liste der zuletzt geöffneten Apps */
         <div className="list">
           {lastOpened.map((app) => (
             <div className="lo-item" key={app.id}>
@@ -61,7 +59,7 @@ export default function LastOpened({ lastOpened = [] }) {
                 <div className="lo-name">{app.name}</div>
                 <div className="lo-meta">
                   <span className="lo-time">{formatDate(app.timestamp)}</span>
-                  <span className="lo-count">({app.openCount}x)</span> {/* how many times opened */}
+                  <span className="lo-count">({app.openCount}x)</span> {/* wie oft geöffnet */}
                 </div>
               </div>
             </div>

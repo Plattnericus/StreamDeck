@@ -1,17 +1,16 @@
-// ─── Header (Menu Bar) ───
-// this is the macOS-style menu bar at the top of the screen
-// it has: Apple menu, Finder menus, Control Center panel with toggles,
-// a music player, brightness/volume sliders, date/time, and the "About this Mac" dialog
-// basically a lot of stuff packed into one component
+// ─── Header (Menüleiste) ───
+// die macOS-Menüleiste ganz oben auf dem Bildschirm
+// enthält: Apple-Menü, Finder-Menüs, Control Center mit Toggles,
+// Musik-Player, Helligkeit/Lautstärke-Slider, Uhrzeit und "Über diesen Mac"-Dialog
+// im Grunde sehr viel auf einmal in einer Komponente
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import './Header.css';
 import { useLanguage } from '../../i18n/LanguageContext';
 import T from '../../i18n/translations';
 
-// ── Music Library ──
-// all the songs available in the Control Center music player
-// each track has a title, artist, cover image, and the audio file
+// ── Musik-Bibliothek ──
+// alle Songs die im Control Center Musik-Player verfügbar sind
 const ALL_TRACKS = [
   /*0*/{ title: 'emails i can\'t send', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - emails i cant send - Sabrina Carpenter.mp3' },
   /*1*/{ title: 'Tornado Warnings', artist: 'Sabrina Carpenter', cover: '/songs/emails i cant send.jpg', src: '/songs/SpotiDownloader.com - Tornado Warnings - Sabrina Carpenter.mp3' },
@@ -23,13 +22,13 @@ const ALL_TRACKS = [
   /*7*/{ title: 'We Almost Broke Up Again Last Night', artist: 'Sabrina Carpenter', cover: '/songs/Mans Best Friend.jpg', src: '/songs/SpotiDownloader.com - We Almost Broke Up Again Last Night - Sabrina Carpenter.mp3' },
 ];
 
-// custom playback order — we dont just play them in order
+// eigene Wiedergabereihenfolge — nicht einfach von vorne nach hinten
 const TRACK_ORDER = [4, 1, 5, 6, 2, 7, 0, 3];
 const tracks = TRACK_ORDER.map((i) => ALL_TRACKS[i]);
 
-// ── Control Center Settings ──
-// these are the default toggle states for the Control Center
-// they get saved to localStorage so they persist between reloads
+// ── Control Center Einstellungen ──
+// Standard-Togglstatus für das Control Center
+// wird in localStorage gespeichert damit es über Neuladen hinweg erhalten bleibt
 const DEFAULT_SETTINGS = {
   wifi: true,
   bluetooth: false,
@@ -41,7 +40,7 @@ const DEFAULT_SETTINGS = {
   volume: 50,
 };
 
-// load control center settings from localStorage
+// Control Center Einstellungen aus localStorage laden
 function loadSettings() {
   try {
     const raw = localStorage.getItem('control_center_settings_v1');
@@ -50,13 +49,13 @@ function loadSettings() {
   return { ...DEFAULT_SETTINGS };
 }
 
-// save control center settings to localStorage
+// Control Center Einstellungen in localStorage speichern
 function saveSettings(s) {
   localStorage.setItem('control_center_settings_v1', JSON.stringify(s));
 }
 
-// ── Music Player State ──
-// we save the current track, playing state, and position so music continues after reload
+// ── Musik-Player State ──
+// aktuellen Track, Wiedergabestatus und Position speichern damit Musik nach Reload weiterläuft
 const MUSIC_STORAGE_KEY = 'music_player_state_v1';
 
 function loadMusicState() {
@@ -78,14 +77,14 @@ function saveMusicState(trackIdx, playing, currentTime) {
   localStorage.setItem(MUSIC_STORAGE_KEY, JSON.stringify({ trackIdx, playing, currentTime }));
 }
 
-// ── Date/Time Formatting ──
-// maps our language codes to proper locale strings
+// ── Datum/Uhrzeit Formatierung ──
+// Sprachcodes auf Locale-Strings mappen
 const LOCALE_MAP = { de: 'de-DE', en: 'en-US', it: 'it-IT' };
 
-// format the date for the menu bar (like "Mon, Apr 1")
+// Datum für die Menüleiste formatieren
 function formatDate(d, lang, dateFormat) {
   if (dateFormat === 'iso') {
-    // ISO format: 2026-04-01
+    // ISO-Format: 2026-04-01
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
@@ -95,7 +94,7 @@ function formatDate(d, lang, dateFormat) {
   return d.toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
-// format the time for the menu bar (like "14:30" or "2:30 PM")
+// Uhrzeit für die Menüleiste formatieren
 function formatTime(d, lang, use24h, showSec) {
   const locale = LOCALE_MAP[lang] ?? 'de-DE';
   return d.toLocaleTimeString(locale, {
@@ -106,7 +105,7 @@ function formatTime(d, lang, use24h, showSec) {
   });
 }
 
-// load the user's app settings (clock format, date format, etc.)
+// App-Einstellungen laden (Uhrzeitformat, Datumsformat, usw.)
 function loadAppSettings() {
   try {
     const raw = localStorage.getItem('streamdeck_settings_v2');
@@ -122,14 +121,13 @@ function loadAppSettings() {
   return { use24hClock: true, showSeconds: false, dateFormat: 'de' };
 }
 
-// ── The Header Component ──
+// ── Die Header-Komponente ──
 export default function Header({ onOpenApp }) {
   const lang = useLanguage();
-  // custom translation function for this component
   const t = useCallback((key) => T[lang]?.[key] ?? T.de[key] ?? key, [lang]);
 
-  // ── Clock ──
-  // update the time every second (if showing seconds) or every 10 seconds
+  // ── Uhr ──
+  // jede Sekunde aktualisieren (wenn Sekunden angezeigt werden) sonst alle 10s
   const [now, setNow] = useState(new Date());
   const [appCfg, setAppCfg] = useState(loadAppSettings);
   useEffect(() => {
@@ -137,20 +135,20 @@ export default function Header({ onOpenApp }) {
     return () => clearInterval(id);
   }, [appCfg.showSeconds]);
 
-  // ── Control Center Settings ──
+  // ── Control Center Einstellungen ──
   const [settings, setSettings] = useState(loadSettings);
-  useEffect(() => saveSettings(settings), [settings]); // save whenever settings change
+  useEffect(() => saveSettings(settings), [settings]); // bei jeder Änderung speichern
 
-  // listen for settings changes from other components (like the Settings app)
+  // auf Einstellungsänderungen von anderen Komponenten hören (z.B. der Settings-App)
   useEffect(() => {
     const sync = () => { setSettings(loadSettings()); setAppCfg(loadAppSettings()); };
     window.addEventListener('streamdeck-settings-sync', sync);
     return () => window.removeEventListener('streamdeck-settings-sync', sync);
   }, []);
 
-  // toggle a control center setting on/off
-  // pls note: airplane mode turns off wifi and cellular
-  // and turning on wifi or cellular turns off airplane mode
+  // Control Center Einstellung ein/ausschalten
+  // Flugmodus deaktiviert WLAN und Mobilfunk
+  // WLAN oder Mobilfunk einschalten deaktiviert Flugmodus
   const toggle = (key) => {
     setSettings((s) => {
       const next = { ...s, [key]: !s[key] };
@@ -165,18 +163,18 @@ export default function Header({ onOpenApp }) {
     });
   };
 
-  // ── Menu State ──
-  const [openMenu, setOpenMenu] = useState(null);        // which dropdown menu is open
-  const [closingMenu, setClosingMenu] = useState(null);  // which menu is playing close animation
-  const [showCC, setShowCC] = useState(false);            // is Control Center open?
-  const [ccClosing, setCcClosing] = useState(false);      // is Control Center closing?
-  const [showAbout, setShowAbout] = useState(false);      // is "About this Mac" dialog open?
-  const [ctxMenu, setCtxMenu] = useState(null);           // desktop right-click context menu
+  // ── Menü-State ──
+  const [openMenu, setOpenMenu] = useState(null);        // welches Dropdown-Menü ist offen
+  const [closingMenu, setClosingMenu] = useState(null);  // welches Menü spielt gerade die Schließ-Animation ab
+  const [showCC, setShowCC] = useState(false);            // ist das Control Center offen?
+  const [ccClosing, setCcClosing] = useState(false);      // schließt das Control Center gerade?
+  const [showAbout, setShowAbout] = useState(false);      // ist der "Über diesen Mac"-Dialog offen?
+  const [ctxMenu, setCtxMenu] = useState(null);           // Desktop-Rechtsklick-Menü
   const ccGlassRef = useRef(null);
   const ccGlassDispRef = useRef(null);
   const ccGlassSpecRef = useRef(null);
 
-  // close the currently open dropdown menu with a short animation
+  // aktuell offenes Dropdown-Menü mit kurzer Animation schließen
   const closeMenu = useCallback(() => {
     if (openMenu) {
       setClosingMenu(openMenu);
@@ -185,26 +183,26 @@ export default function Header({ onOpenApp }) {
     setOpenMenu(null);
   }, [openMenu]);
 
-  // close Control Center with fade-out animation
+  // Control Center mit Ausblend-Animation schließen
   const closeCC = useCallback(() => {
     setCcClosing(true);
     setTimeout(() => { setCcClosing(false); setShowCC(false); }, 200);
   }, []);
 
-  // ── Music Player ──
+  // ── Musik-Player ──
   const audioRef = useRef(null);
   const savedMusic = useRef(loadMusicState());
   const [trackIdx, setTrackIdx] = useState(() => savedMusic.current.trackIdx);
   const [playing, setPlaying] = useState(() => savedMusic.current.playing);
   const [progress, setProgress] = useState(0);
 
-  // save music state whenever track or playing state changes
+  // Musik-State speichern wenn Track oder Wiedergabe sich ändert
   useEffect(() => {
     const a = audioRef.current;
     saveMusicState(trackIdx, playing, a ? a.currentTime : 0);
   }, [trackIdx, playing]);
 
-  // also save the current playback position every 2 seconds
+  // alle 2 Sekunden die aktuelle Wiedergabeposition speichern
   useEffect(() => {
     const id = setInterval(() => {
       const a = audioRef.current;
@@ -215,8 +213,8 @@ export default function Header({ onOpenApp }) {
 
   const currentTrack = tracks[trackIdx];
 
-  // load the track into the audio element
-  // on first load, restore the saved playback position
+  // Track ins Audio-Element laden
+  // beim ersten Laden die gespeicherte Wiedergabeposition wiederherstellen
   const isFirstLoad = useRef(true);
   useEffect(() => {
     const a = audioRef.current;
@@ -226,10 +224,10 @@ export default function Header({ onOpenApp }) {
       a.currentTime = savedMusic.current.currentTime;
       isFirstLoad.current = false;
     }
-    if (playing) a.play().catch(() => {}); // catch needed because autoplay might be blocked
+    if (playing) a.play().catch(() => {}); // catch weil Autoplay blockiert sein könnte
   }, [trackIdx]);
 
-  // play or pause when playing state changes
+  // abspielen oder pausieren wenn sich der Wiedergabestatus ändert
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
@@ -237,26 +235,26 @@ export default function Header({ onOpenApp }) {
     else a.pause();
   }, [playing]);
 
-  // update audio volume when the volume slider changes
+  // Audio-Lautstärke aktualisieren wenn der Slider sich ändert
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    a.volume = settings.volume / 100; // convert 0-100 to 0-1
+    a.volume = settings.volume / 100; // 0-100 zu 0-1 umrechnen
   }, [settings.volume]);
 
-  // track seeking state so we dont update progress while the user is dragging
+  // Seeking-State damit wir den Fortschritt nicht während dem Ziehen aktualisieren
   const seekingRef = useRef(false);
 
-  // update the progress bar as the song plays, and handle track ending
+  // Fortschrittsbalken aktualisieren während der Song läuft, und nächsten Track starten
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
     const tick = () => {
-      if (seekingRef.current) return; // dont update while seeking
+      if (seekingRef.current) return; // nicht aktualisieren während Seeking
       if (a.duration) setProgress((a.currentTime / a.duration) * 100);
     };
     const onEnded = () => {
-      setTrackIdx((i) => (i + 1) % tracks.length); // play next track
+      setTrackIdx((i) => (i + 1) % tracks.length); // nächsten Track abspielen
     };
     a.addEventListener('timeupdate', tick);
     a.addEventListener('ended', onEnded);
@@ -266,12 +264,12 @@ export default function Header({ onOpenApp }) {
     };
   }, []);
 
-  // skip to previous or next track
+  // zum vorherigen oder nächsten Track springen
   const prevTrack = () => { setTrackIdx((i) => (i - 1 + tracks.length) % tracks.length); };
   const nextTrack = () => { setTrackIdx((i) => (i + 1) % tracks.length); };
 
-  // ── Glass Effect for Control Center ──
-  // same glass effect as the dock — a shiny highlight that follows the mouse
+  // ── Glaseffekt für das Control Center ──
+  // gleicher Glaseffekt wie am Dock — glänzendes Highlight das der Maus folgt
   const handleCCGlassMove = useCallback((e) => {
     const el = ccGlassRef.current;
     if (!el) return;
@@ -291,10 +289,10 @@ export default function Header({ onOpenApp }) {
     if (ccGlassSpecRef.current) ccGlassSpecRef.current.style.background = 'none';
   }, []);
 
-  // ── Progress Bar Seeking ──
+  // ── Fortschrittsbalken Seeking ──
   const progressRef = useRef(null);
 
-  // jump to a position in the song when clicking the progress bar
+  // zu einer Position im Song springen wenn man auf den Fortschrittsbalken klickt
   const seekTo = useCallback((e) => {
     const bar = progressRef.current;
     const a = audioRef.current;
@@ -305,7 +303,7 @@ export default function Header({ onOpenApp }) {
     a.currentTime = pct * a.duration;
   }, []);
 
-  // click-and-drag seeking on the progress bar
+  // Klick-und-Ziehen zum Seeken auf dem Fortschrittsbalken
   const onProgressDown = useCallback((e) => {
     e.preventDefault();
     seekingRef.current = true;
@@ -320,14 +318,14 @@ export default function Header({ onOpenApp }) {
     window.addEventListener('mouseup', onUp);
   }, [seekTo]);
 
-  // ── Brightness Overlay ──
-  // we dim the screen by changing a CSS variable when brightness is lowered
+  // ── Helligkeitsoverlay ──
+  // Bildschirm abdunkeln indem wir eine CSS-Variable ändern
   useEffect(() => {
     document.documentElement.style.setProperty('--brightness', `${settings.brightness}%`);
   }, [settings.brightness]);
 
-  // ── About This Mac Dialog ──
-  // the dialog can be dragged around, just like a real macOS window
+  // ── Über diesen Mac Dialog ──
+  // der Dialog kann herumgezogen werden, wie ein echtes macOS-Fenster
   const aboutRef = useRef(null);
   const aboutDrag = useRef(null);
   const [aboutPos, setAboutPos] = useState({ x: 0, y: 0 });
@@ -347,7 +345,7 @@ export default function Header({ onOpenApp }) {
     return () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); };
   }, []);
 
-  // ── Close Menus When Clicking Outside ──
+  // ── Menüs schließen wenn außerhalb geklickt wird ──
   const headerRef = useRef(null);
   useEffect(() => {
     const handler = (e) => {
@@ -363,7 +361,7 @@ export default function Header({ onOpenApp }) {
     };
   }, [closeMenu]);
 
-  // close Control Center when clicking outside of it
+  // Control Center schließen wenn außerhalb geklickt wird
   useEffect(() => {
     if (!showCC) return;
     const handler = (e) => {
@@ -381,11 +379,11 @@ export default function Header({ onOpenApp }) {
     };
   }, [showCC, closeCC]);
 
-  // ── Desktop Right-Click Menu ──
-  // show a context menu when right-clicking on the desktop background
+  // ── Desktop-Rechtsklick-Menü ──
+  // Kontextmenü bei Rechtsklick auf den Desktop-Hintergrund zeigen
   useEffect(() => {
     const handler = (e) => {
-      // only show for clicks on the desktop background, not on windows or dock
+      // nur auf dem Desktop-Hintergrund, nicht auf Fenstern oder Dock
       if (e.target.closest('.app-window') || e.target.closest('.dock-container') || e.target.closest('header')) return;
       e.preventDefault();
       setCtxMenu({ x: e.clientX, y: e.clientY });
@@ -396,8 +394,8 @@ export default function Header({ onOpenApp }) {
     return () => { window.removeEventListener('contextmenu', handler); window.removeEventListener('mousedown', close); };
   }, []);
 
-  // ── Menu Bar Items ──
-  // define all the dropdown menus (Apple, Finder, File, Edit, View, Go, Window, Help)
+  // ── Menüleisten-Einträge ──
+  // alle Dropdown-Menüs (Apple, Finder, Ablage, Bearbeiten, Darstellung, Gehe zu, Fenster, Hilfe)
   const menus = useMemo(() => [
     {
       id: 'apple', label: '', icon: '/icons/apple.png',
@@ -491,7 +489,7 @@ export default function Header({ onOpenApp }) {
     },
   ], [t, onOpenApp, closeMenu]);
 
-  // shortcut icons in the Control Center
+  // Shortcut-Icons im Control Center
   const shortcuts = useMemo(() => [
     { icon: '/icons/moon.png', label: t('cc_dnd') },
     { icon: '/icons/bright.png', label: t('cc_nightmode') },
@@ -501,12 +499,12 @@ export default function Header({ onOpenApp }) {
   // ── Render ──
   return (
     <>
-      {/* brightness overlay — covers the whole screen, gets more opaque when brightness is lower */}
+      {/* Helligkeitsoverlay — deckt den Bildschirm ab, wird undurchsichtiger bei niedrigerer Helligkeit */}
       <div className="brightness-overlay" style={{ opacity: 1 - settings.brightness / 100 }} />
 
-      {/* the menu bar at the top */}
+      {/* die Menüleiste oben */}
       <header className="header-bar" ref={headerRef}>
-        {/* left side: Apple menu and Finder menus */}
+        {/* links: Apple-Menü und Finder-Menüs */}
         <div className="header-left">
           {menus.map((menu) => {
             const isOpen = openMenu === menu.id;
@@ -520,14 +518,14 @@ export default function Header({ onOpenApp }) {
                     if (isOpen) closeMenu();
                     else { setClosingMenu(null); setOpenMenu(menu.id); }
                   }}
-                  onMouseEnter={() => openMenu && setOpenMenu(menu.id)} // hover to switch menus
+                  onMouseEnter={() => openMenu && setOpenMenu(menu.id)} // hover zum Menü wechseln
                 >
                   {menu.icon
                     ? <img src={menu.icon} alt="Apple" className="apple-logo" />
                     : <span>{menu.label}</span>}
                 </button>
 
-                {/* dropdown menu items */}
+                {/* Dropdown-Menü-Einträge */}
                 {showDropdown && (
                   <div className={`menu-dropdown${isClosing ? ' closing' : ''}`}>
                     {menu.items.map((item, i) =>
@@ -547,13 +545,13 @@ export default function Header({ onOpenApp }) {
           })}
         </div>
 
-        {/* right side: battery, wifi, control center, date/time */}
+        {/* rechts: Batterie, WLAN, Control Center, Datum/Uhrzeit */}
         <div className="header-right">
           <div className="header-icon-group">
             <img src="/icons/battery.png" alt="Battery" className="header-status-icon" />
           </div>
 
-          {/* wifi toggle — click to turn wifi on/off right from the menu bar */}
+          {/* WLAN-Toggle — direkt aus der Menüleiste ein/ausschalten */}
           <button
             className="header-icon-btn"
             onClick={() => toggle('wifi')}
@@ -563,11 +561,11 @@ export default function Header({ onOpenApp }) {
               src="/icons/wifi.png"
               alt="Wi-Fi"
               className="header-status-icon"
-              style={{ opacity: settings.wifi ? 1 : 0.4 }} // dim when off
+              style={{ opacity: settings.wifi ? 1 : 0.4 }} // abgedunkelt wenn aus
             />
           </button>
 
-          {/* control center button */}
+          {/* Control Center Button */}
           <button
             className={`header-icon-btn${showCC ? ' active' : ''}`}
             onClick={() => { if (showCC) closeCC(); else setShowCC(true); }}
@@ -575,23 +573,23 @@ export default function Header({ onOpenApp }) {
             <img src="/icons/control-center.png" alt="Control Center" className="header-status-icon" />
           </button>
 
-          {/* date and time display */}
+          {/* Datum und Uhrzeit */}
           <span className="header-datetime">
             {formatDate(now, lang, appCfg.dateFormat)}&ensp;{formatTime(now, lang, appCfg.use24hClock, appCfg.showSeconds)}
           </span>
         </div>
       </header>
 
-      {/* ── About This Mac Dialog ── */}
+      {/* ── Über diesen Mac Dialog ── */}
       {showAbout && (
         <div className="about-overlay" onClick={() => setShowAbout(false)}>
           <div
             className="about-window"
             ref={aboutRef}
             style={{ transform: `translate(${aboutPos.x}px, ${aboutPos.y}px)` }}
-            onClick={(e) => e.stopPropagation()} // dont close when clicking inside
+            onClick={(e) => e.stopPropagation()} // nicht schließen beim Klick ins Fenster
           >
-            {/* title bar with traffic light buttons — draggable */}
+            {/* Titelleiste mit Ampel-Buttons — ziehbar */}
             <div className="about-titlebar" onMouseDown={startAboutDrag}>
               <div className="about-btns">
                 <button className="about-btn close" onClick={() => setShowAbout(false)} />
@@ -603,7 +601,7 @@ export default function Header({ onOpenApp }) {
               <img src="/MAC.png" alt="macOS Tahoe" className="about-apple-logo" />
               <h2>macOS Tahoe</h2>
               <p className="about-version">Version 26.0</p>
-              {/* hardware specs */}
+              {/* Hardware-Specs */}
               <div className="about-specs">
                 <div className="about-spec-row"><span>{t('about_chip')}</span><span>Apple M3 Pro</span></div>
                 <div className="about-spec-row"><span>{t('about_memory')}</span><span>18 GB</span></div>
@@ -619,6 +617,7 @@ export default function Header({ onOpenApp }) {
       )}
 
       {/* ── Control Center Panel ── */}
+
       {showCC && (
         <div className="cc-overlay" onClick={closeCC}>
           <div
@@ -628,7 +627,7 @@ export default function Header({ onOpenApp }) {
             onMouseMove={handleCCGlassMove}
             onMouseLeave={handleCCGlassLeave}
           >
-            {/* glass distortion SVG filter */}
+            {/* SVG-Filter für die Glasverzerrung */}
             <svg style={{ display: 'none' }}>
               <filter id="cc-glass-dist">
                 <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="noise" />
@@ -640,7 +639,7 @@ export default function Header({ onOpenApp }) {
             <div className="cc-glass-specular" ref={ccGlassSpecRef} />
 
             <div className="cc-glass-content">
-              {/* toggle buttons (wifi, bluetooth, airplane, cellular) */}
+              {/* Toggle-Buttons (WLAN, Bluetooth, Flugmodus, Mobilfunk) */}
               <div className="cc-section cc-toggles">
                 <div className="cc-toggle-grid">
                   <button className={`cc-toggle-btn${settings.wifi ? ' on' : ''}`} onClick={() => toggle('wifi')}>
@@ -662,25 +661,25 @@ export default function Header({ onOpenApp }) {
                 </div>
               </div>
 
-              {/* music player section */}
+              {/* Musik-Player */}
               <div className="cc-section cc-music">
                 <div className="cc-music-info">
                   <img
                     className="cc-music-cover"
                     src={currentTrack.cover}
                     alt={currentTrack.title}
-                    onError={(e) => { e.target.src = '/songs/no-song-found.png'; }} // fallback if cover is missing
+                    onError={(e) => { e.target.src = '/songs/no-song-found.png'; }} // Fallback wenn kein Cover da ist
                   />
                   <div className="cc-music-text">
                     <span className="cc-music-title">{currentTrack.title}</span>
                     <span className="cc-music-artist">{currentTrack.artist}</span>
                   </div>
                 </div>
-                {/* progress bar — click or drag to seek */}
+                {/* Fortschrittsbalken — klicken oder ziehen zum Springen */}
                 <div className="cc-music-progress" ref={progressRef} onMouseDown={onProgressDown}>
                   <div className="cc-music-progress-bar" style={{ width: `${progress}%` }} />
                 </div>
-                {/* playback controls: previous, play/pause, next */}
+                {/* Wiedergabe-Steuerung: zurück, play/pause, vor */}
                 <div className="cc-music-controls">
                   <button onClick={prevTrack}>
                     <img src="/icons/skip-backwards.png" alt="Previous" />
@@ -694,7 +693,7 @@ export default function Header({ onOpenApp }) {
                 </div>
               </div>
 
-              {/* brightness slider */}
+              {/* Helligkeits-Slider */}
               <div className="cc-section cc-slider-section">
                 <div className="cc-slider-label">
                   <img src="/icons/bright.png" alt="" className="cc-slider-icon" />
@@ -710,7 +709,7 @@ export default function Header({ onOpenApp }) {
                 />
               </div>
 
-              {/* volume slider */}
+              {/* Lautstärke-Slider */}
               <div className="cc-section cc-slider-section">
                 <div className="cc-slider-label">
                   <img src="/icons/volume.png" alt="" className="cc-slider-icon" />
@@ -730,7 +729,7 @@ export default function Header({ onOpenApp }) {
         </div>
       )}
 
-      {/* ── Desktop Context Menu (Right-Click) ── */}
+      {/* ── Desktop-Kontextmenü (Rechtsklick) ── */}
       {ctxMenu && (
         <div className="desktop-ctx-overlay" onClick={() => setCtxMenu(null)}>
           <div className="desktop-ctx" style={{ left: ctxMenu.x, top: ctxMenu.y }} onClick={(e) => e.stopPropagation()}>
@@ -745,7 +744,7 @@ export default function Header({ onOpenApp }) {
         </div>
       )}
 
-      {/* hidden audio element for the music player */}
+      {/* verstecktes Audio-Element für den Musik-Player */}
       <audio ref={audioRef} preload="metadata" />
     </>
   );

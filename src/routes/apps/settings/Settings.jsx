@@ -1,8 +1,8 @@
-// ─── Settings App ───
-// this is the main Settings app — it looks like the iOS/macOS Settings
-// it has a sidebar with navigation and sections for Network, Appearance, Sound,
-// General, Notifications, Privacy, and About
-// all settings are saved to localStorage and synced across components via custom events
+// ─── Einstellungs-App ───
+// die Einstellungs-App im iOS/macOS-Stil
+// Sidebar mit Navigation und Bereichen für Netzwerk, Darstellung, Ton,
+// Allgemein, Benachrichtigungen, Datenschutz und Über
+// alle Einstellungen werden in localStorage gespeichert und per Custom Events synchronisiert
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './Settings.css';
 import { loadSettings, saveSettings, resetAppSettings, DEFAULT_SETTINGS, DEFAULT_CC, ACCENT_COLORS, broadcastSettingsChange } from './settingsStore';
@@ -17,7 +17,7 @@ import PrivacySection from './sections/PrivacySection';
 import AboutSection from './sections/AboutSection';
 import { WifiIcon, SunIcon, VolumeIcon, GlobeIcon, BellIcon, ShieldIcon, InfoIcon } from './icons';
 
-// sidebar nav items
+// Sidebar-Navigations-Einträge
 const SECTION_NAV = [
   { id: 'network',       icon: <WifiIcon />,   iconClass: 'blue',   labelKey: 'nav_network' },
   { id: 'appearance',    icon: <SunIcon />,    iconClass: 'purple', labelKey: 'nav_appearance' },
@@ -28,7 +28,7 @@ const SECTION_NAV = [
   { id: 'about',         icon: <InfoIcon />,   iconClass: 'blue',   labelKey: 'nav_about' },
 ];
 
-// all the things you can search for
+// alles was man durchsuchen kann
 const SEARCHABLE_ROWS = [
   { sectionId: 'network',       labelKey: 'wifi' },
   { sectionId: 'network',       labelKey: 'bluetooth' },
@@ -68,7 +68,7 @@ const SEARCHABLE_ROWS = [
   { sectionId: 'about',          labelKey: 'hardware' },
 ];
 
-// scary confirm popup for reset and delete
+// Bestätigungs-Popup für Reset und Löschen
 function ConfirmDialog({ message, onConfirm, onCancel, cancelLabel, confirmLabel, danger }) {
   return (
     <div className="st-confirm-overlay" onClick={onCancel}>

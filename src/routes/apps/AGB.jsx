@@ -1,12 +1,11 @@
-// ─── Terms and Conditions (AGB) ───
-// this is the AGB page — "Allgemeine Geschaeftsbedingungen" in German
-// it shows all the legal terms of use for the StreamDeck project
-// can be shown as a standalone page or as a closable popup overlay
+// ─── AGB-Seite ───
+// zeigt die Allgemeinen Geschäftsbedingungen des StreamDeck-Projekts
+// kann als eigenständige Seite oder als schließbares Popup angezeigt werden
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 
 export default function AGB({ popup = false, onClose }) {
-  // Close popup on Escape key
+  // Popup bei Escape-Taste schließen
   useEffect(() => {
     if (!popup) return;
     const handler = (e) => { if (e.key === 'Escape') onClose?.(); };

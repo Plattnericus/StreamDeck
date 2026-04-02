@@ -1,6 +1,6 @@
-// ─── About Page ───
-// this is the "About" app — it shows general info about the StreamDeck project
-// it has a sidebar and content area, similar to a macOS About window
+// ─── Über-Seite ───
+// zeigt allgemeine Infos über das StreamDeck-Projekt
+// mit Sidebar und Inhaltsbereich, ähnlich einem macOS Über-Fenster
 import "./About.css";
 import { useTranslation } from '../../i18n/LanguageContext';
 

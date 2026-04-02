@@ -1,12 +1,12 @@
-// ─── Photo Gallery ───
-// this is an image gallery app with category filters and a fullscreen viewer
-// it loads photo data from a JSON file (/galerie/galerie.json)
-// if the JSON fails to load, it shows demo data instead
+// ─── Foto-Galerie ───
+// Bildergalerie mit Kategoriefiltern und Vollbild-Viewer.
+// Lädt die Fotodaten aus /galerie/galerie.json —
+// bei Fehler wird automatisch auf Demo-Daten zurückgefallen.
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 import "./galerie.css";
 
-// backup data if the json dosnt load
+// Fallback-Daten, falls die JSON-Datei nicht geladen werden kann
 const DEMO = {
   titel: "Stream Deck",
   eintraege: [
@@ -75,7 +75,7 @@ const datumFormatieren = (s, lang = false, locale = 'de') =>
     : { day: "2-digit", month: "short", year: "numeric" })
   : null;
 
-// try to read exif date from the image
+// Versucht, das EXIF-Datum aus dem Bild auszulesen
 function exifAuslesen(imgEl) {
   return new Promise((resolve) => {
     try {
@@ -99,7 +99,7 @@ function exifAuslesen(imgEl) {
   });
 }
 
-// one photo card in the grid
+// Eine einzelne Foto-Kachel im Raster
 function Kachel({ eintrag, index, onClick }) {
   const [geladen, setGeladen] = useState(false);
   const [fehler,  setFehler]  = useState(false);
@@ -129,7 +129,7 @@ function Kachel({ eintrag, index, onClick }) {
   );
 }
 
-// big photo viewer, swipe left and right
+// Vollbild-Viewer mit Links/Rechts-Navigation und Swipe-Unterstützung
 function FotoViewer({ eintraege, startIndex, onClose, t, locale }) {
   const [index,      setIndex]      = useState(startIndex);
   const [geladen,    setGeladen]    = useState(false);

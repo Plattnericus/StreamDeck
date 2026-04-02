@@ -1,7 +1,7 @@
-// ─── General Settings Section ───
-// this handles: language selection, clock format (24h), date format, seconds display,
-// motion reduction, auto-lock, and a reset button to go back to defaults
-// the language change triggers a live update across the whole app
+// ─── Allgemeine Einstellungen ───
+// Sprachauswahl, Uhrzeitformat (24h), Datumsformat, Sekunden-Anzeige,
+// Bewegungsreduzierung, Auto-Sperre und ein Reset-Button für Standardwerte
+// Sprachänderung löst ein Live-Update in der ganzen App aus
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSelect } from '../primitives';
 import { GlobeIcon, ClockIcon, CalendarIcon, MotionIcon, LockIcon, ResetIcon } from '../icons';

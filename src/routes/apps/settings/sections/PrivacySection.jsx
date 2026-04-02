@@ -1,7 +1,7 @@
-// ─── Privacy Settings Section ───
-// this handles: cookie consent status, camera/microphone permissions,
-// analytics toggle, cache clearing, and the "delete all data" button
-// the cookie status reads from localStorage and can be reset here
+// ─── Datenschutz-Einstellungen ───
+// Cookie-Zustimmungsstatus, Kamera/Mikrofon-Berechtigungen,
+// Analyse-Toggle, Cache-Löschen und "alle Daten löschen"
+// Cookie-Status wird aus localStorage gelesen und kann hier zurückgesetzt werden
 import React from 'react';
 import { IosGroup, IosRow, IosToggle } from '../primitives';
 import { CookieIcon, CameraIcon, MicIcon, BarChartIcon, TrashIcon } from '../icons';

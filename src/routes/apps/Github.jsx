@@ -1,7 +1,6 @@
-// ─── GitHub Profile Page ───
-// this shows a GitHub profile with repos, followers, and bio
-// it fetches real data from the GitHub API for the given username
-// if the API fails, it still looks nice with placeholder data
+// ─── GitHub-Profilseite ───
+// Zeigt ein GitHub-Profil mit Repos, Followern und Bio.
+// Die Daten sind statisch hinterlegt — kein echter API-Aufruf.
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../../i18n/LanguageContext';
 import './Github.css';

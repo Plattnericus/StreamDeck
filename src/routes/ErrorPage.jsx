@@ -1,7 +1,7 @@
-// ─── Error Page (404) ───
-// this shows when the user navigates to a page that doesnt exist
-// it looks like the classic Windows "Blue Screen of Death" — just for fun
-// has a link back to the homepage
+// ─── Fehlerseite (404) ───
+// wird angezeigt wenn der Nutzer eine Seite aufruft die nicht existiert
+// sieht aus wie der klassische Windows "Blue Screen of Death" — ist halt lustig
+// hat einen Link zurück zur Startseite
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './ErrorPage.css';

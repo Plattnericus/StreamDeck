@@ -1,7 +1,6 @@
-// ─── Trash (Recycle Bin) ───
-// this is the Trash app — it looks like a Finder window but always shows empty
-// its purely decorative, no actual delete functionality
-// just there to make the desktop feel more like a real macOS
+// ─── Papierkorb ───
+// Sieht aus wie ein Finder-Fenster, zeigt aber immer einen leeren Papierkorb.
+// Rein dekorativ — macht den Desktop authentischer.
 import React from 'react';
 import './trash.css';
 import { useTranslation } from '../../i18n/LanguageContext';
@@ -62,7 +61,7 @@ export default function Trash() {
         </div>
       </div>
 
-      {/* ── Empty Content ── */}
+      {/* ── Leerer Inhalt ── */}
       <div className="tr-body">
         <div className="tr-empty">
           <svg className="tr-empty-icon" viewBox="0 0 80 80" fill="none">
@@ -77,7 +76,7 @@ export default function Trash() {
         </div>
       </div>
 
-      {/* ── Status Bar ── */}
+      {/* ── Statusleiste ── */}
       <div className="tr-statusbar">
         <span>{t('trash_zero_items')}</span>
       </div>

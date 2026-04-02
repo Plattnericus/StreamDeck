@@ -1,4 +1,4 @@
-/* ─── macOS Trash ─── */
+/* ─── macOS Papierkorb ─── */
 
 .tr-root {
   display: flex;
@@ -14,6 +14,7 @@
 }
 
 /* ─── Toolbar ─── */
+/* Navigation und Ansichts-Buttons (alle deaktiviert) */
 .tr-toolbar {
   display: flex;
   align-items: center;
@@ -47,7 +48,7 @@
   white-space: nowrap;
 }
 
-/* ─── Navigation Buttons ─── */
+/* ─── Navigations-Buttons ─── */
 .tr-nav-buttons {
   display: flex;
   gap: 2px;
@@ -72,7 +73,7 @@
   cursor: default;
 }
 
-/* ─── View Mode Buttons ─── */
+/* ─── Ansichtsmode-Buttons ─── */
 .tr-view-modes {
   display: flex;
   background: rgba(255, 255, 255, 0.06);
@@ -113,7 +114,7 @@
   cursor: default;
 }
 
-/* ─── Body ─── */
+/* ─── Inhaltsbereich ─── */
 .tr-body {
   flex: 1;
   display: flex;
@@ -122,7 +123,7 @@
   min-height: 0;
 }
 
-/* ─── Empty State ─── */
+/* ─── Leerer Zustand ─── */
 .tr-empty {
   display: flex;
   flex-direction: column;
@@ -143,7 +144,7 @@
   margin: 0;
 }
 
-/* ─── Status Bar ─── */
+/* ─── Statusleiste ─── */
 .tr-statusbar {
   display: flex;
   align-items: center;
@@ -159,7 +160,7 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
-/* ─── Light Mode ─── */
+/* ─── Heller Modus ─── */
 .light-mode .tr-root {
   background: #fff;
   color: #000;

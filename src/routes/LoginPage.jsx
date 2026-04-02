@@ -1,15 +1,15 @@
-// ─── Login Page ───
-// this is the first thing users see — it shows a macOS-style boot animation
-// then a lock screen with password input and a slide-to-unlock gesture
-// the user also has to accept cookies before they can continue to the desktop
-// the password is just "1234" — its not real security, just for the experience
+// ─── Login-Seite ───
+// das erste was der Nutzer sieht — macOS-Style Boot-Animation
+// dann ein Sperrbildschirm mit Passwortfeld und Slide-to-Unlock
+// Cookies müssen akzeptiert werden bevor's zum Desktop geht
+// das Passwort ist kein echtes Sicherheitsfeature, nur für die Optik
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from './apps/Cookies';
 import './LoginPage.css';
 import { useSEO } from '../hooks/useSEO';
 import { useTranslation } from '../i18n/LanguageContext';
 
-// Critical assets preloaded during the boot animation (visible on first frame)
+// Wichtige Assets die schon während der Boot-Animation geladen werden (sofort sichtbar)
 const PRELOAD_ASSETS = [
   { type: 'icon', label: 'Finder', src: '/icons/finder.webp' },
   { type: 'icon', label: 'Safari', src: '/icons/safari.webp' },
@@ -28,9 +28,9 @@ const PRELOAD_ASSETS = [
   { type: 'icon', label: 'Apple Logo', src: '/icons/apple.png' },
 ];
 
-// All remaining desktop images — loaded 3s after page load so PageSpeed stays 100%
+// Alle anderen Desktop-Bilder — 3s nach dem Laden nachgeladen damit PageSpeed 100 bleibt
 const DEFERRED_ASSETS = [
-  // Header / Control Center icons
+  // Header / Control Center Icons
   '/icons/flugmodus.png',
   '/icons/mobile-Daten.png',
   '/icons/skip-backwards.png',
@@ -43,11 +43,11 @@ const DEFERRED_ASSETS = [
   '/icons/airplay.png',
   '/icons/search.png',
   '/icons/lock.png',
-  // Window control icons
+  // Fenster-Steuerungsicons
   '/icons/close.png',
   '/icons/minimize.png',
   '/icons/maximize.png',
-  // App icons (App Store / Dock)
+  // App-Icons (App Store / Dock)
   '/icons/about.webp',
   '/icons/agb.webp',
   '/icons/changelog.webp',
@@ -64,10 +64,10 @@ const DEFERRED_ASSETS = [
   '/icons/cookies.png',
   '/icons/docker.png',
   '/icons/fallback.png',
-  // Other images used on desktop
+  // Sonstige Desktop-Bilder
   '/MAC.png',
   '/logos/apple-logo.png',
-  // Album covers for the music player
+  // Album-Cover für den Musik-Player
   '/songs/emails i cant send.jpg',
   '/songs/Short n Sweet (Deluxe).jpg',
   '/songs/Mans Best Friend (Bonus Track Version).jpg',
@@ -97,7 +97,7 @@ export default function LoginPage() {
   const [timeText, setTimeText] = useState('');
   const [declineCount, setDeclineCount] = useState(0);
 
-  // The simulated login password (shown as a hint on screen)
+  // Das angezeigte Hinweis-Passwort (kein echtes Sicherheitsfeature)
   const correctPassword = 'Kennwort0';
 
   const wheelAccumRef = useRef(0);
@@ -129,7 +129,7 @@ export default function LoginPage() {
     return passwordRef.current === '' || passwordRef.current === correctPassword;
   }
 
-  // Finish the unlock: if password is valid, redirect to desktop (or show cookie consent)
+  // Entsperren abschließen: bei gültigem Passwort zum Desktop oder Cookie-Dialog
   const completeUnlock = useCallback(() => {
     if (isUnlockingRef.current) return;
     if (canSlide()) {
@@ -164,7 +164,7 @@ export default function LoginPage() {
     window.location.href = '/desktop';
   }
 
-  // After declining cookies twice, force-accept and proceed anyway
+  // Nach zweimaliger Ablehnung wird trotzdem weitergeleitet
   function handleCookieDecline() {
     setDeclineCount((prev) => {
       const next = prev + 1;
@@ -191,7 +191,7 @@ export default function LoginPage() {
       });
     }
 
-    // Preload critical assets during boot animation
+    // Kritische Assets schon während der Boot-Animation laden
     const preloadTimer = setTimeout(() => {
       PRELOAD_ASSETS.forEach((asset) => {
         if (asset.type === 'font') {
@@ -203,7 +203,7 @@ export default function LoginPage() {
       });
     }, 2000);
 
-    // Preload all other desktop images 3s after page load (keeps PageSpeed at 100%)
+    // Alle anderen Bilder 3s nach dem Laden nachladen (PageSpeed bleibt auf 100%)
     const deferredTimer = setTimeout(() => {
       const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 50));
       idle(() => {
@@ -222,7 +222,7 @@ export default function LoginPage() {
     updateClock();
     const clockTimer = setInterval(updateClock, 1000);
 
-    // Scroll wheel drives the slide-to-unlock gesture
+    // Scrollrad steuert die Slide-to-Unlock Geste
     const wheelHandler = (e) => {
       if (!showLogin && !document.querySelector('.login-screen')) return;
       if (isUnlockingRef.current) return;

@@ -1,7 +1,7 @@
 // ─── Settings Store ───
-// this file handles saving and loading all user settings from localStorage
-// it also provides default values and a broadcast function to sync settings across components
-// we use a custom event 'streamdeck-settings-sync' so all components update immediately
+// speichert und lädt alle Nutzereinstellungen aus localStorage
+// liefert Standardwerte und eine Broadcast-Funktion um Einstellungen sofort zu synchronisieren
+// nutzt ein Custom Event 'streamdeck-settings-sync' damit alle Komponenten sofort updaten
 
 export const DEFAULT_SETTINGS = {
   darkMode: false,
@@ -49,7 +49,7 @@ export const ACCENT_COLORS = {
   red:    '#ff3b30',
 };
 
-// app settings and control center keys are stored separatly
+// App-Einstellungen und Control Center Keys werden getrennt gespeichert
 const APP_KEYS = [
   'darkMode', 'accentColor', 'fontSize', 'reduceTransparency',
   'soundEffects', 'startupSound', 'muted',
@@ -60,7 +60,7 @@ const APP_KEYS = [
 
 const CC_KEYS = ['wifi', 'bluetooth', 'airplane', 'cellular', 'lock', 'mirror', 'brightness', 'volume'];
 
-// load evrything and smash it together
+// alles laden und zusammenführen
 export function loadSettings() {
   let app = { ...DEFAULT_SETTINGS };
   let cc = { ...DEFAULT_CC };
@@ -75,7 +75,7 @@ export function loadSettings() {
   return { ...app, ...cc };
 }
 
-// split up and save to localStorage
+// aufteilen und in localStorage speichern
 export function saveSettings(next) {
   try {
     const appPart = {};
@@ -93,7 +93,7 @@ export function resetAppSettings() {
   } catch {}
 }
 
-// tell everyone that setings changed
+// alle Komponenten informieren dass sich Einstellungen geändert haben
 export function broadcastSettingsChange() {
   try {
     window.dispatchEvent(new CustomEvent('streamdeck-settings-sync'));

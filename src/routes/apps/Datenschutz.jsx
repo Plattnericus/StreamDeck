@@ -1,7 +1,6 @@
-// ─── Privacy Policy (Datenschutz) ───
-// this is the privacy policy page — "Datenschutz" means data protection in German
-// it explains what personal data is collected and how its used
-// can be shown as a standalone page or as a closable popup overlay
+// ─── Datenschutzerklärung ───
+// Erklärt, welche Daten gesammelt werden und wofür.
+// Kann als eigenständige Seite oder als schließbares Popup angezeigt werden.
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

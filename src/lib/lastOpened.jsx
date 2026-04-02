@@ -1,32 +1,31 @@
-// ─── Last Opened Tracker ───
-// this keeps a list of recently opened apps
-// it saves the list to localStorage so it persists between page reloads
-// the "Recently Opened" section on the desktop uses this data
+// ─── Zuletzt-geöffnet Tracker ───
+// speichert eine Liste zuletzt geöffneter Apps
+// in localStorage damit sie über Neuladen hinweg erhalten bleibt
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 
-// the key we use to store the data in localStorage
+// localStorage-Key für die Daten
 const STORAGE_KEY = 'streamdeck_last_opened_v1';
-const MAX_ITEMS = 10; // we only keep the last 10 apps — nobody needs more
+const MAX_ITEMS = 10; // maximal 10 Apps merken
 
-// context so all components can access the recently opened list
+// Context damit alle Komponenten auf die zuletzt-geöffnet Liste zugreifen können
 const LastOpenedContext = createContext(null);
 
-// provider that wraps the app and manages the recently opened state
+// Provider der die App einwickelt und den Zuletzt-geöffnet State verwaltet
 export function LastOpenedProvider({ children }) {
-  // the list of recently opened apps
+  // die Liste der zuletzt geöffneten Apps
   const [lastOpened, setLastOpened] = useState([]);
 
-  // load the list from localStorage when the app starts
-  // we strip out the 'component' property because you cant serialize React components
+  // Liste aus localStorage laden wenn die App startet
+  // 'component' Property wird entfernt weil React-Komponenten nicht serialisierbar sind
   const loadLastOpened = useCallback(() => {
-    if (typeof localStorage === 'undefined') return; // safety check for SSR
+    if (typeof localStorage === 'undefined') return; // SSR-Sicherheitscheck
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return; // nothing saved yet
+      if (!raw) return; // noch nichts gespeichert
       const data = JSON.parse(raw);
       if (Array.isArray(data)) {
-        // remove the component property — we only need the metadata
+        // component-Property entfernen — wir brauchen nur die Metadaten
         const cleanData = data.map(({ component, ...rest }) => rest);
         setLastOpened(cleanData);
       }
@@ -35,39 +34,39 @@ export function LastOpenedProvider({ children }) {
     }
   }, []);
 
-  // call this when a user opens an app
-  // it moves the app to the top of the list and updates the timestamp
+  // aufrufen wenn der Nutzer eine App öffnet
+  // verschiebt die App an den Anfang der Liste und aktualisiert den Timestamp
   const trackOpenedApp = useCallback((app) => {
     setLastOpened((items) => {
-      // check if this app is already in the list (by id or name)
+      // prüfen ob diese App schon in der Liste ist (nach ID oder Name)
       const existing = items.findIndex(
         (a) => a.id === app.id || a.name.toLowerCase() === app.name.toLowerCase()
       );
 
       let updated;
       if (existing !== -1) {
-        // app was opened before — update its timestamp and open count
+        // App war schon mal offen — Timestamp und Öffnungs-Zähler aktualisieren
         const item = { ...items[existing] };
         item.timestamp = Date.now();
         item.openCount = (item.openCount || 1) + 1;
-        // move it to the front of the list
+        // an den Anfang verschieben
         updated = [item, ...items.slice(0, existing), ...items.slice(existing + 1)];
       } else {
-        // first time opening this app — add it at the top
+        // App zum ersten Mal geöffnet — am Anfang hinzufügen
         updated = [
           { ...app, timestamp: Date.now(), openCount: 1, component: undefined },
           ...items,
         ];
       }
 
-      // keep only the most recent items and save to localStorage
+      // nur die neuesten Items behalten und in localStorage speichern
       updated = updated.slice(0, MAX_ITEMS);
       saveToLocalStorage(updated);
       return updated;
     });
   }, []);
 
-  // clear the whole list (used in settings or when user wants a fresh start)
+  // ganze Liste leeren (in Einstellungen oder für einen Neustart)
   const clearLastOpened = useCallback(() => {
     setLastOpened([]);
     if (typeof localStorage !== 'undefined') {
@@ -82,15 +81,15 @@ export function LastOpenedProvider({ children }) {
   );
 }
 
-// hook to access the recently opened list from any component
+// Hook um die Zuletzt-geöffnet Liste in einer Komponente zu nutzen
 export function useLastOpened() {
   const ctx = useContext(LastOpenedContext);
   if (!ctx) throw new Error('useLastOpened must be used within LastOpenedProvider');
   return ctx;
 }
 
-// helper to save the list to localStorage
-// we remove the component property because React components cant be turned into JSON
+// Hilfsfunktion zum Speichern in localStorage
+// component-Property wird entfernt weil React-Komponenten kein JSON sind
 function saveToLocalStorage(items) {
   if (typeof localStorage === 'undefined') return;
   try {

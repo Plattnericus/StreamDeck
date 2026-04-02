@@ -1,6 +1,5 @@
-// ─── Description Page (WIP) ───
-// this is a placeholder page — nothing here yet, its still work in progress
-// will eventually show a description of the project
+// ─── Beschreibungsseite (WIP) ───
+// Noch ein Platzhalter — Inhalt folgt später.
 export default function WIP() {
   return (
     <div style={{

@@ -1,8 +1,8 @@
-// ─── 3D Model Viewer ───
-// this shows 3D models of the StreamDeck parts using Three.js
-// you can rotate, zoom, and switch between different STL files
-// has auto-rotation, preset camera views (front, back, top, etc.)
-// and a download button to save the STL file
+// ─── 3D-Modell-Viewer ───
+// Zeigt die StreamDeck-Teile als 3D-Modell mit Three.js.
+// Drehen, Zoomen, zwischen STL-Dateien wechseln.
+// Automatische Rotation, Kamera-Voreinstellungen (vorne, hinten, oben …)
+// und Download-Button für die STL-Datei.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
@@ -15,7 +15,7 @@ const models = [
   { name: 'Lid Model', path: '/models/lidModel.stl' },
 ];
 
-// wich way each cube face looks
+// Blickrichtung jeder Würfelseite
 const orientationKeys = {
   model_right: [1, 0, 0],
   model_left: [-1, 0, 0],
@@ -50,7 +50,7 @@ export default function Model() {
 
   const isLidModel = selectedModel === models[1].path;
 
-  // load a model and fade it in nicley
+  // Modell laden und sanft einblenden
   const loadModel = useCallback((modelPath) => {
     const scene = sceneRef.current;
     const camera = cameraRef.current;
@@ -206,7 +206,7 @@ export default function Model() {
       orientationContainerRef.current.appendChild(oRenderer.domElement);
     }
 
-    // click on the cube to rotate camera there
+    // Klick auf den Orientierungswürfel → Kamera an diese Seite schwenken
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -237,13 +237,13 @@ export default function Model() {
       const ctrl = controlsRef.current;
       if (!cam || !ctrl) return;
 
-      // pause rotation while moving
+      // Autorotation während der Kamerabewegung pausieren
       ctrl.autoRotate = false;
       setIsRotating(false);
 
-      const dist = cam.position.length(); // keep current distance
+      const dist = cam.position.length(); // Aktuellen Abstand beibehalten
       const targetPos = dir.clone().multiplyScalar(dist);
-      // litle nudge so up stays up
+      // Kleiner Versatz, damit "oben" oben bleibt
       if (Math.abs(dir.y) > 0.9) {
         targetPos.z += 0.001;
       }
@@ -253,9 +253,9 @@ export default function Model() {
       const endTarget = new THREE.Vector3(0, 0, 0);
 
       animatingRef.current = true;
-      ctrl.enabled = false; // disable user interaction during animation
+      ctrl.enabled = false; // Nutzerinteraktion während der Animation sperren
 
-      const duration = 600; // ms
+      const duration = 600; // Animationsdauer in ms
       const t0 = Date.now();
       const animateToFace = () => {
         const elapsed = Date.now() - t0;

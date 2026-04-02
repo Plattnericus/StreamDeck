@@ -1,40 +1,39 @@
-// ─── Desktop Page ───
-// this is the main desktop screen — like the macOS desktop
-// it shows the header (menu bar), dock, and handles the drag-selection box
-// on mobile devices, it shows a message that says "please use a desktop"
+// ─── Desktop-Seite ───
+// der Hauptbildschirm des Desktops — wie der macOS Desktop
+// zeigt Menüleiste, Dock und den Auswahlrahmen beim Ziehen
+// auf Mobilgeräten kommt stattdessen eine Hinweismeldung
 
 import React from 'react';
 import Header from './Header';
 import Dock from './Dock';
-import DesktopMarquee from './DesktopMarquee'; // the drag-selection box on the desktop
-import { AppStoreProvider } from '../../lib/appStore'; // manages which apps are open
-import { LastOpenedProvider } from '../../lib/lastOpened'; // tracks recently opened apps
+import DesktopMarquee from './DesktopMarquee'; // Auswahlrahmen auf dem Desktop
+import { AppStoreProvider } from '../../lib/appStore'; // verwaltet welche Apps offen sind
+import { LastOpenedProvider } from '../../lib/lastOpened'; // merkt sich zuletzt geöffnete Apps
 import './DesktopPage.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
 export default function DesktopPage() {
-  const t = useTranslation(); // get the translation function
+  const t = useTranslation();
 
-  // this handler gets passed down to Header and Dock
-  // right now its empty because app opening is handled inside Dock
+  // wird an Header und Dock weitergegeben
+  // aktuell leer, da das App-Öffnen direkt im Dock passiert
   const handleOpenApp = (appName) => {
   };
 
   return (
-    // wrap everything in providers so all child components can access app state
+    // alles in Provider einwickeln damit Kind-Komponenten auf den App-State zugreifen können
     <AppStoreProvider>
       <LastOpenedProvider>
-        {/* the actual desktop — DesktopMarquee adds the drag-selection box */}
+        {/* der eigentliche Desktop — DesktopMarquee fügt den Auswahlrahmen hinzu */}
         <DesktopMarquee className="desktop">
           <Header onOpenApp={handleOpenApp} />
           <Dock onOpenApp={handleOpenApp} />
         </DesktopMarquee>
 
-        {/* mobile users see this instead of the desktop */}
-        {/* we show a friendly message telling them to use a computer */}
+        {/* auf Mobilgeräten kommt diese Meldung statt dem Desktop */}
         <div className="mobile-lockscreen">
           <div className="mobile-lockscreen-content">
-            {/* a simple toggle switch icon */}
+            {/* einfaches Toggle-Icon als Symbolbild */}
             <div className="mobile-lockscreen-icon">
               <svg width="72" height="72" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {}

@@ -1,7 +1,7 @@
-// ─── Cookie Consent Banner ───
-// this is the cookie popup that shows up on the login page
-// the user has to accept or decline cookies before they can use the app
-// it also links to the Cookie Info page and Privacy Policy for more details
+// ─── Cookie-Zustimmungs-Banner ───
+// das Cookie-Popup das auf der Login-Seite erscheint
+// der Nutzer muss Cookies akzeptieren oder ablehnen bevor er die App nutzen kann
+// verlinkt auch auf die Cookie-Info-Seite und Datenschutzerklärung
 import React, { useState, useEffect } from 'react';
 import CookiesInfo from './Cookies-info';
 import Datenschutz from './Datenschutz';
@@ -15,7 +15,7 @@ export default function Cookies({ onConsent, onDecline }) {
   const [showCookiesInfo, setShowCookiesInfo] = useState(false);
   const [showDatenschutz, setShowDatenschutz] = useState(false);
 
-  // already clicked? dont show again
+  // schon geklickt? nicht nochmal zeigen
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
     if (consent) {

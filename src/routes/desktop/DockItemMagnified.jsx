@@ -1,43 +1,43 @@
-// ─── Dock Item with Magnification ───
-// this is a single icon in the dock
-// it gets bigger when the mouse is close to it — just like the real macOS dock
-// uses the popmotion library for smooth interpolation between sizes
+// ─── Dock-Icon mit Vergrößerungseffekt ───
+// ein einzelnes Icon im Dock
+// wird größer wenn die Maus nah dran ist — genau wie beim echten macOS Dock
+// nutzt popmotion für weiche Interpolation zwischen den Größen
 
 import React, { useRef, useEffect, useCallback } from 'react';
 import { interpolate } from 'popmotion';
 import './DockItemMagnified.css';
 
-// the normal size of a dock icon in pixels
+// normale Icon-Größe in Pixeln
 const baseWidth = 79;
 
-// how far the magnification effect reaches (in pixels from the icon center)
+// wie weit der Vergrößerungseffekt reicht (in Pixeln vom Icon-Mittelpunkt)
 const distanceLimit = baseWidth * 6;
 
-// input: distance from mouse to icon center
-// the closer the mouse, the bigger the icon gets
+// Eingabe: Abstand der Maus zum Icon-Mittelpunkt
+// je näher die Maus, desto größer das Icon
 const distanceInput = [
-  -distanceLimit,        // far left
+  -distanceLimit,        // ganz links
   -distanceLimit / 1.25,
   -distanceLimit / 2,
-  0,                     // directly on the icon — maximum size
+  0,                     // direkt auf dem Icon — maximale Größe
   distanceLimit / 2,
   distanceLimit / 1.25,
-  distanceLimit,         // far right
+  distanceLimit,         // ganz rechts
 ];
 
-// output: the width of the icon at each distance
-// at center (distance 0) the icon is 1.9x its normal size
+// Ausgabe: Icon-Breite bei jedem Abstand
+// bei Abstand 0 ist das Icon 1,9x so groß
 const widthOutput = [
   baseWidth,
   baseWidth * 1.1,
   baseWidth * 1.414,
-  baseWidth * 1.9,       // maximum magnification
+  baseWidth * 1.9,       // maximale Vergrößerung
   baseWidth * 1.414,
   baseWidth * 1.1,
   baseWidth,
 ];
 
-// this creates a smooth function that maps distance -> icon width
+// glatte Funktion die Abstand -> Icon-Breite mappt
 const sizeInterp = interpolate(distanceInput, widthOutput);
 
 export default function DockItemMagnified({
@@ -50,41 +50,41 @@ export default function DockItemMagnified({
   onClick,
   onContextMenu,
 }) {
-  const elRef = useRef(null);      // ref to the icon DOM element
-  const curRef = useRef(baseWidth); // current animated size
-  const tgtRef = useRef(baseWidth); // target size we are animating towards
-  const rafRef = useRef(null);      // requestAnimationFrame handle
+  const elRef = useRef(null);      // Ref zum Icon-DOM-Element
+  const curRef = useRef(baseWidth); // aktuelle animierte Größe
+  const tgtRef = useRef(baseWidth); // Zielgröße zu der wir animieren
+  const rafRef = useRef(null);      // requestAnimationFrame-Handle
 
-  // when mouse moves, calculate the new target size based on distance
+  // wenn Maus sich bewegt, neue Zielgröße anhand des Abstands berechnen
   useEffect(() => {
     if (mouse_x === null) {
-      // mouse left the dock — go back to normal size
+      // Maus hat den Dock verlassen — zurück zur normalen Größe
       tgtRef.current = baseWidth;
     } else if (elRef.current) {
-      // calculate how far the mouse is from this icon's center
+      // Abstand der Maus zum Icon-Mittelpunkt berechnen
       const rect = elRef.current.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
-      tgtRef.current = sizeInterp(mouse_x - cx); // get the target size from the curve
+      tgtRef.current = sizeInterp(mouse_x - cx); // Zielgröße von der Kurve holen
     }
   }, [mouse_x]);
 
-  // smooth animation loop — runs every frame
-  // uses lerp (linear interpolation) to smoothly move towards the target size
+  // weiche Animations-Schleife — läuft jeden Frame
+  // nutzt Lerp (lineare Interpolation) um weich zur Zielgröße zu gleiten
   useEffect(() => {
     let running = true;
-    const lerp = 0.22; // how fast to move towards target (0 = never, 1 = instant)
+    const lerp = 0.22; // wie schnell wir zur Zielgröße gehen (0 = nie, 1 = sofort)
 
     function tick() {
       if (!running) return;
       const diff = tgtRef.current - curRef.current;
       if (Math.abs(diff) > 0.25) {
-        // still moving — lerp towards target
+        // noch in Bewegung — zur Zielgröße lerpen
         curRef.current += diff * lerp;
       } else {
-        // close enough — snap to target
+        // nah genug — direkt auf Zielgröße snappen
         curRef.current = tgtRef.current;
       }
-      // update the DOM element size directly (not through React state, for performance)
+      // DOM-Element direkt updaten (nicht über React State, für Performance)
       const el = elRef.current;
       if (el) {
         const px = curRef.current + 'px';
@@ -95,14 +95,14 @@ export default function DockItemMagnified({
     }
     rafRef.current = requestAnimationFrame(tick);
 
-    // clean up on unmount
+    // aufräumen wenn die Komponente entfernt wird
     return () => {
       running = false;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  // allow opening apps with keyboard (Enter or Space)
+  // Apps per Tastatur öffnen (Enter oder Leertaste)
   const handleKey = useCallback(
     (e) => { if (e.key === 'Enter' || e.key === ' ') onClick?.(); },
     [onClick],
@@ -120,13 +120,13 @@ export default function DockItemMagnified({
       onKeyDown={handleKey}
       style={{ width: baseWidth + 'px', height: baseWidth + 'px' }}
     >
-      {/* tooltip that shows the app name on hover */}
+      {/* Tooltip mit dem App-Namen beim Hovern */}
       <span className="app-tooltip">{name}</span>
 
-      {/* the actual app icon image */}
+      {/* das eigentliche App-Icon */}
       <img src={icon} alt={name} draggable={false} />
 
-      {/* small dot under the icon to show the app is open */}
+      {/* kleiner Punkt unter dem Icon wenn die App offen ist */}
       {is_open && <span className="dot" />}
     </div>
   );

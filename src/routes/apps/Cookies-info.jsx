@@ -1,6 +1,6 @@
-// ─── Cookie Information Page ───
-// this explains what cookies are used on the site, what they do, and what rights users have
-// can be shown as a popup from the cookie banner or opened from the App Store
+// ─── Cookie-Informationsseite ───
+// erklärt welche Cookies auf der Seite verwendet werden und welche Rechte Nutzer haben
+// kann als Popup aus dem Cookie-Banner oder aus dem App Store geöffnet werden
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

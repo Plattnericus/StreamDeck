@@ -1,6 +1,6 @@
-// ─── Appearance Settings Section ───
-// this handles the visual settings: dark/light mode, brightness slider,
-// accent color picker, font size selection, and transparency toggle
+// ─── Darstellungs-Einstellungen ───
+// visuelle Einstellungen: Dark/Light Mode, Helligkeits-Slider,
+// Akzentfarbe, Schriftgröße und Transparenz-Toggle
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSlider, IosSelect } from '../primitives';
 import { SunIcon, PaletteIcon, TextIcon, GlassIcon } from '../icons';

@@ -1,13 +1,13 @@
 // ─── Finder ───
-// this is a macOS Finder clone with a fake file system
-// it supports 4 view modes: icons, list, columns, and gallery
-// the file system is all in memory — no real files, just looks realistic
-// has a sidebar, toolbar, breadcrumb path bar, and status bar
+// macOS-Finder-Klon mit einem virtuellen Dateisystem.
+// Unterstützt 4 Ansichtsmodi: Icons, Liste, Spalten und Galerie.
+// Das Dateisystem lebt nur im Speicher — keine echten Dateien.
+// Hat Sidebar, Toolbar, Pfadleiste und Statusleiste.
 import React, { useState, useMemo, useCallback } from 'react';
 import './finder.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
-/* fake file system, all in memory */
+/* Virtuelles Dateisystem — nur im Speicher */
 const FS = {
   '/': {
     type: 'folder',
@@ -99,7 +99,7 @@ function getChildren(path) {
   });
 }
 
-// grab all files inside a folder
+// Alle Dateien innerhalb eines Ordners rekursiv sammeln
 function getAllFiles(path = '/') {
   const results = [];
   const node = getNode(path);
@@ -116,7 +116,7 @@ function getAllFiles(path = '/') {
   return results;
 }
 
-// last 10 changed files
+// Die 10 zuletzt geänderten Dateien
 function getRecents() {
   return getAllFiles('/')
     .sort((a, b) => b.modified.localeCompare(a.modified))
@@ -145,7 +145,7 @@ function pathSegments(path) {
   return segs;
 }
 
-/* icons */
+/* Icons */
 function FolderIcon({ className }) {
   return (
     <svg className={className} viewBox="0 0 32 32" fill="none">
@@ -184,7 +184,7 @@ function ItemIcon({ item, size }) {
   return <FileIcon icon={item.icon} className={cls} />;
 }
 
-/* sidebar icons */
+/* Sidebar-Icons */
 function SidebarIcon({ type }) {
   const s = { width: 16, height: 16, flexShrink: 0 };
   switch (type) {
@@ -213,7 +213,7 @@ function SidebarIcon({ type }) {
   }
 }
 
-/* view mode icons */
+/* Ansichtsmode-Icons */
 function ViewIcon({ mode, active }) {
   const color = active ? '#007AFF' : 'currentColor';
   switch (mode) {
@@ -230,7 +230,7 @@ function ViewIcon({ mode, active }) {
   }
 }
 
-/* sidebar favs */
+/* Sidebar-Favoriten */
 const SIDEBAR_FAVORITES = [
   { id: 'airdrop', path: '/AirDrop', iconType: 'airdrop', labelKey: 'finder_airdrop' },
   { id: 'recents', path: '/Recents', iconType: 'recents', labelKey: 'finder_recents' },
@@ -247,7 +247,7 @@ const SIDEBAR_LOCATIONS = [
   { id: 'network', path: '/', iconType: 'network', labelKey: 'finder_network' },
 ];
 
-/* the actual finder component */
+/* Haupt-Finder-Komponente */
 export default function Finder() {
   const t = useTranslation();
   const [currentPath, setCurrentPath] = useState('/Desktop');
@@ -340,7 +340,8 @@ export default function Finder() {
 
   return (
     <div className="fd-root">
-      {/* ── Toolbar ── */}
+      {/* ── Toolbar ──
+          Navigation, Ansichts-Buttons und Suche */}
       <div className="fd-toolbar">
         <div className="fd-toolbar-left">
           <div className="fd-nav-buttons">
@@ -435,7 +436,7 @@ export default function Finder() {
           </div>
         )}
 
-        {/* ── Content Area ── */}
+        {/* ── Inhaltsbereich ── */}
         <div className="fd-content">
           {viewMode === 'icons' && (
             <div className="fd-grid">
@@ -563,7 +564,7 @@ export default function Finder() {
         </div>
       </div>
 
-      {/* ── Path Bar ── */}
+      {/* ── Pfadleiste ── */}
       <div className="fd-pathbar">
         {segments.map((seg, i) => (
           <React.Fragment key={seg.path}>
@@ -575,7 +576,7 @@ export default function Finder() {
         ))}
       </div>
 
-      {/* ── Status Bar ── */}
+      {/* ── Statusleiste ── */}
       <div className="fd-statusbar">
         <span>{itemCount} {itemCount === 1 ? t('finder_item') : t('finder_items')}</span>
       </div>

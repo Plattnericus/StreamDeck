@@ -1,6 +1,6 @@
-/* ─── Terminal Styles ───
-   dark terminal with monospace font, colored output, cursor blinking,
-   tab completion suggestions, and neofetch ASCII art */
+/* ─── Terminal-Stile ───
+   Dunkles Terminal mit Monospace-Schrift, farbiger Ausgabe,
+   blinkenden Cursor, Tab-Vorschlägen und neofetch-ASCII-Art */
 
 .terminal-wrap {
   display: flex;

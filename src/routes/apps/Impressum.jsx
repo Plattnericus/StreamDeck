@@ -1,7 +1,7 @@
-// ─── Impressum (Legal Notice) ───
-// this page is required by German and Italian law
-// it shows who runs the website, contact info, copyright, and disclaimers
-// can be shown as a standalone page or as a closable popup overlay
+// ─── Impressum ───
+// Nach deutschem und italienischem Recht vorgeschrieben.
+// Zeigt Betreiber, Kontakt, Urheberrecht und Haftungsausschlüsse.
+// Funktioniert als eigenständige Seite oder als schließbares Popup.
 import React, { useEffect } from 'react';
 import './legal-shared.css';
 

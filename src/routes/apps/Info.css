@@ -1,5 +1,5 @@
-/* ─── Info Page Styles ───
-   styles for the product info page with sidebar navigation and content sections */
+/* ─── Info-Seite Stile ───
+   Produktdokumentation mit Sidebar-Navigation und Inhaltsabschnitten */
 
 .info {
   display: flex;
@@ -10,7 +10,8 @@
   overflow: hidden;
 }
 
-/* ── Sidebar ── */
+/* ── Sidebar ──
+   Navigationsleiste links */
 .info-sidebar {
   width: 168px;
   min-width: 168px;
@@ -111,7 +112,7 @@
   line-height: 1.55;
 }
 
-/* ── Main scroll area ── */
+/* ── Scrollbarer Hauptbereich ── */
 .info-main {
   flex: 1;
   display: flex;
@@ -128,7 +129,7 @@
   padding: 0 0 20px;
 }
 
-/* ── Section ── */
+/* ── Abschnitt ── */
 .info-section {
   display: flex;
   flex-direction: column;
@@ -169,7 +170,7 @@
   background: rgba(255,255,255,0.06);
 }
 
-/* ── Card ── */
+/* ── Karte ── */
 .info-card {
   border: 0.5px solid rgba(255,255,255,0.07);
   border-radius: 10px;
@@ -177,7 +178,7 @@
   margin-bottom: 10px;
 }
 
-/* Simple key-value row */
+/* Einfache Schlüssel-Wert-Zeile */
 .kv-row {
   display: flex;
   align-items: baseline;
@@ -219,7 +220,7 @@
 }
 .kv-val a:hover { color: #90cdf4; }
 
-/* Wide text block inside a card */
+/* Breiter Textblock innerhalb einer Karte */
 .info-prose {
   padding: 10px 14px;
   font-size: 11.5px;
@@ -234,7 +235,7 @@
   font-weight: 500;
 }
 
-/* Two-column grid for cards */
+/* Zweispaltiges Raster für Karten */
 .info-grid {
   display: flex;
   flex-direction: row;
@@ -246,7 +247,7 @@
   margin-bottom: 0;
 }
 
-/* Step rows */
+/* Bauschritt-Zeilen */
 .step-row {
   display: flex;
   align-items: flex-start;
@@ -288,7 +289,7 @@
   line-height: 1.55;
 }
 
-/* Tag cloud */
+/* Tag-Cloud (Feature-Übersicht) */
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -320,7 +321,7 @@
   color: rgba(104,211,145,0.85);
 }
 
-/* Wiring table */
+/* Verkabelungstabelle */
 .wire-row {
   display: flex;
   align-items: center;
@@ -353,7 +354,7 @@
   font-style: italic;
 }
 
-/* Spec bar */
+/* Komplexitätsbalken */
 .spec-bar-row {
   display: flex;
   align-items: center;

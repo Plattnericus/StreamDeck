@@ -1,6 +1,6 @@
-// ─── Sound Settings Section ───
-// this handles: volume slider, mute toggle, sound effects on/off, and startup sound
-// the volume is connected to the music player in the Control Center
+// ─── Ton-Einstellungen ───
+// Lautstärke-Slider, Stummschalten, Soundeffekte ein/aus und Startton
+// die Lautstärke ist mit dem Musik-Player im Control Center verknüpft
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSlider } from '../primitives';
 import { VolumeIcon, VolumeMuteIcon, SoundFxIcon, LightbulbIcon } from '../icons';

@@ -1,10 +1,9 @@
 // ─── Settings UI Primitives ───
-// these are the reusable iOS-style UI components for the Settings app
-// includes: toggle switches, rows, groups, sliders, select dropdowns
-// they all follow the iOS/macOS design language with rounded corners and clean look
+// wiederverwendbare iOS-Style UI-Komponenten für die Einstellungs-App
+// enthält: Toggle-Schalter, Zeilen, Gruppen, Slider, Dropdowns
 import React from 'react';
 
-// toggle on/off
+// Ein/Aus-Schalter
 export function IosToggle({ checked, onChange, disabled }) {
   return (
     <button
@@ -19,7 +18,7 @@ export function IosToggle({ checked, onChange, disabled }) {
   );
 }
 
-// grouped card with title
+// Gruppen-Karte mit Titel
 export function IosGroup({ label, children }) {
   return (
     <div className="st-ios-group">
@@ -29,7 +28,7 @@ export function IosGroup({ label, children }) {
   );
 }
 
-// one row in the settings list
+// eine Zeile in der Einstellungsliste
 export function IosRow({ icon, iconClass = 'gray', label, value, chevron, onClick, children }) {
   return (
     <div className={`st-ios-row${onClick ? ' tappable' : ''}`} onClick={onClick}>
@@ -44,7 +43,7 @@ export function IosRow({ icon, iconClass = 'gray', label, value, chevron, onClic
   );
 }
 
-// slider row with number
+// Slider-Zeile mit Zahlenwert
 export function IosSlider({ icon, iconClass = 'gray', label, value, min, max, onChange, unit = '%' }) {
   return (
     <div className="st-ios-slider-row">
@@ -67,7 +66,7 @@ export function IosSlider({ icon, iconClass = 'gray', label, value, min, max, on
   );
 }
 
-// dropdown picker
+// Dropdown-Auswahl
 export function IosSelect({ icon, iconClass = 'gray', label, value, options, onChange }) {
   return (
     <IosRow icon={icon} iconClass={iconClass} label={label}>

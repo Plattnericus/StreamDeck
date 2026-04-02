@@ -1,13 +1,13 @@
-// ─── Entry Point ───
-// this is where the whole app starts
-// we grab the root element from index.html and render our React app into it
-// StrictMode helps us catch problems during development
+// ─── Einstiegspunkt ───
+// hier startet die ganze App
+// wir holen das Root-Element aus index.html und rendern unsere React-App rein
+// StrictMode hilft uns Probleme während der Entwicklung zu finden
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App'; // the main App component with all the routes
+import App from './App'; // die Haupt-App-Komponente mit allen Routen
 
-// find the root div in index.html and start the app
+// Root-Div aus index.html nehmen und App starten
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />

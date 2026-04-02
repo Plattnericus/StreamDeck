@@ -1,7 +1,7 @@
-// ─── About This Mac ───
-// this shows the "About this Mac" dialog with fake hardware specs
-// it shows the macOS version, chip, memory, and serial number
-// purely decorative — just makes it feel like a real Mac
+// ─── Über diesen Mac ───
+// zeigt den "Über diesen Mac"-Dialog mit simulierten Hardware-Specs
+// macOS-Version, Chip, Speicher und Seriennummer
+// rein dekorativ — soll sich anfühlen wie ein echter Mac
 import React from 'react';
 import './AboutMac.css';
 

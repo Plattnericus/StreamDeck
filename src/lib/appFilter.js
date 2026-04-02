@@ -1,10 +1,9 @@
-// ─── App Filter ───
-// this file helps us tell the difference between standard apps and user-installed ones
-// standard apps are always there (like Finder, Browser, etc.)
-// we use this in the dock and app store to decide what to show
+// ─── App-Filter ───
+// unterscheidet Standard-Apps von nutzerinstallierten Apps
+// Standard-Apps sind immer da (Finder, Browser, etc.) und können nicht entfernt werden
+// wird im Dock und App Store genutzt um zu entscheiden was angezeigt wird
 
-// these are the apps that come with the system by default
-// they are always installed and cant be removed
+// Standard-Apps die immer installiert sind
 const STANDARD_APPS = [
   'apps.jsx',
   'finder.jsx',
@@ -13,13 +12,13 @@ const STANDARD_APPS = [
   'trash.jsx',
 ];
 
-// quick check: is this app one of the standard ones?
+// schnelle Prüfung: ist das eine Standard-App?
 export function isStandardApp(fileName) {
   return STANDARD_APPS.includes(fileName.toLowerCase());
 }
 
-// the opposite — returns true if the app is NOT a standard app
-// useful for filtering lists to only show user-installed apps
+// das Gegenteil — true wenn die App KEINE Standard-App ist
+// nützlich um Listen auf nutzerinstallierte Apps zu filtern
 export function filterOutStandardApps(fileName) {
   return !isStandardApp(fileName);
 }

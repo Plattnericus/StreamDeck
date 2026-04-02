@@ -1,6 +1,6 @@
-// ─── Notifications Settings Section ───
-// this handles: notifications on/off, app badges, notification sounds,
-// preview mode (always/when unlocked/never), and Do Not Disturb toggle
+// ─── Benachrichtigungs-Einstellungen ───
+// Benachrichtigungen ein/aus, App-Badges, Benachrichtigungstöne,
+// Vorschau-Modus (immer/gesperrt/nie) und Nicht stören
 import React from 'react';
 import { IosGroup, IosRow, IosToggle, IosSelect } from '../primitives';
 import { BellIcon, MessageIcon, SoundFxIcon, DoNotDisturbIcon } from '../icons';
