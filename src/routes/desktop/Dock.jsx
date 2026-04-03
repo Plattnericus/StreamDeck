@@ -23,6 +23,8 @@ import TerminalApp from '../apps/Terminal';
 import Datenschutz from '../apps/Datenschutz';
 import Model from '../apps/Model';
 import CookiesInfo from '../apps/Cookies-info';
+import Contact from '../apps/Contact';
+import Docker from '../apps/Docker';
 import { openTab, getCenterPosition } from '../../lib/openTab';
 import { useTranslation } from '../../i18n/LanguageContext';
 import './Dock.css';
@@ -32,7 +34,7 @@ import './Dock.css';
 // weil man React-Komponenten nicht als JSON speichern kann
 const COMPONENT_MAP = {
   Finder, Apps, Settings, Browser, Terminal, Github, Papierkorb,
-  About, Changelog, Galerie, Impressum, Agb, Info, Datenschutz, Model, CookiesInfo,
+  About, Changelog, Galerie, Impressum, Agb, Info, Datenschutz, Model, CookiesInfo, Contact, Docker,
 };
 
 // localStorage-Key für gepinnte Dock-Apps

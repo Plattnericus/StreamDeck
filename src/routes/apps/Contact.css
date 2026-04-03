@@ -1,0 +1,280 @@
+/* ─── Kontaktformular Styles ───
+   Zwei-Spalten-Layout mit Sidebar und Formular */
+
+.contact {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  font-family: inherit;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* ── Sidebar ── */
+.contact-sidebar {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 24px;
+  border-right: 0.5px solid rgba(255, 255, 255, 0.07);
+  gap: 0;
+}
+
+.contact-icon-wrap {
+  animation: contact-float 7s ease-in-out infinite;
+  margin-bottom: 14px;
+}
+
+@keyframes contact-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+.contact-sidebar img {
+  width: 86px;
+  height: 86px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+  display: block;
+}
+
+.contact-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: 6px;
+}
+
+.contact-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 28px;
+}
+
+.contact-badge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #48bb78;
+  box-shadow: 0 0 6px #48bb78;
+  animation: contact-blink 2.5s ease-in-out infinite;
+}
+
+@keyframes contact-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+.contact-divider {
+  width: 100%;
+  height: 0.5px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-bottom: 18px;
+}
+
+.contact-info-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.2);
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+
+.contact-info-rows {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-info-key {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.contact-info-val {
+  font-size: 11px;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.contact-info-val.contact-green {
+  color: #68d391;
+}
+
+/* ── Formular ── */
+.contact-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 22px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.contact-main::-webkit-scrollbar { display: none; }
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: contact-rise 0.35s ease both;
+}
+
+@keyframes contact-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.contact-group-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.2);
+  padding-left: 2px;
+}
+
+.contact-card {
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.contact-field {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  min-height: 38px;
+  transition: background 0.12s ease;
+}
+
+.contact-field:not(:last-child) {
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+}
+
+.contact-field:focus-within {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.contact-field label {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.38);
+  font-weight: 400;
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.contact-field input,
+.contact-field textarea {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
+  padding: 9px 0;
+}
+
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.contact-field-textarea {
+  align-items: flex-start;
+}
+
+.contact-field-textarea label {
+  padding-top: 10px;
+}
+
+.contact-field textarea {
+  resize: none;
+  line-height: 1.6;
+  scrollbar-width: none;
+}
+
+.contact-field textarea::-webkit-scrollbar { display: none; }
+
+/* ── Senden-Button ── */
+.contact-send {
+  width: 100%;
+  padding: 10px 0;
+  border: none;
+  border-radius: 10px;
+  background: #007aff;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease, transform 0.15s ease;
+}
+
+.contact-send:hover:not(.disabled):not(.sending) {
+  background: #0070e6;
+}
+
+.contact-send:active:not(.disabled):not(.sending) {
+  transform: scale(0.98);
+}
+
+.contact-send.disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.contact-send.sending {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.contact-send.sent {
+  background: #48bb78;
+}
+
+/* ─── Light Mode ─── */
+html.light-mode .contact { color: #000; }
+html.light-mode .contact-sidebar { border-right-color: rgba(0, 0, 0, 0.08); }
+html.light-mode .contact-title { color: #000; }
+html.light-mode .contact-badge { color: rgba(0, 0, 0, 0.4); background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.08); }
+html.light-mode .contact-divider { background: rgba(0, 0, 0, 0.08); }
+html.light-mode .contact-info-label { color: rgba(0, 0, 0, 0.5); }
+html.light-mode .contact-info-key { color: rgba(0, 0, 0, 0.5); }
+html.light-mode .contact-info-val { color: #000; }
+html.light-mode .contact-group-label { color: rgba(0, 0, 0, 0.5); }
+html.light-mode .contact-card { background: #fff; border-color: rgba(0, 0, 0, 0.08); }
+html.light-mode .contact-field:not(:last-child) { border-bottom-color: rgba(0, 0, 0, 0.06); }
+html.light-mode .contact-field label { color: rgba(0, 0, 0, 0.5); }
+html.light-mode .contact-field input,
+html.light-mode .contact-field textarea { color: #000; }
+html.light-mode .contact-field input::placeholder,
+html.light-mode .contact-field textarea::placeholder { color: rgba(0, 0, 0, 0.2); }

@@ -1,0 +1,253 @@
+/* ─── Docker-Seite Stile ───
+   Portainer-aehnliche Container-Ansicht mit Flexbox-Layout */
+
+.docker {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.docker-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.07);
+  flex: 0 0 auto;
+}
+
+.docker-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+
+.docker-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.docker-header-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: -0.3px;
+}
+
+.docker-header-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 1px;
+}
+
+.docker-stats {
+  display: flex;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+.docker-stat {
+  text-align: center;
+}
+
+.docker-stat-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgba(99,179,237,0.9);
+  font-family: 'SF Mono', ui-monospace, monospace;
+}
+
+.docker-stat-label {
+  font-size: 9px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Suchleiste ── */
+.docker-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+  flex: 0 0 auto;
+}
+
+.docker-search-icon {
+  width: 14px;
+  height: 14px;
+  color: rgba(255,255,255,0.3);
+  flex: 0 0 auto;
+}
+
+.docker-search-input {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 7px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.88);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.docker-search-input::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+
+.docker-search-input:focus {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(99,179,237,0.4);
+}
+
+.docker-search-input::-webkit-search-cancel-button { display: none; }
+
+/* ── Container-Liste (scrollbar unsichtbar) ── */
+.docker-list {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.docker-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Container-Karte ── */
+.docker-card {
+  flex: 0 0 auto;
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  animation: dockerPop 0.25s ease both;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.docker-card:hover {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.12);
+}
+
+@keyframes dockerPop {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Karten-Header */
+.docker-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+}
+
+.docker-card-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.docker-card-status.running {
+  background: #68d391;
+  box-shadow: 0 0 6px rgba(104,211,145,0.4);
+}
+
+.docker-card-status.stopped {
+  background: #fc8181;
+  box-shadow: 0 0 6px rgba(252,129,129,0.3);
+}
+
+.docker-card-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.88);
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.docker-card-id {
+  font-size: 10px;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  color: rgba(99,179,237,0.6);
+  flex: 0 0 auto;
+}
+
+.docker-card-arrow {
+  font-size: 10px;
+  color: rgba(255,255,255,0.2);
+  transition: transform 0.2s;
+  flex: 0 0 auto;
+}
+
+.docker-card.open .docker-card-arrow {
+  transform: rotate(90deg);
+}
+
+/* Karten-Body (aufklappbar, passt sich dem Text an) */
+.docker-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 0;
+  opacity: 0;
+  padding: 0 14px;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s, padding 0.25s;
+  border-top: 0.5px solid rgba(255,255,255,0.04);
+}
+
+.docker-card.open .docker-card-body {
+  max-height: 800px;
+  opacity: 1;
+  padding: 12px 14px 14px;
+}
+
+.docker-card-text {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.58);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.docker-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.docker-tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(99,179,237,0.08);
+  border: 0.5px solid rgba(99,179,237,0.15);
+  color: rgba(99,179,237,0.75);
+  font-family: 'SF Mono', ui-monospace, monospace;
+}
+
+/* ── Leere Suche ── */
+.docker-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.25);
+  font-size: 12px;
+}
