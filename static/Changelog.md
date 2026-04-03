@@ -135,6 +135,7 @@
 - added some comments
 - made Translations
 - Added Häufige Fragen (Docker)
+- added Tutorial Page (worked like the whole day)
 
 
 ## TO DO

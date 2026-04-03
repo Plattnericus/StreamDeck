@@ -1,0 +1,386 @@
+/* ─── Tutorial-Seite Stile ───
+   ausfuehrliche Schritt-fuer-Schritt Anleitung */
+
+.tutorial {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* ── Sidebar ── */
+.tut-sidebar {
+  width: 170px;
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 10px;
+  border-right: 0.5px solid rgba(255,255,255,0.07);
+  overflow-y: auto;
+  scrollbar-width: none;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.tut-sidebar::-webkit-scrollbar { display: none; }
+
+.tut-sidebar-label {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.18);
+  padding: 8px 8px 4px;
+}
+
+.tut-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 400;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+
+.tut-nav-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.65);
+}
+
+.tut-nav-btn.active {
+  background: rgba(99,179,237,0.1);
+  color: rgba(99,179,237,0.9);
+  font-weight: 500;
+}
+
+.tut-nav-num {
+  font-size: 9px;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  opacity: 0.6;
+  width: 16px;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+/* ── Layout: Sidebar + Content ── */
+.tut-layout {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Scrollbarer Hauptbereich (keine sichtbare Scrollbar) ── */
+.tut-main {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tut-main::-webkit-scrollbar { display: none; }
+
+.tut-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px 32px;
+}
+
+/* ── Abschnitts-Header ── */
+.tut-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tut-section-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(99,179,237,0.1);
+  border: 0.5px solid rgba(99,179,237,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  color: rgba(99,179,237,0.85);
+  flex: 0 0 auto;
+}
+
+.tut-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: -0.3px;
+}
+
+.tut-section-line {
+  flex: 1;
+  height: 0.5px;
+  background: rgba(255,255,255,0.06);
+}
+
+/* ── Text ── */
+.tut-text {
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.55);
+  word-wrap: break-word;
+}
+
+.tut-text strong {
+  color: rgba(255,255,255,0.78);
+  font-weight: 600;
+}
+
+/* ── Bild ── */
+.tut-img-wrap {
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tut-img {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  background: rgba(0,0,0,0.3);
+}
+
+.tut-img-caption {
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.3);
+  padding: 6px 12px;
+  border-top: 0.5px solid rgba(255,255,255,0.05);
+  font-style: italic;
+}
+
+/* ── Code-Block ── */
+.tut-code-wrap {
+  border: 0.5px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tut-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 0.5px solid rgba(255,255,255,0.06);
+}
+
+.tut-code-lang {
+  font-size: 10px;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  color: rgba(99,179,237,0.7);
+}
+
+.tut-code-copy {
+  all: unset;
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: background 0.12s, color 0.12s;
+}
+
+.tut-code-copy:hover {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.6);
+}
+
+.tut-code {
+  padding: 12px 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tut-code::-webkit-scrollbar { display: none; }
+
+.tut-code pre {
+  margin: 0;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.6);
+  white-space: pre;
+  tab-size: 4;
+}
+
+/* ── Info-Karte (Bauteile, Hinweise) ── */
+.tut-card {
+  border: 0.5px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tut-card-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 8px 14px;
+  gap: 12px;
+  transition: background 0.12s;
+}
+
+.tut-card-row:not(:last-child) {
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+
+.tut-card-row:hover { background: rgba(255,255,255,0.025); }
+
+.tut-card-key {
+  font-size: 12px;
+  color: rgba(255,255,255,0.36);
+  font-weight: 400;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.tut-card-val {
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  font-weight: 500;
+  text-align: right;
+}
+
+.tut-card-val.mono {
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: rgba(99,179,237,0.85);
+}
+
+.tut-card-val.green { color: #68d391; }
+.tut-card-val.orange { color: #f6ad55; }
+
+/* ── Hinweis-Box ── */
+.tut-note {
+  border: 0.5px solid rgba(246,173,85,0.2);
+  background: rgba(246,173,85,0.04);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(246,173,85,0.75);
+}
+
+.tut-note strong {
+  color: rgba(246,173,85,0.9);
+}
+
+/* ── Verkabelungstabelle ── */
+.tut-wire-row {
+  display: flex;
+  align-items: center;
+  padding: 7px 14px;
+  gap: 10px;
+}
+
+.tut-wire-row:not(:last-child) {
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+
+.tut-wire-from {
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: rgba(99,179,237,0.8);
+  width: 120px;
+  flex: 0 0 auto;
+}
+
+.tut-wire-arrow {
+  font-size: 10px;
+  color: rgba(255,255,255,0.15);
+}
+
+.tut-wire-to {
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: rgba(104,211,145,0.8);
+  flex: 1;
+}
+
+/* ── Download-Link ── */
+.tut-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 0.5px solid rgba(99,179,237,0.2);
+  background: rgba(99,179,237,0.06);
+  border-radius: 8px;
+  font-size: 12px;
+  color: rgba(99,179,237,0.8);
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s;
+  cursor: pointer;
+}
+
+.tut-download:hover {
+  background: rgba(99,179,237,0.12);
+  border-color: rgba(99,179,237,0.35);
+}
+
+/* ── Befehls-Tabelle ── */
+.tut-cmd-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  gap: 12px;
+}
+
+.tut-cmd-row:not(:last-child) {
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
+}
+
+.tut-cmd-char {
+  font-family: 'SF Mono', ui-monospace, monospace;
+  font-size: 12px;
+  color: rgba(99,179,237,0.85);
+  width: 28px;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.tut-cmd-action {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.5);
+  flex: 1;
+}
+
+.tut-cmd-target {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  font-family: 'SF Mono', ui-monospace, monospace;
+  text-align: right;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Fade-In Animation ── */
+.tut-fade {
+  animation: tutFade 0.3s ease both;
+}
+
+@keyframes tutFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -17,6 +17,7 @@ import Datenschutz from './Datenschutz';
 import Model from './Model';
 import CookiesInfo from './Cookies-info';
 import Contact from './Contact';
+import Tutorial from './Tutorial';
 import Settings from './settings/Settings';
 import Docker from './Docker';
 
@@ -45,12 +46,13 @@ const APP_LIST = [
   { id: 103, name: '3D-Modell',   icon: 'model.webp',       component: Model,       subtitleKey: 'app_model_sub',       descKey: 'app_model_desc',       developer: 'System', version: '1.0.0',    width: 520, height: 760 },
   { id: 104, name: 'Docker',      icon: 'docker.png',       component: Docker,      subtitleKey: 'app_description_sub', descKey: 'app_description_desc', developer: 'System', version: '1.0.0',    width: 720, height: 560 },
   { id: 105, name: 'Galerie',     icon: 'fotos.webp',       component: Galerie,     subtitleKey: 'app_galerie_sub',     descKey: 'app_galerie_desc',     developer: 'System', version: '8.0.0',    width: 720, height: 560 },
-  { id: 106, name: 'Changelog',   icon: 'changelog.webp',   component: Changelog,   subtitleKey: 'app_changelog_sub',   descKey: 'app_changelog_desc',   developer: 'System', version: '9.4.2',    width: 640, height: 480 },
-  { id: 107, name: 'Contact',     icon: 'mail.webp',        component: Contact,     subtitleKey: 'app_contact_sub',     descKey: 'app_contact_desc',     developer: 'System', version: '1.0.0',    width: 700, height: 520 },
-  { id: 108, name: 'Datenschutz', icon: 'datenschutz.webp', component: Datenschutz, subtitleKey: 'app_datenschutz_sub', descKey: 'app_datenschutz_desc', developer: 'System', version: '1.20b.0',  width: 720, height: 560 },
-  { id: 109, name: 'Impressum',   icon: 'impressum.webp',   component: Impressum,   subtitleKey: 'app_impressum_sub',   descKey: 'app_impressum_desc',   developer: 'System', version: '21.0.0',   width: 720, height: 560 },
-  { id: 110, name: 'AGB',         icon: 'agb.webp',         component: Agb,         subtitleKey: 'app_agb_sub',         descKey: 'app_agb_desc',         developer: 'System', version: '1.0.0',    width: 720, height: 560 },
-  { id: 111, name: 'Cookies',     icon: 'cookies.png',      component: CookiesInfo, subtitleKey: 'app_cookies_sub',     descKey: 'app_cookies_desc',     developer: 'System', version: '1.0.1',    width: 720, height: 560 },
+  { id: 106, name: 'Tutorial',    icon: 'tutorial.png',     component: Tutorial,    subtitleKey: 'app_tutorial_sub',    descKey: 'app_tutorial_desc',    developer: 'System', version: '1.0.0',    width: 820, height: 620 },
+  { id: 107, name: 'Changelog',   icon: 'changelog.webp',   component: Changelog,   subtitleKey: 'app_changelog_sub',   descKey: 'app_changelog_desc',   developer: 'System', version: '9.4.2',    width: 640, height: 480 },
+  { id: 108, name: 'Contact',     icon: 'mail.webp',        component: Contact,     subtitleKey: 'app_contact_sub',     descKey: 'app_contact_desc',     developer: 'System', version: '1.0.0',    width: 700, height: 520 },
+  { id: 109, name: 'Datenschutz', icon: 'datenschutz.webp', component: Datenschutz, subtitleKey: 'app_datenschutz_sub', descKey: 'app_datenschutz_desc', developer: 'System', version: '1.20b.0',  width: 720, height: 560 },
+  { id: 110, name: 'Impressum',   icon: 'impressum.webp',   component: Impressum,   subtitleKey: 'app_impressum_sub',   descKey: 'app_impressum_desc',   developer: 'System', version: '21.0.0',   width: 720, height: 560 },
+  { id: 111, name: 'AGB',         icon: 'agb.webp',         component: Agb,         subtitleKey: 'app_agb_sub',         descKey: 'app_agb_desc',         developer: 'System', version: '1.0.0',    width: 720, height: 560 },
+  { id: 112, name: 'Cookies',     icon: 'cookies.png',      component: CookiesInfo, subtitleKey: 'app_cookies_sub',     descKey: 'app_cookies_desc',     developer: 'System', version: '1.0.1',    width: 720, height: 560 },
 ];
 
 // installierte Apps in localStorage speichern damit sie nach Neuladen noch da sind
