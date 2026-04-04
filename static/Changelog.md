@@ -137,6 +137,9 @@
 - Added Häufige Fragen (Docker)
 - added Tutorial Page (worked like the whole day)
 
+# 04.04.2026
+- made everything work locally (without api calls)
+
 
 ## TO DO
 - Bilder erstellen für Galerie

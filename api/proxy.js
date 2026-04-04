@@ -1,10 +1,3 @@
-// ─── Serverless Proxy (Vercel) ───
-// die Produktionsversion des Browser-Proxys als Vercel Serverless Function
-// lädt externe Webseiten damit unser In-App-Browser sie anzeigen kann
-// nötig weil Browser Cross-Origin Requests (CORS) blockieren
-// injiziert auch einen <base>-Tag damit relative Links weiter funktionieren
-
-// Scrollbars verstecken damit Seiten im Browser-Fenster sauberer aussehen
 const HIDE_SCROLLBAR = `<style>::-webkit-scrollbar{display:none}html,body{scrollbar-width:none;-ms-overflow-style:none}</style>`;
 
 // der Haupt-Handler den Vercel für jede Anfrage aufruft

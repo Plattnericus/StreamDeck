@@ -174,6 +174,9 @@ const T = {
     browser_page_error: 'Seite kann nicht geladen werden',
     browser_retry: 'Erneut versuchen',
     browser_open_external: 'In neuem Tab öffnen ↗',
+    browser_offline_title: 'Offline-Modus aktiv',
+    browser_offline_sub: 'Externe Webseiten sind deaktiviert',
+    browser_clear: 'Eingabe leeren',
     browser_wip: 'WIP',
     browser_wip_sub: 'Work in Progress',
 
@@ -670,6 +673,9 @@ const T = {
     browser_page_error: "Page can't be loaded",
     browser_retry: 'Try Again',
     browser_open_external: 'Open in new tab ↗',
+    browser_offline_title: 'Offline mode active',
+    browser_offline_sub: 'External websites are disabled',
+    browser_clear: 'Clear entry',
     browser_wip: 'WIP',
     browser_wip_sub: 'Work in Progress',
 
@@ -1166,6 +1172,9 @@ const T = {
     browser_page_error: 'Impossibile caricare la pagina',
     browser_retry: 'Riprova',
     browser_open_external: 'Apri in nuova scheda ↗',
+    browser_offline_title: 'Modalita offline attiva',
+    browser_offline_sub: 'I siti esterni sono disabilitati',
+    browser_clear: 'Cancella input',
     browser_wip: 'WIP',
     browser_wip_sub: 'Lavori in corso',
 

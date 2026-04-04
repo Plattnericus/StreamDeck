@@ -6,12 +6,6 @@ import React, { useState, useMemo, useRef, useCallback } from 'react';
 import './Browser.css';
 import { useTranslation } from '../../i18n/LanguageContext';
 
-// URLs durch unseren Proxy leiten damit CORS nicht blockiert
-function proxyUrl(url) {
-  if (!url) return '';
-  return `/api/proxy?url=${encodeURIComponent(url)}`;
-}
-
 export default function Browser({ onClose }) {
   const t = useTranslation();
   const [tabs, setTabs] = useState(() => [{ id: 1, title: t('browser_new_tab'), url: '' }]);
@@ -100,8 +94,10 @@ export default function Browser({ onClose }) {
     const term = query.trim();
     if (!term) return;
     const isUrl = !term.includes(' ') && term.includes('.');
-    const url = isUrl ? (term.startsWith('http') ? term : `https://${term}`) : `https://www.google.com/search?q=${encodeURIComponent(term)}`;
-    navigateTo(activeTabId, url, isUrl ? term : `Google: ${term}`);
+    const value = isUrl ? (term.startsWith('http') ? term : `https://${term}`) : term;
+    navigateTo(activeTabId, value, isUrl ? term : term);
+    setLoading(false);
+    setLoadError(false);
   };
 
   return (
@@ -136,27 +132,23 @@ export default function Browser({ onClose }) {
       <div className={`browser-page${activeTab?.url ? ' has-webview' : ''}`}>
         <div className="browser-viewport">
           {activeTab?.url ? (
-            <>
-              {loadError && (
-                <div className="browser-error">
-                  <div className="error-icon">⚠️</div>
-                  <div className="error-title">{t('browser_page_error')}</div>
-                  <div className="error-sub">{activeTab.url}</div>
-                  <button className="error-retry" onClick={reload}>{t('browser_retry')}</button>
-                  <button className="error-open-external" onClick={() => window.open(activeTab.url, '_blank')}>{t('browser_open_external')}</button>
-                </div>
-              )}
-              <iframe
-                key={`${activeTab.id}-${activeTab.url}-${reloadKey}`}
-                className="webview"
-                title="Tab Ansicht"
-                src={proxyUrl(activeTab.url)}
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                onLoad={() => setLoading(false)}
-                onError={() => { setLoading(false); setLoadError(true); }}
-                style={loadError ? { display: 'none' } : undefined}
-              />
-            </>
+            <div className="browser-error">
+              <div className="error-icon">📴</div>
+              <div className="error-title">{t('browser_offline_title')}</div>
+              <div className="error-sub">{activeTab.url}</div>
+              <button
+                className="error-retry"
+                onClick={() => {
+                  setTabs((p) => p.map((tab) => (tab.id === activeTabId ? { ...tab, url: '', title: t('browser_new_tab') } : tab)));
+                  setQuery('');
+                  setLoading(false);
+                  setLoadError(false);
+                }}
+              >
+                {t('browser_clear')}
+              </button>
+              <button className="error-open-external" disabled title={t('browser_offline_sub')}>{t('browser_offline_sub')}</button>
+            </div>
           ) : (
             <div className="browser-center">
               <div className="shortcut-row">
