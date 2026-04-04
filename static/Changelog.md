@@ -144,3 +144,4 @@
 ## TO DO
 - Bilder erstellen für Galerie
 - 3D model (switch)
+- Translate Changelog
