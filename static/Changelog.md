@@ -145,3 +145,4 @@
 - Bilder erstellen für Galerie
 - 3D model (switch)
 - Translate Changelog
+- - like a live button with original text and ttandlatet
