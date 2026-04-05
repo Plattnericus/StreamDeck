@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="HTML Sitemap für Stream Deck DIY - Komplette Übersicht aller Seiten und Features">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Stream Deck DIY - HTML Sitemap">
+    <meta property="og:description" content="Alle Seiten und Inhalte des Stream Deck DIY Projekts - Navigation & Übersicht">
+    <meta property="og:url" content="https://streamdeck.plattnericus.dev/sitemap.html">
+    <meta property="og:type" content="website">
+    <title>Stream Deck DIY - HTML Sitemap | Alle Features & Seiten</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #1c1c1e 0%, #2a2a2d 100%);
+            color: #f5f5f7;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #0071e3, #a2845e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #a1a1a6;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .site-map-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .site-map-section:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .site-map-section h2 {
+            font-size: 1.5rem;
+            color: #0071e3;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .site-map-section h3 {
+            font-size: 1.1rem;
+            color: #a2845e;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .site-map-section ul {
+            list-style: none;
+        }
+        
+        .site-map-section li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .site-map-section li:last-child {
+            border-bottom: none;
+        }
+        
+        .site-map-section a {
+            color: #0071e3;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .site-map-section a:hover {
+            color: #a2845e;
+            text-decoration: underline;
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            background: rgba(0, 113, 227, 0.2);
+            color: #0071e3;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .feature-item {
+            background: rgba(0, 113, 227, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #0071e3;
+        }
+        
+        .feature-item strong {
+            color: #0071e3;
+        }
+        
+        .footer-info {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 40px;
+            text-align: center;
+            color: #a1a1a6;
+        }
+        
+        .breadcrumb {
+            color: #86868b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb a {
+            color: #0071e3;
+            text-decoration: none;
+        }
+        
+        .desktop-section {
+            background: rgba(162, 132, 94, 0.1);
+            border-left: 4px solid #a2845e;
+        }
+        
+        .desktop-section h2 {
+            color: #a2845e;
+        }
+        
+        .legal-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #86868b;
+        }
+        
+        .legal-section h2 {
+            color: #86868b;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="https://streamdeck.plattnericus.dev/">🏠 Startseite</a> / 
+            <strong>Sitemap</strong>
+        </div>
+        
+        <h1>🗺️ Stream Deck DIY – Sitemap</h1>
+        <p class="subtitle">Komplette Übersicht aller Seiten, Features und Inhalte</p>
+        
+        <!-- HAUPTSEITE -->
+        <section class="site-map-section">
+            <h2><span class="icon">🏠</span> Hauptseite / Desktop</h2>
+            <ul>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/">
+                        <span class="icon">→</span>
+                        <strong>Startseite / Desktop</strong>
+                    </a>
+                    <span class="category-badge">Homepage</span>
+                    <p style="color: #a1a1a6; font-size: 0.9rem; margin-top: 5px;">
+                        Vollständige macOS Tahoe Liquid Glass Desktop-UI mit installierten Apps
+                    </p>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- DESKTOP ANWENDUNGEN -->
+        <section class="site-map-section desktop-section">
+            <h2><span class="icon">🖥️</span> Desktop Anwendungen</h2>
+            
+            <h3>📱 Kern-Apps</h3>
+            <ul>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Info">
+                        <span class="icon">ℹ️</span> Info-App
+                    </a>
+                    <span class="category-badge">Dokumentation</span>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=About">
+                        <span class="icon">ℹ️</span> Über Stream Deck DIY
+                    </a>
+                    <span class="category-badge">Projekt-Info</span>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Browser">
+                        <span class="icon">🌐</span> Browser (Safari-Klon)
+                    </a>
+                    <span class="category-badge">Utility</span>
+                </li>
+            </ul>
+            
+            <h3>📚 Dokumentation & Anleitungen</h3>
+            <ul>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Tutorial">
+                        <span class="icon">🔧</span> Hardware-Bauanleitung
+                    </a>
+                    <span class="category-badge">Tutorial</span>
+                    <p style="color: #a1a1a6; font-size: 0.9rem; margin-top: 5px;">
+                        Schritt-für-Schritt Anleitung für DIY Stream Deck mit Arduino RP2040 und Nextion Display
+                    </p>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Docker">
+                        <span class="icon">❓</span> FAQ & Docker Container
+                    </a>
+                    <span class="category-badge">FAQ</span>
+                    <p style="color: #a1a1a6; font-size: 0.9rem; margin-top: 5px;">
+                        24 häufig gestellte Fragen mit ausführlichen Antworten
+                    </p>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Changelog">
+                        <span class="icon">📝</span> Changelog
+                    </a>
+                    <span class="category-badge">Updates</span>
+                </li>
+            </ul>
+            
+            <h3>🎨 Media & Inhalte</h3>
+            <ul>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Galerie">
+                        <span class="icon">🖼️</span> Galerie
+                    </a>
+                    <span class="category-badge">Media</span>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=3D-Modell">
+                        <span class="icon">🎭</span> 3D-Modell
+                    </a>
+                    <span class="category-badge">Visualisierung</span>
+                </li>
+            </ul>
+            
+            <h3>⚙️ System & Einstellungen</h3>
+            <ul>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Settings">
+                        <span class="icon">⚙️</span> Einstellungen
+                    </a>
+                    <span class="category-badge">System</span>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Contact">
+                        <span class="icon">✉️</span> Kontakt
+                    </a>
+                    <span class="category-badge">Support</span>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- RECHTLICHE SEITEN -->
+        <section class="site-map-section legal-section">
+            <h2><span class="icon">⚖️</span> Rechtliche Seiten</h2>
+            <ul>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Datenschutz">
+                        <span class="icon">🔒</span> Datenschutzerklärung
+                    </a>
+                    <span class="category-badge">Rechtlich</span>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Impressum">
+                        <span class="icon">📋</span> Impressum
+                    </a>
+                    <span class="category-badge">Rechtlich</span>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=AGB">
+                        <span class="icon">📄</span> Allgemeine Geschäftsbedingungen
+                    </a>
+                    <span class="category-badge">Rechtlich</span>
+                </li>
+                <li>
+                    <a href="https://streamdeck.plattnericus.dev/desktop#app=Cookies">
+                        <span class="icon">🍪</span> Cookie-Informationen
+                    </a>
+                    <span class="category-badge">Rechtlich</span>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- EXTERNE LINKS -->
+        <section class="site-map-section">
+            <h2><span class="icon">🔗</span> Externe Links</h2>
+            <ul>
+                <li>
+                    <a href="https://github.com/Plattnericus/StreamDeck" target="_blank" rel="noopener noreferrer">
+                        <span class="icon">🐙</span> GitHub Repository
+                    </a>
+                    <span class="category-badge">Source Code</span>
+                    <p style="color: #a1a1a6; font-size: 0.9rem; margin-top: 5px;">
+                        Vollständiger Open-Source Code - MIT Lizenz
+                    </p>
+                </li>
+                <li>
+                    <a href="https://plattnericus.dev" target="_blank" rel="noopener noreferrer">
+                        <span class="icon">👤</span> Portfolio des Entwicklers
+                    </a>
+                    <span class="category-badge">Extern</span>
+                </li>
+            </ul>
+        </section>
+        
+        <!-- FEATURES ÜBERSICHT -->
+        <section class="site-map-section">
+            <h2><span class="icon">✨</span> Hauptfeatures</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>🭙 macOS Tahoe UI</strong><br/>
+                    Authentische Liquid Glass Oberfläche
+                </div>
+                <div class="feature-item">
+                    <strong>🖱️ Draggable Windows</strong><br/>
+                    Bewegbare Fenster mit Animations
+                </div>
+                <div class="feature-item">
+                    <strong>🎨 Dark & Light Mode</strong><br/>
+                    System-Theme Support
+                </div>
+                <div class="feature-item">
+                    <strong>⚡ React 18</strong><br/>
+                    Moderne Frontend-Entwicklung
+                </div>
+                <div class="feature-item">
+                    <strong>📦 Vite 5</strong><br/>
+                    Ultra-schneller Build-Prozess
+                </div>
+                <div class="feature-item">
+                    <strong>🔌 Node.js API</strong><br/>
+                    Backend für Integrationen
+                </div>
+                <div class="feature-item">
+                    <strong>🎛️ DIY Controller</strong><br/>
+                    Hardware-Support (Arduino, RP2040)
+                </div>
+                <div class="feature-item">
+                    <strong>🌐 Browser-basiert</strong><br/>
+                    Kein Download nötig
+                </div>
+                <div class="feature-item">
+                    <strong>📱 Responsive</strong><br/>
+                    Desktop & Mobile
+                </div>
+                <div class="feature-item">
+                    <strong>🔓 Open Source</strong><br/>
+                    MIT Lizenz, frei nutzen
+                </div>
+            </div>
+        </section>
+        
+        <!-- TECHNOLOGIE STACK -->
+        <section class="site-map-section">
+            <h2><span class="icon">🛠️</span> Technologie Stack</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <strong>Frontend</strong><br/>
+                    React 18, Vite 5, JavaScript
+                </div>
+                <div class="feature-item">
+                    <strong>Backend</strong><br/>
+                    Node.js 20, Express, REST API
+                </div>
+                <div class="feature-item">
+                    <strong>Styling</strong><br/>
+                    CSS Modules, Backdrop Filter
+                </div>
+                <div class="feature-item">
+                    <strong>Hardware</strong><br/>
+                    Arduino, RP2040, Nextion
+                </div>
+                <div class="feature-item">
+                    <strong>Firmware</strong><br/>
+                    KMK, CircuitPython
+                </div>
+                <div class="feature-item">
+                    <strong>Deployment</strong><br/>
+                    Vercel, Cloudflare
+                </div>
+            </div>
+        </section>
+        
+        <!-- INHALTSÜBERSICHT -->
+        <section class="site-map-section">
+            <h2><span class="icon">📑</span> Inhaltsübersicht</h2>
+            <h3>🔤 Keywords & SEO</h3>
+            <ul>
+                <li><strong>Haupt-Keywords:</strong> Stream Deck DIY, macOS Tahoe React, Liquid Glass UI</li>
+                <li><strong>Long-Tail:</strong> Arduino Stream Deck, Nextion Display, RP2040 DIY</li>
+                <li><strong>Sprachen:</strong> Deutsch (Deutsch, Deutsch-AT, Deutsch-CH), Englisch</li>
+            </ul>
+            
+            <h3>🎯 Zielgruppen</h3>
+            <ul>
+                <li>Fullstack-Entwickler (React, Node.js)</li>
+                <li>Elektronik-Enthusiasten & Maker</li>
+                <li>Arduino / Microcontroller Nutzer</li>
+                <li>macOS Power User</li>
+                <li>UI/UX Design Interessierte</li>
+                <li>Open Source Community</li>
+            </ul>
+        </section>
+        
+        <!-- FOOTER -->
+        <div class="footer-info">
+            <p><strong>🌐 Stream Deck DIY</strong> — macOS Tahoe Liquid Glass in React</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                <a href="https://streamdeck.plattnericus.dev/" style="color: #0071e3;">Zur Startseite</a> | 
+                <a href="https://github.com/Plattnericus/StreamDeck" style="color: #0071e3;">GitHub</a> | 
+                <a href="https://streamdeck.plattnericus.dev/sitemap.xml" style="color: #0071e3;">XML Sitemap</a>
+            </p>
+            <p style="margin-top: 10px; color: #555;">
+                Sitemap generiert für SEO-Optimierung | 
+                <span itemprop="copyrightYear">2026</span> | 
+                MIT License
+            </p>
+        </div>
+    </div>
+    
+    <!-- SCHEMA.ORK MARKUP -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Stream Deck DIY - Sitemap",
+      "url": "https://streamdeck.plattnericus.dev/sitemap.html",
+      "description": "HTML Sitemap - Komplette Übersicht aller Seiten des Stream Deck DIY Projekts",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Stream Deck DIY",
+        "url": "https://streamdeck.plattnericus.dev"
+      }
+    }
+    </script>
+</body>
+</html>

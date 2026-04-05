@@ -1,0 +1,412 @@
+{
+  "website": {
+    "name": "Stream Deck DIY",
+    "url": "https://streamdeck.plattnericus.dev",
+    "language": "de",
+    "region": "DE",
+    "description": "macOS Tahoe Liquid Glass Interface nachgebaut in React. DIY Stream Deck Dokumentation mit Node.js Backend — open source, kostenlos."
+  },
+
+  "primaryKeywords": [
+    {
+      "keyword": "Stream Deck DIY",
+      "volume": 450,
+      "difficulty": 65,
+      "intent": "informational/navigational",
+      "targets": ["Homepage", "About", "Tutorial"],
+      "priority": 1,
+      "searchVolume": "450-500/month",
+      "relatedQueries": [
+        "Stream Deck DIY bauen",
+        "DIY Stream Deck software",
+        "Stream Deck selber machen",
+        "Stream Deck DIY Tutorial"
+      ]
+    },
+    {
+      "keyword": "macOS Tahoe React",
+      "volume": 280,
+      "difficulty": 55,
+      "intent": "informational",
+      "targets": ["Homepage", "About"],
+      "priority": 1,
+      "searchVolume": "280-350/month",
+      "relatedQueries": [
+        "macOS Tahoe nachbauen React",
+        "macOS Tahoe UI React",
+        "React macOS interface"
+      ]
+    },
+    {
+      "keyword": "Liquid Glass UI React",
+      "volume": 200,
+      "difficulty": 60,
+      "intent": "informational",
+      "targets": ["Homepage", "About", "Tutorial"],
+      "priority": 1,
+      "searchVolume": "200-250/month",
+      "relatedQueries": [
+        "Liquid Glass React",
+        "Glass Morphism CSS",
+        "Frosted Glass UI React",
+        "macOS Liquid Glass CSS"
+      ]
+    },
+    {
+      "keyword": "DIY Stream Deck kostenlos",
+      "volume": 320,
+      "difficulty": 58,
+      "intent": "commercial/informational",
+      "targets": ["Homepage", "About"],
+      "priority": 1,
+      "searchVolume": "320-400/month",
+      "relatedQueries": [
+        "Stream Deck alternative kostenlos",
+        "Stream Deck freeware",
+        "kostenloses Stream Deck"
+      ]
+    },
+    {
+      "keyword": "Stream Deck ohne Hardware",
+      "volume": 180,
+      "difficulty": 62,
+      "intent": "informational",
+      "targets": ["Homepage", "Tutorial"],
+      "priority": 2,
+      "searchVolume": "180-220/month",
+      "relatedQueries": [
+        "Stream Deck browser",
+        "Stream Deck web version",
+        "virtueller Stream Deck"
+      ]
+    }
+  ],
+
+  "longTailKeywords": [
+    {
+      "keyword": "Arduino RP2040 Stream Deck",
+      "volume": 85,
+      "difficulty": 45,
+      "intent": "informational",
+      "targets": ["Tutorial", "Docker"],
+      "priority": 2,
+      "searchVolume": "85-120/month"
+    },
+    {
+      "keyword": "Nextion Display Arduino Anleitung",
+      "volume": 120,
+      "difficulty": 40,
+      "intent": "informational",
+      "targets": ["Tutorial", "Docker"],
+      "priority": 2,
+      "searchVolume": "120-150/month"
+    },
+    {
+      "keyword": "KMK Firmware CircuitPython",
+      "volume": 95,
+      "difficulty": 50,
+      "intent": "informational",
+      "targets": ["Tutorial", "Docker"],
+      "priority": 2,
+      "searchVolume": "95-130/month"
+    },
+    {
+      "keyword": "UART Kommunikation Arduino Nextion",
+      "volume": 110,
+      "difficulty": 45,
+      "intent": "informational",
+      "targets": ["Tutorial"],
+      "priority": 3,
+      "searchVolume": "110-140/month"
+    },
+    {
+      "keyword": "React Desktop Application macOS",
+      "volume": 225,
+      "difficulty": 52,
+      "intent": "informational",
+      "targets": ["Homepage", "About"],
+      "priority": 2,
+      "searchVolume": "225-280/month"
+    },
+    {
+      "keyword": "macOS Tahoe Design System React",
+      "volume": 160,
+      "difficulty": 55,
+      "intent": "informational",
+      "targets": ["About"],
+      "priority": 2,
+      "searchVolume": "160-200/month"
+    },
+    {
+      "keyword": "CSS backdrop-filter macOS Liquid Glass",
+      "volume": 145,
+      "difficulty": 50,
+      "intent": "informational",
+      "targets": ["Tutorial", "About"],
+      "priority": 3,
+      "searchVolume": "145-180/month"
+    },
+    {
+      "keyword": "Stream Deck Plugin mit Node.js",
+      "volume": 105,
+      "difficulty": 48,
+      "intent": "informational",
+      "targets": ["Tutorial", "Docker"],
+      "priority": 2,
+      "searchVolume": "105-140/month"
+    },
+    {
+      "keyword": "Browser-basierter Hardware Controller",
+      "volume": 75,
+      "difficulty": 52,
+      "intent": "informational",
+      "targets": ["About"],
+      "priority": 3,
+      "searchVolume": "75-100/month"
+    },
+    {
+      "keyword": "Open Source Stream Deck GitHub",
+      "volume": 135,
+      "difficulty": 48,
+      "intent": "informational",
+      "targets": ["Homepage", "GitHub"],
+      "priority": 2,
+      "searchVolume": "135-170/month"
+    }
+  ],
+
+  "voiceSearchKeywords": [
+    "Wie baue ich einen DIY Stream Deck",
+    "Stream Deck Alternative kostenlos",
+    "Was ist macOS Tahoe Liquid Glass",
+    "Wie programmiere ich Nextion Display",
+    "Arduino RP2040 Keyboard Controller",
+    "Kann ich ein Stream Deck selbst bauen",
+    "Ist Stream Deck DIY kostenlos",
+    "React macOS Desktop App erstellen",
+    "Stream Deck ohne Hardware möglich"
+  ],
+
+  "semanticKeywords": [
+    "Stream Deck Alternative",
+    "DIY Keyboard Controller",
+    "macOS UI Framework",
+    "Gesture Recognition",
+    "Hardware Automation",
+    "Keyboard Macro",
+    "Custom Controls",
+    "CSS Glass morphism",
+    "React Komponenten Bibliothek",
+    "Node.js Backend API"
+  ],
+
+  "keywordsByPage": {
+    "/": {
+      "primary": ["Stream Deck DIY", "macOS Tahoe React", "Liquid Glass UI React"],
+      "secondary": ["DIY Stream Deck kostenlos", "Stream Deck ohne Hardware"],
+      "long-tail": [
+        "macOS Tahoe Design System React",
+        "Browser-basierter Hardware Controller",
+        "Open Source Stream Deck GitHub"
+      ],
+      "related": ["React Desktop Application", "Vite JavaScript", "Node.js API"],
+      "entities": [
+        "Stream Deck DIY",
+        "macOS Tahoe",
+        "React",
+        "Liquid Glass",
+        "Open Source",
+        "plattnericus"
+      ]
+    },
+    "/tutorial": {
+      "primary": ["Arduino RP2040 Stream Deck", "Nextion Display Arduino"],
+      "secondary": [
+        "DIY Stream Deck Hardware",
+        "KMK Firmware CircuitPython"
+      ],
+      "long-tail": [
+        "UART Kommunikation Arduino Nextion",
+        "Stream Deck Plugin mit Node.js",
+        "CSS backdrop-filter macOS"
+      ],
+      "questions": [
+        "Wie baue ich einen DIY Stream Deck",
+        "Welche Komponenten brauche ich",
+        "Wie programmiere ich den RP2040",
+        "Nextion Display Setup Anleitung"
+      ]
+    },
+    "/faq": {
+      "primary": ["Stream Deck FAQ", "DIY Stream Deck Fragen"],
+      "secondary": ["Arduino FAQ", "Nextion FAQ", "React FAQ"],
+      "topics": [
+        "Hardware",
+        "Software",
+        "Firmware",
+        "Debugging",
+        "Best Practices"
+      ]
+    },
+    "/about": {
+      "primary": [
+        "Stream Deck DIY Projekt",
+        "React macOS Tahoe",
+        "Liquid Glass Design System"
+      ],
+      "secondary": [
+        "Open Source Projekt",
+        "React Desktop Application",
+        "macOS UI Design"
+      ]
+    },
+    "/contact": {
+      "primary": ["Stream Deck Kontakt", "Support Anfragen"],
+      "secondary": ["GitHub Issues", "Feature Requests"],
+      "intent": "transactional"
+    }
+  },
+
+  "competitorAnalysis": {
+    "directCompetitors": [
+      {
+        "name": "Elgato Stream Deck",
+        "url": "https://www.elgato.com/stream-deck",
+        "strength": "Hardware device, official",
+        "weakness": "Paid, hardware required"
+      },
+      {
+        "name": "Open Stream Deck",
+        "url": "https://github.com/OpenStreamDeck/OpenStreamDeck",
+        "strength": "Also open source, hardware-based",
+        "weakness": "Needs hardware"
+      }
+    ],
+    "indirectCompetitors": [
+      {
+        "name": "React macOS Emulator projects",
+        "strength": "Similar tech stack",
+        "weakness": "More limited feature set"
+      },
+      {
+        "name": "Liquid Glass CSS projects",
+        "strength": "Same visual style",
+        "weakness": "Not comprehensive projects"
+      }
+    ],
+    "keywordGaps": [
+      "Browser-based Stream Deck",
+      "Free/Kostenlos Stream Deck",
+      "Full React implementation",
+      "German documentation"
+    ]
+  },
+
+  "contentGaps": [
+    {
+      "topic": "Comparison Articles",
+      "title": "Stream Deck DIY vs. Elgato – Kosten-Nutzen Analyse",
+      "keyword": "Stream Deck DIY vs Elgato",
+      "priority": "high"
+    },
+    {
+      "topic": "Tutorial Series",
+      "title": "Learn Liquid Glass UI with React – Complete Tutorial",
+      "keyword": "Liquid Glass UI React Tutorial",
+      "priority": "high"
+    },
+    {
+      "topic": "Case Studies",
+      "title": "Building a Production Stream Deck – Case Study",
+      "keyword": "Stream Deck DIY production",
+      "priority": "medium"
+    },
+    {
+      "topic": "Video Content",
+      "title": "Hardware Build - Schritt-für-Schritt Video",
+      "keyword": "Stream Deck Hardware bauen Video",
+      "priority": "high"
+    },
+    {
+      "topic": "Interactive Demos",
+      "title": "Live Liquid Glass Demo – Interactive",
+      "keyword": "Liquid Glass Demo",
+      "priority": "medium"
+    }
+  ],
+
+  "semanticEntities": {
+    "products": [
+      "Stream Deck DIY",
+      "Stream Deck Hardware",
+      "Elgato Stream Deck",
+      "macOS Tahoe"
+    ],
+    "technologies": [
+      "React 18",
+      "Vite 5",
+      "Node.js 20",
+      "JavaScript",
+      "CSS",
+      "Arduino",
+      "RP2040",
+      "Nextion Display",
+      "KMK Firmware",
+      "CircuitPython"
+    ],
+    "concepts": [
+      "Liquid Glass",
+      "Glass Morphism",
+      "Backdrop Filter",
+      "Frosted Glass",
+      "macOS Tahoe Design",
+      "UI Components",
+      "Desktop Application",
+      "Hardware Controller",
+      "DIY Project",
+      "Open Source"
+    ],
+    "people": [
+      "plattnericus",
+      "Creator/Author"
+    ],
+    "organizations": [
+      "Elgato",
+      "Apple",
+      "Meta (Facebook)",
+      "Vercel",
+      "Cloudflare"
+    ]
+  },
+
+  "localSEO": {
+    "targetRegions": ["Germany", "Austria", "Switzerland"],
+    "languages": ["de", "en"],
+    "geo-tags": {
+      "region": "DE",
+      "placename": "Germany",
+      "position": "51.1657;10.4515"
+    }
+  },
+
+  "trendingTopics": [
+    {
+      "topic": "AI-powered macOS automation",
+      "keyword": "Stream Deck AI",
+      "relevance": "high",
+      "opportunity": "integrate ChatGPT"
+    },
+    {
+      "topic": "Liquid Glass 2.0 design trend",
+      "keyword": "macOS Sequoia design",
+      "relevance": "high",
+      "opportunity": "stay ahead of trends"
+    },
+    {
+      "topic": "Web-based hardware control",
+      "keyword": "Browser HID API",
+      "relevance": "medium",
+      "opportunity": "feature expansion"
+    }
+  ]
+}

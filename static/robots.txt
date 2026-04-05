@@ -1,23 +1,76 @@
-# ═══════════════════════════════════════════════════
-# robots.txt für streamdeck.plattnericus.dev
-# Alle wichtigen Crawler sind explizit eingeladen!
-# ═══════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════
+# ROBOTS.TXT für streamdeck.plattnericus.dev
+# ═══════════════════════════════════════════════════════════════════════════════
+# SEO-OPTIMIERT FÜR MAXIMALE SUCHMASCHINEN-SICHTBARKEIT
+# Alle wichtigen Crawler sind explizit mit höchster Priorität eingeladen!
+# ═══════════════════════════════════════════════════════════════════════════════
 
-# Alle Crawler: voller Zugriff
+# Standard-Richtlinie: Voller Zugriff für alle Crawler
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /.git
+Disallow: /node_modules
+Crawl-delay: 0
+Request-rate: unlimited
 
-# ── Google ──────────────────────────────────────────
+# ═══════════════════════════════════════════════════════════════════════════════
+# GOOGLE SEARCH CONSOLE
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Google Desktop Bot
 User-agent: Googlebot
 Allow: /
+Disallow: /api/
+Disallow: /.git
+Crawl-delay: 0
 
+# Google Image Bot
 User-agent: Googlebot-Image
 Allow: /
+Allow: /galerie/
+Allow: /models/
+Allow: /icons/
+Allow: /logos/
 
-# ── ChatGPT / OpenAI ────────────────────────────────
+# Google Mobile Bot
+User-agent: Googlebot-Mobile
+Allow: /
+Allow: /desktop
+
+# Google News Bot
+User-agent: Googlebot-News
+Allow: /
+Allow: /static/Changelog.md
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MICROSOFT BING & COPILOT
+# ─────────────────────────────────────────────────────────────────────────────
+
+User-agent: bingbot
+Allow: /
+Crawl-delay: 0
+
+User-agent: msnbot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot-Image
+Allow: /
+Allow: /galerie/
+
+User-agent: BingPreview
+Allow: /
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AI & GENERATIVE AI CRAWLERS
+# ─────────────────────────────────────────────────────────────────────────────
+
+# OpenAI / ChatGPT
 User-agent: GPTBot
 Allow: /
+Crawl-delay: 0
+Request-rate: unlimited
 
 User-agent: ChatGPT-User
 Allow: /
@@ -25,29 +78,148 @@ Allow: /
 User-agent: OAI-SearchBot
 Allow: /
 
-# ── Claude / Anthropic ──────────────────────────────
+# Anthropic Claude
 User-agent: Claude-Web
-Allow: /
-
-User-agent: anthropic-ai
 Allow: /
 
 User-agent: ClaudeBot
 Allow: /
 
-# ── Perplexity ──────────────────────────────────────
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity AI
 User-agent: PerplexityBot
 Allow: /
 
-# ── Microsoft Bing / Copilot ────────────────────────
-User-agent: bingbot
+# Meta AI (Llama)
+User-agent: facebookexternalhit
 Allow: /
 
-User-agent: msnbot
+User-agent: Meta-ExternalAgent
 Allow: /
 
-# ── Apple ───────────────────────────────────────────
+User-agent: facebookexternalhit/1.1
+Allow: /
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TECHNOLOGIE-CRAWLER
+# ─────────────────────────────────────────────────────────────────────────────
+
+# GitHub Crawler
+User-agent: GitHubBot
+Allow: /
+
+# Vercel / Deployment
+User-agent: Vercel-Insight
+Allow: /
+
+# Cloudflare
+User-agent: Cloudflare
+Allow: /
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SOCIAL MEDIA & CONTENT CRAWLER
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Facebook / Meta
+User-agent: facebookexternalhit
+Allow: /preview.jpg
+Allow: /galerie/
+
+# Twitter / X
+User-agent: Twitterbot
+Allow: /
+
+# LinkedIn
+User-agent: LinkedInBot
+Allow: /
+
+# Discord Bot
+User-agent: Discordbot
+Allow: /preview.jpg
+
+# Slack Bot
+User-agent: Slackbot
+Allow: /
+
+# WhatsApp Bot
+User-agent: WhatsApp
+Allow: /
+
+# Telegram
+User-agent: TelegramBot
+Allow: /
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SUCHMASCHINEN & VERZEICHNISSE
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Apple Siri Smart Search
 User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Yandex
+User-agent: Yandex
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Baidu (China)
+User-agent: Baiduspider
+Allow: /
+
+# Sogou (China)
+User-agent: Sogou
+Allow: /
+
+# QQ Spider (China)
+User-agent: QQSpider
+Allow: /
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ANALYTICS & MONITORING
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Stripe Crawler (Webhooks)
+User-agent: StripeBot
+Allow: /
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# UNERWÜNSCHTE CRAWLER (BLOCKIERT)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Aggressive Scraper (blockieren)
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SITEMAP REFERENZEN
+# ─────────────────────────────────────────────────────────────────────────────
+
+Sitemap: https://streamdeck.plattnericus.dev/sitemap.xml
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SONDERKONFIGURATIONEN
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Cache-Kontrolle für Statische Assets
+# (wird durch HTTP-Header gesteuert, nicht durch robots.txt)
+
+Host: streamdeck.plattnericus.dev
 Allow: /
 
 # ── Weitere KI-Crawler ──────────────────────────────

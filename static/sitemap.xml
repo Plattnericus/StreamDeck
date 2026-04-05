@@ -3,19 +3,235 @@
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+  xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
 >
 
   <!-- ═══════════════════════════════════════════════
-       STARTSEITE — höchste Priorität
+       STARTSEITE / DESKTOP — höchste Priorität
+       Keywords: Stream Deck DIY, macOS Tahoe, Liquid Glass React, DIY Stream Deck Software
+       Description: Browser-basierte macOS Tahoe Liquid Glass UI als DIY Stream Deck
   ═══════════════════════════════════════════════ -->
   <url>
     <loc>https://streamdeck.plattnericus.dev/</loc>
-    <lastmod>2026-03-17</lastmod>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://streamdeck.plattnericus.dev/preview.jpg</image:loc>
       <image:title>Stream Deck DIY macOS Tahoe Liquid Glass React Interface</image:title>
+      <image:caption>Vollständige macOS Tahoe Liquid Glass Oberfläche in React – DIY Stream Deck ohne Hardware</image:caption>
     </image:image>
   </url>
+
+  <!-- DESKTOP PAGES — Hauptseiten -->
+  
+  <!-- ═══════════════════════════════════════════════
+       ABOUT — Über das Projekt
+       Keywords: Stream Deck DIY, macOS Tahoe, React Projekt, Open Source
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=About</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://streamdeck.plattnericus.dev/galerie/streamdeck.png</image:loc>
+      <image:title>Über Stream Deck DIY</image:title>
+      <image:caption>Informationen über das Open-Source Stream Deck DIY Projekt mit macOS Tahoe UI</image:caption>
+    </image:image>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       INFORMATION/INFO — Projektinformationen
+       Keywords: Stream Deck DIY Info, Projekt Details, Dokumentation
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Info</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       BROWSER — Web Browser App
+       Keywords: Stream Deck Browser, macOS Safari Klon, Browser App React
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Browser</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       TUTORIAL — Bauanleitung für Hardware
+       Keywords: DIY Stream Deck Arduino Tutorial, Stream Deck Hardware Anleitung,
+                 Arduino RP2040 Anleitung, Nextion Display Setup, Stream Deck bauen
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Tutorial</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://streamdeck.plattnericus.dev/galerie/tutorial.jpg</image:loc>
+      <image:title>Stream Deck DIY Hardware-Bauanleitung</image:title>
+      <image:caption>Schritt-für-Schritt Anleitung zum Bauen eines DIY Stream Decks mit Arduino RP2040 und Nextion Display</image:caption>
+    </image:image>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       3D MODELL — 3D Visualisierung
+       Keywords: Stream Deck 3D Modell, RP2040 3D, Hardware Visualisierung
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=3D-Modell</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       DOCKER — Fragen & Antworten (FAQ)
+       Keywords: Stream Deck FAQ, DIY FAQ, Arduino FAQ, Nextion FAQ,
+                 Stream Deck Fragen, Arduino DIY Fragen
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Docker</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       GALERIE — Bilder und Fotos
+       Keywords: Stream Deck Galerie, DIY Stream Deck Bilder, Projekt-Fotos
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Galerie</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       CHANGELOG — Versions- und Änderungsprotokoll
+       Keywords: Stream Deck Changelog, Updates, Versionshistorie
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Changelog</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       EINSTELLUNGEN — Settings App
+       Keywords: Stream Deck Einstellungen, macOS Settings Klon, Anwendungseinstellungen
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Settings</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       KONTAKT — Kontaktformular
+       Keywords: Stream Deck Kontakt, Kontaktformular, Nachricht senden
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Contact</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       DATENSCHUTZ — Datenschutzerklärung
+       Keywords: Stream Deck Datenschutz, Datenschutzerklärung, DSGVO
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Datenschutz</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.70</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       IMPRESSUM — Impressum / Rechtliche Info
+       Keywords: Stream Deck Impressum, Herausgeber, Kontaktinformationen
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Impressum</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.70</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       AGB — Allgemeine Geschäftsbedingungen
+       Keywords: Stream Deck AGB, Nutzungsbedingungen, Vereinbarungen
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=AGB</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       COOKIES — Cookie-Informationen
+       Keywords: Stream Deck Cookies, Cookie-Richtlinie, Datenverwaltung
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://streamdeck.plattnericus.dev/desktop#app=Cookies</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.65</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       GITHUB REPOSITORY LINK
+       Keywords: Stream Deck GitHub, Open Source Code, Source Repository
+  ═══════════════════════════════════════════════ -->
+  <url>
+    <loc>https://github.com/Plattnericus/StreamDeck</loc>
+    <lastmod>2026-04-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- ═══════════════════════════════════════════════
+       META INFORMATION FÜR GOOGLE SEO
+       
+       HAUPTKEYWORDS:
+       - Stream Deck DIY
+       - macOS Tahoe Liquid Glass React
+       - DIY Stream Deck Software kostenlos
+       - Stream Deck ohne Hardware
+       - React macOS UI
+       - Arduino Stream Deck Tutorial
+       - Nextion Stream Deck
+       - RP2040 DIY Controller
+       - macOS Desktop Browser
+       - Open Source Stream Deck
+       
+       LONG-TAIL KEYWORDS:
+       - Wie baue ich einen DIY Stream Deck
+       - Stream Deck Alternative kostenlos
+       - macOS Tahoe Design nachbauen
+       - Arduino Stream Deck mit Display
+       - Nextion Display Arduino Anleitung
+       - RP2040 Keyboard Controller
+       - Liquid Glass UI React Turorial
+       - macOS Liquid Glass CSS
+       - Browser-basierter Stream Deck
+       - Open Source Stream Deck GitHub
+       
+       ZIELMARKT: Deutschland, Österreich, Schweiz (Deutsch)
+       HAUPTZIELGRUPPE: Entwickler, Maker, Elektronik-Enthusiasten, macOS User
+       
+  ═══════════════════════════════════════════════ -->
+
 </urlset>
