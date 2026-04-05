@@ -62,13 +62,20 @@ export default function Model() {
       const oldMesh = currentMeshRef.current;
 
       const doLoad = () => {
-        if (oldMesh) {
-          scene.remove(oldMesh);
-          oldMesh.geometry?.dispose();
-          if (Array.isArray(oldMesh.material)) oldMesh.material.forEach(m => m.dispose());
-          else oldMesh.material?.dispose();
-          currentMeshRef.current = null;
-        }
+        // Remove ALL meshes from the scene to prevent stale models staying visible
+        const toRemove = [];
+        scene.traverse((child) => {
+          if (child.isMesh && child !== orientCubeRef.current) {
+            toRemove.push(child);
+          }
+        });
+        toRemove.forEach((m) => {
+          scene.remove(m);
+          m.geometry?.dispose();
+          if (Array.isArray(m.material)) m.material.forEach(mat => mat.dispose());
+          else m.material?.dispose();
+        });
+        currentMeshRef.current = null;
 
         loader.load(modelPath, (geometry) => {
           const material = new THREE.MeshStandardMaterial({

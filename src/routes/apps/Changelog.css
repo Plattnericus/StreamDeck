@@ -1,5 +1,5 @@
 /* ─── Changelog Styles ───
-   styles for the changelog entries, filter tabs, version badges, and TO DO section */
+   Stile für die Changelog-Einträge, Filtertabs, Versionsbadges und den TO DO Bereich */
 
 .changelog {
   display: flex;
@@ -32,7 +32,7 @@
   color: rgba(252,129,129,0.75);
 }
 
-/* ── Sidebar ── */
+/* ── Seitenleiste ── */
 .cl-sidebar {
   width: 160px;
   min-width: 160px;
@@ -129,7 +129,7 @@
   color: rgba(255,255,255,0.4);
 }
 
-/* ── Main ── */
+/* ── Hauptbereich ── */
 .cl-main {
   flex: 1;
   overflow-y: auto;
@@ -225,7 +225,7 @@
   padding: 2px 7px;
 }
 
-/* ── Card ── */
+/* ── Karte ── */
 .cl-card {
   border: 0.5px solid rgba(255,255,255,0.07);
   border-radius: 10px;
@@ -289,7 +289,7 @@
   text-align: center;
 }
 
-/* ─── Light mode ─── */
+/* ─── Heller Modus ─── */
 html.light-mode .changelog { color: #000; }
 html.light-mode .cl-sidebar { border-right-color: rgba(0,0,0,0.08); }
 html.light-mode .cl-sidebar-label { color: rgba(0,0,0,0.5); }

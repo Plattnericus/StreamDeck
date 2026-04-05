@@ -64,13 +64,21 @@ function isToday(dateStr) {
   return +p[1] === n.getDate() && +p[2] === n.getMonth() + 1 && +p[3] === n.getFullYear();
 }
 
-// Typ des Eintrags bestimmen: Fix, Hinzufügen, etc.
+// Typ des Eintrags bestimmen: Fix, Hinzufügen, Entfernen, Aktualisieren
 function getType(text) {
   const l = text.toLowerCase();
-  if (l.includes('fix') || l.includes('bug'))                                               return 'fix';
-  if (l.includes('add') || l.includes('added') || l.includes('new') || l.includes('made')) return 'add';
-  if (l.includes('delete') || l.includes('removed'))                                        return 'remove';
-  if (l.includes('update') || l.includes('upgrade') || l.includes('rework') || l.includes('change')) return 'update';
+  if (l.includes('fix') || l.includes('bug') || l.includes('behob') || l.includes('behoben') || l.includes('risolto') || l.includes('risolti'))
+    return 'fix';
+  if (l.includes('delete') || l.includes('removed') || l.includes('gelöscht') || l.includes('entfernt') || l.includes('cancellat') || l.includes('rimoss'))
+    return 'remove';
+  if (l.includes('update') || l.includes('upgrade') || l.includes('rework') || l.includes('change') || l.includes('improv') || l.includes('switch') || l.includes('finish')
+    || l.includes('aktualisiert') || l.includes('geändert') || l.includes('überarbeitet') || l.includes('verbesser') || l.includes('fertiggestellt') || l.includes('wechsel')
+    || l.includes('aggiornato') || l.includes('cambiato') || l.includes('rielaborat') || l.includes('miglior') || l.includes('completat'))
+    return 'update';
+  if (l.includes('add') || l.includes('added') || l.includes('new') || l.includes('made') || l.includes('started')
+    || l.includes('hinzugefügt') || l.includes('erstellt') || l.includes('begonnen')
+    || l.includes('aggiunt') || l.includes('creato') || l.includes('creata'))
+    return 'add';
   return 'default';
 }
 
@@ -118,16 +126,25 @@ export default function Changelog() {
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState(null);
   const [filter, setFilter]   = useState('all');
+  const [showOriginal, setShowOriginal] = useState(false);
   const lastHashRef           = useRef('');
+  const initialLoadRef        = useRef(true);
 
   const t    = useTranslation();
   const lang = useLanguage();
   const locale = lang === 'de' ? 'de-DE' : lang === 'it' ? 'it-IT' : 'en-US';
 
+  // Dateiname je nach Sprache und Toggle-Status
+  const getChangelogPath = useCallback(() => {
+    if (showOriginal || lang === 'en') return '/Changelog.md';
+    return `/Changelog.${lang}.md`;
+  }, [lang, showOriginal]);
+
   // Changelog-Datei laden und nur neu parsen wenn sich der Hash geändert hat
   const fetchChangelog = useCallback(async () => {
     try {
-      const res = await fetch('/Changelog.md?t=' + Date.now());
+      const path = getChangelogPath();
+      const res = await fetch(path + '?t=' + Date.now());
       if (!res.ok) throw new Error('fetch_failed');
       const raw = await res.text();
       const buf  = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(raw));
@@ -143,10 +160,14 @@ export default function Changelog() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [getChangelogPath]);
 
   useEffect(() => {
-    fetchChangelog();
+    // Hash zurücksetzen damit beim Wechsel sofort neu geladen wird
+    lastHashRef.current = '';
+    // Spinner nur beim allerersten Laden anzeigen, nicht beim Sprach-/Toggle-Wechsel
+    if (initialLoadRef.current) setLoading(true);
+    fetchChangelog().then(() => { initialLoadRef.current = false; });
     const id = setInterval(fetchChangelog, 5000);
     return () => clearInterval(id);
   }, [fetchChangelog]);
@@ -197,6 +218,24 @@ export default function Changelog() {
           <span className="cl-stat-key">{t('changelog_total')}</span>
           <span className="cl-stat-val">{counts.all}</span>
         </div>
+
+        {lang !== 'en' && (
+          <>
+            <div className="cl-sidebar-divider" />
+            <button
+              className={`cl-nav-btn cl-lang-toggle${showOriginal ? ' active' : ''}`}
+              onClick={() => setShowOriginal(prev => !prev)}
+            >
+              <span className="cl-nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 8l6 6" /><path d="M4 14l6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" />
+                  <path d="M22 22l-5-10-5 10" /><path d="M14 18h6" />
+                </svg>
+              </span>
+              {showOriginal ? t('changelog_original') : t('changelog_translated')}
+            </button>
+          </>
+        )}
       </div>
 
       <div className="cl-main">

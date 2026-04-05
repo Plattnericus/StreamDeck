@@ -1,33 +1,33 @@
 const T = {
   de: {
-    /* ── Settings core ── */
+    /* ── Einstellungen Kern ── */
     settings: 'Einstellungen', back: 'Zurück', cancel: 'Abbrechen',
     profile_sub: 'StreamDeck · DIY Stream Deck',
     profile_title: 'Profil bearbeiten', profile_change_photo: 'Foto ändern',
     profile_name_label: 'Name', profile_initials_label: 'Farbe wählen',
     profile_save: 'Speichern', family: 'Familie',
 
-    /* ── Settings nav ── */
+    /* ── Einstellungen Navigation ── */
     nav_network: 'Netzwerk', nav_appearance: 'Darstellung', nav_sound: 'Ton',
     nav_general: 'Allgemein', nav_notifications: 'Benachrichtigungen',
     nav_privacy: 'Datenschutz', nav_about: 'Über StreamDeck',
 
-    /* ── Network ── */
+    /* ── Netzwerk ── */
     wifi: 'WLAN', bluetooth: 'Bluetooth', airplane: 'Flugmodus',
     cellular: 'Mobilfunk', vpn: 'VPN',
     connected: 'Verbunden', disconnected: 'Getrennt', on: 'Ein', off: 'Aus',
 
-    /* ── Appearance ── */
+    /* ── Darstellung ── */
     dark_mode: 'Erscheinungsbild', mode_dark: 'Dunkel', mode_light: 'Hell',
     brightness: 'Helligkeit', accent_color: 'Akzentfarbe',
     font_size: 'Schriftgröße', font_small: 'Klein', font_medium: 'Mittel', font_large: 'Groß',
     reduce_transparency: 'Transparenz reduzieren',
 
-    /* ── Sound ── */
+    /* ── Ton ── */
     volume: 'Lautstärke', sound_effects: 'Soundeffekte',
     startup_sound: 'Startton', mute: 'Stummschalten',
 
-    /* ── General ── */
+    /* ── Allgemein ── */
     language: 'Sprache', lang_de: 'Deutsch', lang_en: 'English', lang_it: 'Italiano',
     auto_language: 'Automatische Sprache', auto_language_sub: 'Systemsprache verwenden', select_language: 'Sprache wählen',
     clock_24h: '24-Stunden-Format', show_seconds: 'Sekunden anzeigen',
@@ -35,13 +35,13 @@ const T = {
     reduce_motion: 'Bewegung reduzieren', auto_lock: 'Automatisch sperren',
     reset_settings: 'Einstellungen zurücksetzen', reset_confirm: 'Einstellungen wirklich zurücksetzen?',
 
-    /* ── Notifications ── */
+    /* ── Benachrichtigungen ── */
     notifications: 'Benachrichtigungen', app_badges: 'App-Abzeichen',
     notification_sound: 'Töne', show_previews: 'Vorschau anzeigen',
     preview_always: 'Immer', preview_unlocked: 'Wenn entsperrt', preview_never: 'Nie',
     do_not_disturb: 'Nicht stören',
 
-    /* ── Privacy ── */
+    /* ── Datenschutz ── */
     cookie_consent: 'Cookie-Einwilligung', cookie_accepted: 'Akzeptiert',
     cookie_declined: 'Abgelehnt', cookie_pending: 'Ausstehend', cookie_reset: 'Zurücksetzen',
     camera: 'Kamera', microphone: 'Mikrofon',
@@ -49,7 +49,7 @@ const T = {
     delete_all: 'Alle Daten löschen',
     delete_confirm: 'Alle lokalen Daten wirklich löschen? Die Seite wird neu geladen.',
 
-    /* ── About ── */
+    /* ── Über ── */
     about_title: 'Über StreamDeck', app_name: 'StreamDeck',
     version: 'Version', build: 'Build', developer: 'Entwickler',
     license: 'Lizenz', hardware: 'Hardware', mcu: 'Mikrocontroller',
@@ -67,6 +67,7 @@ const T = {
     changelog_loading: 'Laden…', changelog_error: 'Fehler beim Laden',
     changelog_entries: 'Einträge', changelog_total: 'Gesamt',
     changelog_no_todo: 'Keine offenen Einträge', changelog_no_entries: 'Keine Einträge',
+    changelog_original: 'Original', changelog_translated: 'Übersetzt',
 
     /* ── Apps ── */
     apps_title: 'App Store', apps_all: 'Alle',
@@ -84,7 +85,7 @@ const T = {
     diy_build: 'DIY-Bau', keys_label: 'Tasten',
     name_label: 'Name', app_full_name: 'StreamDeck Controller',
 
-    /* ── Menubar (Header) ── */
+    /* ── Menüleiste (Header) ── */
     menu_apple_about: 'Über diesen Mac',
     menu_apple_syspreferences: 'Systemeinstellungen …',
     menu_apple_appstore: 'App Store …',
@@ -134,35 +135,35 @@ const T = {
     menu_help_macos: 'macOS-Hilfe',
     menu_help_tips: 'Tipps für den Mac',
 
-    /* ── Control Center ── */
+    /* ── Kontrollzentrum ── */
     cc_wifi: 'WLAN', cc_bluetooth: 'Bluetooth',
     cc_airplane: 'Flugmodus', cc_cellular: 'Mobilfunk',
     cc_brightness: 'Helligkeit', cc_volume: 'Lautstärke',
     cc_lock: 'Sperren', cc_mirror: 'Spiegeln',
     cc_dnd: 'Nicht stören', cc_nightmode: 'Nachtmodus', cc_airplay: 'AirPlay',
 
-    /* ── About This Mac dialog ── */
+    /* ── Über diesen Mac Dialog ── */
     about_chip: 'Chip', about_memory: 'Arbeitsspeicher',
     about_serial: 'Seriennummer', about_more_info: 'Weitere Informationen …',
 
-    /* ── Desktop context menu ── */
+    /* ── Desktop Kontextmenü ── */
     ctx_new_folder: 'Neuer Ordner', ctx_info: 'Informationen',
     ctx_arrange: 'Darstellung aufräumen',
     ctx_change_wallpaper: 'Hintergrundbild ändern …',
     ctx_paste: 'Einfügen',
 
-    /* ── Login page ── */
+    /* ── Anmeldeseite ── */
     login_password: 'Kennwort',
     login_hint: '(oder Finger über den Leser ziehen)',
     login_wrong_password: 'Falsches Kennwort',
     login_accept_cookies: 'Es wäre vorteilhaft die Cookies zu akzeptieren',
 
-    /* ── Desktop / Mobile ── */
+    /* ── Desktop / Mobil ── */
     desktop_only: 'Nur Desktop',
     mobile_not_optimized: 'Diese Seite ist nicht für Mobilgeräte optimiert!',
     mobile_open_desktop: 'Bitte öffne diese Seite auf einem Desktop-Computer.',
 
-    /* ── Last Opened ── */
+    /* ── Zuletzt geöffnet ── */
     recently_opened: 'Zuletzt geöffnet',
     no_recently_opened: 'Keine zuletzt geöffneten Apps',
     time_just_now: 'Gerade eben',
@@ -180,7 +181,7 @@ const T = {
     browser_wip: 'WIP',
     browser_wip_sub: 'Work in Progress',
 
-    /* ── Cookies banner ── */
+    /* ── Cookie-Banner ── */
     cookies_title: 'Cookies & Datenschutz',
     cookies_text: 'Wir verwenden Cookies, um Ihnen das beste Erlebnis auf unserer Website zu bieten. Sie können wählen, ob Sie alle Cookies akzeptieren oder nur die notwendigen zulassen möchten.',
     cookies_decline: 'Ablehnen',
@@ -188,7 +189,7 @@ const T = {
     cookies_learn_more: 'Mehr erfahren',
     cookies_privacy_policy: 'Datenschutzerklärung',
 
-    /* ── Error page ── */
+    /* ── Fehlerseite ── */
     error_message: 'Ein Fehler ist aufgetreten, um fortzufahren:',
     error_return: '* Kehre zu unserer Startseite zurück.',
     error_email: '* Sende uns eine E-Mail über diesen Fehler und versuche es später.',
@@ -406,7 +407,7 @@ const T = {
     tut_s9_tip: 'Wenn ein Button nicht reagiert, prüfe zuerst den Serial Monitor. Wenn dort der richtige Buchstabe ankommt, liegt das Problem im HID-Code. Wenn nichts ankommt, prüfe die TX/RX-Verkabelung und die Nextion-Konfiguration.',
     tut_s9_text2: '<strong>Fertig!</strong> Dein DIY Stream Deck ist jetzt einsatzbereit. Verbinde es per USB mit dem PC und starte deine Programme, Websites und Shortcuts mit einem Fingertipp.<br/><br/><strong>Nächste Schritte:</strong><br/>• Erstelle mehrere Seiten auf dem Nextion Display für verschiedene Profile<br/>• Füge RGB-LEDs hinzu (WS2812B mit Arduino Nano und FastLED)<br/>• Passe die Buttons an deine eigenen Programme und Workflows an<br/>• Teile dein Projekt mit der Community!',
 
-    /* ── Contact ── */
+    /* ── Kontakt ── */
     contact_title: 'Kontakt',
     contact_available: 'Erreichbar',
     contact_info: 'Kontaktdaten',
@@ -443,12 +444,12 @@ const T = {
     finder_no_results: 'Keine Ergebnisse',
     finder_gallery_hint: 'Objekt auswählen für Vorschau',
 
-    /* ── Trash ── */
+    /* ── Papierkorb ── */
     trash_title: 'Papierkorb',
     trash_empty: 'Der Papierkorb ist leer',
     trash_zero_items: '0 Objekte',
 
-    /* ── Music Menu ── */
+    /* ── Musikmenü ── */
     music_playlist: 'Wiedergabeliste',
 
     /* ── Galerie ── */
@@ -473,7 +474,7 @@ const T = {
     github_no_bio: 'Keine Bio',
     github_loading: 'Lade…',
 
-    /* ── 3D Model Viewer ── */
+    /* ── 3D-Modellviewer ── */
     model_auto_rotate: 'Auto-Rotation',
     model_reset_view: 'Ansicht zurücksetzen',
     model_zoom_in: 'Hineinzoomen',
@@ -488,7 +489,7 @@ const T = {
     model_front: 'VORNE',
     model_back: 'HINTEN',
 
-    /* ── Dock Context Menu ── */
+    /* ── Dock Kontextmenü ── */
     dock_open: 'Öffnen',
     dock_close: 'Schließen',
     dock_minimize: 'Minimieren',
@@ -497,36 +498,36 @@ const T = {
     dock_restore: 'Wiederherstellen',
   },
 
-  // ── English translations ──
+  // ── Englische Übersetzungen ──
   en: {
-    /* ── Settings core ── */
+    /* ── Einstellungen Kern ── */
     settings: 'Settings', back: 'Back', cancel: 'Cancel',
     profile_sub: 'StreamDeck · DIY Stream Deck',
     profile_title: 'Edit Profile', profile_change_photo: 'Change Photo',
     profile_name_label: 'Name', profile_initials_label: 'Choose Color',
     profile_save: 'Save', family: 'Family',
 
-    /* ── Settings nav ── */
+    /* ── Einstellungen Navigation ── */
     nav_network: 'Network', nav_appearance: 'Appearance', nav_sound: 'Sound',
     nav_general: 'General', nav_notifications: 'Notifications',
     nav_privacy: 'Privacy', nav_about: 'About StreamDeck',
 
-    /* ── Network ── */
+    /* ── Netzwerk ── */
     wifi: 'Wi-Fi', bluetooth: 'Bluetooth', airplane: 'Airplane Mode',
     cellular: 'Cellular', vpn: 'VPN',
     connected: 'Connected', disconnected: 'Disconnected', on: 'On', off: 'Off',
 
-    /* ── Appearance ── */
+    /* ── Darstellung ── */
     dark_mode: 'Appearance', mode_dark: 'Dark', mode_light: 'Light',
     brightness: 'Brightness', accent_color: 'Accent Color',
     font_size: 'Font Size', font_small: 'Small', font_medium: 'Medium', font_large: 'Large',
     reduce_transparency: 'Reduce Transparency',
 
-    /* ── Sound ── */
+    /* ── Ton ── */
     volume: 'Volume', sound_effects: 'Sound Effects',
     startup_sound: 'Startup Sound', mute: 'Mute',
 
-    /* ── General ── */
+    /* ── Allgemein ── */
     language: 'Language', lang_de: 'Deutsch', lang_en: 'English', lang_it: 'Italiano',
     auto_language: 'Automatic Language', auto_language_sub: 'Use system language', select_language: 'Select Language',
     clock_24h: '24-Hour Time', show_seconds: 'Show Seconds',
@@ -534,13 +535,13 @@ const T = {
     reduce_motion: 'Reduce Motion', auto_lock: 'Auto-Lock',
     reset_settings: 'Reset Settings', reset_confirm: 'Reset all settings to defaults?',
 
-    /* ── Notifications ── */
+    /* ── Benachrichtigungen ── */
     notifications: 'Allow Notifications', app_badges: 'App Badges',
     notification_sound: 'Sounds', show_previews: 'Show Previews',
     preview_always: 'Always', preview_unlocked: 'When Unlocked', preview_never: 'Never',
     do_not_disturb: 'Do Not Disturb',
 
-    /* ── Privacy ── */
+    /* ── Datenschutz ── */
     cookie_consent: 'Cookie Consent', cookie_accepted: 'Accepted',
     cookie_declined: 'Declined', cookie_pending: 'Pending', cookie_reset: 'Reset',
     camera: 'Camera', microphone: 'Microphone',
@@ -548,7 +549,7 @@ const T = {
     delete_all: 'Delete All Data',
     delete_confirm: 'Delete all local data? The page will reload.',
 
-    /* ── About ── */
+    /* ── Über ── */
     about_title: 'About StreamDeck', app_name: 'StreamDeck',
     version: 'Version', build: 'Build', developer: 'Developer',
     license: 'License', hardware: 'Hardware', mcu: 'Microcontroller',
@@ -566,6 +567,7 @@ const T = {
     changelog_loading: 'Loading…', changelog_error: 'Error loading',
     changelog_entries: 'Entries', changelog_total: 'Total',
     changelog_no_todo: 'No pending items', changelog_no_entries: 'No entries',
+    changelog_original: 'Original', changelog_translated: 'Translated',
 
     /* ── Apps ── */
     apps_title: 'App Store', apps_all: 'All',
@@ -583,7 +585,7 @@ const T = {
     diy_build: 'DIY Build', keys_label: 'Keys',
     name_label: 'Name', app_full_name: 'StreamDeck Controller',
 
-    /* ── Menubar (Header) ── */
+    /* ── Menüleiste (Header) ── */
     menu_apple_about: 'About This Mac',
     menu_apple_syspreferences: 'System Settings…',
     menu_apple_appstore: 'App Store…',
@@ -633,35 +635,35 @@ const T = {
     menu_help_macos: 'macOS Help',
     menu_help_tips: 'Mac Tips',
 
-    /* ── Control Center ── */
+    /* ── Kontrollzentrum ── */
     cc_wifi: 'Wi-Fi', cc_bluetooth: 'Bluetooth',
     cc_airplane: 'Airplane Mode', cc_cellular: 'Cellular',
     cc_brightness: 'Brightness', cc_volume: 'Volume',
     cc_lock: 'Lock', cc_mirror: 'Mirror',
     cc_dnd: 'Do Not Disturb', cc_nightmode: 'Night Mode', cc_airplay: 'AirPlay',
 
-    /* ── About This Mac dialog ── */
+    /* ── Über diesen Mac Dialog ── */
     about_chip: 'Chip', about_memory: 'Memory',
     about_serial: 'Serial Number', about_more_info: 'More Info…',
 
-    /* ── Desktop context menu ── */
+    /* ── Desktop Kontextmenü ── */
     ctx_new_folder: 'New Folder', ctx_info: 'Get Info',
     ctx_arrange: 'Clean Up By',
     ctx_change_wallpaper: 'Change Wallpaper…',
     ctx_paste: 'Paste',
 
-    /* ── Login page ── */
+    /* ── Anmeldeseite ── */
     login_password: 'Password',
     login_hint: '(or swipe finger across reader)',
     login_wrong_password: 'Wrong Password',
     login_accept_cookies: 'It would be beneficial to accept cookies',
 
-    /* ── Desktop / Mobile ── */
+    /* ── Desktop / Mobil ── */
     desktop_only: 'Desktop Only',
     mobile_not_optimized: 'This page is not optimized for mobile devices!',
     mobile_open_desktop: 'Please open this page on a desktop computer.',
 
-    /* ── Last Opened ── */
+    /* ── Zuletzt geöffnet ── */
     recently_opened: 'Recently Opened',
     no_recently_opened: 'No recently opened apps',
     time_just_now: 'Just now',
@@ -679,7 +681,7 @@ const T = {
     browser_wip: 'WIP',
     browser_wip_sub: 'Work in Progress',
 
-    /* ── Cookies banner ── */
+    /* ── Cookie-Banner ── */
     cookies_title: 'Cookies & Privacy',
     cookies_text: 'We use cookies to give you the best experience on our website. You can choose to accept all cookies or only allow the necessary ones.',
     cookies_decline: 'Decline',
@@ -687,12 +689,12 @@ const T = {
     cookies_learn_more: 'Learn More',
     cookies_privacy_policy: 'Privacy Policy',
 
-    /* ── Error page ── */
+    /* ── Fehlerseite ── */
     error_message: 'An error has occurred, to continue:',
     error_return: '* Return to our homepage.',
     error_email: '* Send us an e-mail about this error and try later.',
 
-    /* ── App Store – App metadata ── */
+    /* ── App Store – App-Metadaten ── */
     app_category_system: 'System',
     app_info_sub: 'Product Information',
     app_info_desc: 'Information about the StreamDeck product and its features.',
@@ -726,16 +728,16 @@ const T = {
     app_description_desc: 'Questions and answers about the DIY Stream Deck project.',
 
     dq1_name: 'Why this project?',
-    dq1_text: 'The project "DIY Stream Deck with Arduino and Nextion" is interesting because you don\'t just buy a product. You build it yourself and learn how it works. You make a device with touchscreen buttons that can start programs, run shortcuts and make your work faster. It is different from mouse and keyboard because it gives you buttons you can see and change. The building process is just as important as the result.',
+    dq1_text: 'What makes the "DIY Stream Deck with Arduino and Nextion" project stand out is that you don\'t simply purchase a finished product — you construct it yourself while gaining a deep understanding of how it works. The device features touchscreen buttons that can launch programs, trigger shortcuts and streamline your workflow. Unlike a standard mouse and keyboard setup, it provides visual, customizable controls at your fingertips. Ultimately, the building process is just as valuable as the end result.',
 
     dq2_name: 'Why build it yourself?',
-    dq2_text: 'You can buy a ready Stream Deck, but building your own has clear benefits. You have full control and you understand how everything works. You don\'t need special software from a company. You can change anything at any time. Also, a real Elgato Stream Deck costs much more than Arduino parts. And if something breaks, you can fix it yourself.',
+    dq2_text: 'While you could certainly purchase a ready-made Stream Deck, building your own offers several compelling advantages. You retain full control over every aspect and develop a thorough understanding of how the system operates. There is no dependency on proprietary software from any company, and you can modify anything whenever you wish. Furthermore, a genuine Elgato Stream Deck costs significantly more than a set of Arduino components. If something breaks, you have the knowledge to repair it yourself.',
 
     dq3_name: 'Why Arduino?',
-    dq3_text: 'Arduino is great for this project because it is easy to program and has many ready libraries. The most important thing: the Arduino Pro Micro can work as a HID device — like a keyboard. The computer sees it as a normal keyboard. No drivers needed. When you press a button on the display, the Arduino sends a key press that the computer understands right away.',
+    dq3_text: 'Arduino is an excellent fit for this project, primarily because it is straightforward to program and benefits from a vast ecosystem of ready-made libraries. The crucial advantage, however, is that the Arduino Pro Micro can function as a HID device — essentially mimicking a keyboard. As a result, the computer recognises it as a standard keyboard without requiring any additional drivers. When you press a button on the display, the Arduino instantly transmits a keystroke that the computer processes immediately.',
 
     dq4_name: 'Why a Nextion touchscreen?',
-    dq4_text: 'You could use simple buttons, but a touchscreen is much more flexible. You can change the design anytime, make many pages and create your own style. The Nextion display has its own processor that shows the interface — this helps the Arduino. The display knows exactly which button was pressed, and the reaction is very fast.',
+    dq4_text: 'Although you could rely on simple physical buttons, a touchscreen offers far greater flexibility. You can redesign the layout at any time, create multiple pages and develop your own visual style. The Nextion display features its own built-in processor, which handles the rendering of the interface and consequently reduces the workload on the Arduino. It identifies precisely which button was pressed, and the response time is remarkably fast.',
 
     dq5_name: 'How is the interface made?',
     dq5_text: 'There is a free program called Nextion Editor. You can make pages, place buttons, add icons and text — all with drag and drop. The finished design is saved as a .TFT file on an SD card and then put on the display. You don\'t need design experience. You can make your own layouts and change them anytime without touching the Arduino code.',
@@ -905,7 +907,7 @@ const T = {
     tut_s9_tip: 'If a button does not work, first check the Serial Monitor. If the right letter comes there, the problem is in the HID code. If nothing comes, check the TX/RX wiring and the Nextion settings.',
     tut_s9_text2: '<strong>Done!</strong> Your DIY Stream Deck is now ready. Connect it to the PC with USB and start your programs, websites and shortcuts with one tap.<br/><br/><strong>Next steps:</strong><br/>• Make more pages on the Nextion display for different profiles<br/>• Add RGB LEDs (WS2812B with Arduino Nano and FastLED)<br/>• Change the buttons to your own programs and workflows<br/>• Share your project with the community!',
 
-    /* ── Contact ── */
+    /* ── Kontakt ── */
     contact_title: 'Contact',
     contact_available: 'Available',
     contact_info: 'Contact Info',
@@ -942,12 +944,12 @@ const T = {
     finder_no_results: 'No results',
     finder_gallery_hint: 'Select an item to preview',
 
-    /* ── Trash ── */
+    /* ── Papierkorb ── */
     trash_title: 'Trash',
     trash_empty: 'Trash is empty',
     trash_zero_items: '0 items',
 
-    /* ── Music Menu ── */
+    /* ── Musikmenü ── */
     music_playlist: 'Playlist',
 
     /* ── Galerie ── */
@@ -972,7 +974,7 @@ const T = {
     github_no_bio: 'No bio',
     github_loading: 'Loading…',
 
-    /* ── 3D Model Viewer ── */
+    /* ── 3D-Modellviewer ── */
     model_auto_rotate: 'Auto Rotate',
     model_reset_view: 'Reset View',
     model_zoom_in: 'Zoom In',
@@ -987,7 +989,7 @@ const T = {
     model_front: 'FRONT',
     model_back: 'BACK',
 
-    /* ── Dock Context Menu ── */
+    /* ── Dock Kontextmenü ── */
     dock_open: 'Open',
     dock_close: 'Close',
     dock_minimize: 'Minimize',
@@ -996,36 +998,36 @@ const T = {
     dock_restore: 'Restore',
   },
 
-  // ── Italian translations ──
+  // ── Italienische Übersetzungen ──
   it: {
-    /* ── Settings core ── */
+    /* ── Einstellungen Kern ── */
     settings: 'Impostazioni', back: 'Indietro', cancel: 'Annulla',
     profile_sub: 'StreamDeck · Stream Deck fai da te',
     profile_title: 'Modifica profilo', profile_change_photo: 'Cambia foto',
     profile_name_label: 'Nome', profile_initials_label: 'Scegli colore',
     profile_save: 'Salva', family: 'Famiglia',
 
-    /* ── Settings nav ── */
+    /* ── Einstellungen Navigation ── */
     nav_network: 'Rete', nav_appearance: 'Aspetto', nav_sound: 'Audio',
     nav_general: 'Generali', nav_notifications: 'Notifiche',
     nav_privacy: 'Privacy', nav_about: 'Info su StreamDeck',
 
-    /* ── Network ── */
+    /* ── Netzwerk ── */
     wifi: 'Wi-Fi', bluetooth: 'Bluetooth', airplane: 'Modalità aereo',
     cellular: 'Rete cellulare', vpn: 'VPN',
     connected: 'Connesso', disconnected: 'Disconnesso', on: 'On', off: 'Off',
 
-    /* ── Appearance ── */
+    /* ── Darstellung ── */
     dark_mode: 'Aspetto', mode_dark: 'Scuro', mode_light: 'Chiaro',
     brightness: 'Luminosità', accent_color: 'Colore principale',
     font_size: 'Dimensione carattere', font_small: 'Piccolo', font_medium: 'Medio', font_large: 'Grande',
     reduce_transparency: 'Riduci trasparenza',
 
-    /* ── Sound ── */
+    /* ── Ton ── */
     volume: 'Volume', sound_effects: 'Effetti sonori',
     startup_sound: 'Suono di avvio', mute: 'Silenzia',
 
-    /* ── General ── */
+    /* ── Allgemein ── */
     language: 'Lingua', lang_de: 'Deutsch', lang_en: 'English', lang_it: 'Italiano',
     auto_language: 'Lingua automatica', auto_language_sub: 'Usa lingua di sistema', select_language: 'Seleziona lingua',
     clock_24h: 'Formato 24 ore', show_seconds: 'Mostra secondi',
@@ -1033,13 +1035,13 @@ const T = {
     reduce_motion: 'Riduci movimento', auto_lock: 'Blocco automatico',
     reset_settings: 'Ripristina impostazioni', reset_confirm: 'Ripristinare tutte le impostazioni?',
 
-    /* ── Notifications ── */
+    /* ── Benachrichtigungen ── */
     notifications: 'Consenti notifiche', app_badges: 'Badge app',
     notification_sound: 'Suoni', show_previews: 'Mostra anteprime',
     preview_always: 'Sempre', preview_unlocked: 'Quando sbloccato', preview_never: 'Mai',
     do_not_disturb: 'Non disturbare',
 
-    /* ── Privacy ── */
+    /* ── Datenschutz ── */
     cookie_consent: 'Consenso cookie', cookie_accepted: 'Accettato',
     cookie_declined: 'Rifiutato', cookie_pending: 'In attesa', cookie_reset: 'Reimposta',
     camera: 'Fotocamera', microphone: 'Microfono',
@@ -1047,7 +1049,7 @@ const T = {
     delete_all: 'Elimina tutti i dati',
     delete_confirm: 'Eliminare tutti i dati locali? La pagina verrà ricaricata.',
 
-    /* ── About ── */
+    /* ── Über ── */
     about_title: 'Info su StreamDeck', app_name: 'StreamDeck',
     version: 'Versione', build: 'Build', developer: 'Sviluppatore',
     license: 'Licenza', hardware: 'Hardware', mcu: 'Microcontrollore',
@@ -1065,6 +1067,7 @@ const T = {
     changelog_loading: 'Caricamento…', changelog_error: 'Errore di caricamento',
     changelog_entries: 'Voci', changelog_total: 'Totale',
     changelog_no_todo: 'Nessun elemento in sospeso', changelog_no_entries: 'Nessuna voce',
+    changelog_original: 'Originale', changelog_translated: 'Tradotto',
 
     /* ── Apps ── */
     apps_title: 'App Store', apps_all: 'Tutti',
@@ -1082,7 +1085,7 @@ const T = {
     diy_build: 'Build fai da te', keys_label: 'Tasti',
     name_label: 'Nome', app_full_name: 'StreamDeck Controller',
 
-    /* ── Menubar (Header) ── */
+    /* ── Menüleiste (Header) ── */
     menu_apple_about: 'Informazioni su questo Mac',
     menu_apple_syspreferences: 'Impostazioni di sistema…',
     menu_apple_appstore: 'App Store…',
@@ -1132,35 +1135,35 @@ const T = {
     menu_help_macos: 'Aiuto macOS',
     menu_help_tips: 'Suggerimenti Mac',
 
-    /* ── Control Center ── */
+    /* ── Kontrollzentrum ── */
     cc_wifi: 'Wi-Fi', cc_bluetooth: 'Bluetooth',
     cc_airplane: 'Modalità aereo', cc_cellular: 'Rete cellulare',
     cc_brightness: 'Luminosità', cc_volume: 'Volume',
     cc_lock: 'Blocca', cc_mirror: 'Specchia',
     cc_dnd: 'Non disturbare', cc_nightmode: 'Modalità notte', cc_airplay: 'AirPlay',
 
-    /* ── About This Mac dialog ── */
+    /* ── Über diesen Mac Dialog ── */
     about_chip: 'Chip', about_memory: 'Memoria',
     about_serial: 'Numero seriale', about_more_info: 'Ulteriori informazioni…',
 
-    /* ── Desktop context menu ── */
+    /* ── Desktop Kontextmenü ── */
     ctx_new_folder: 'Nuova cartella', ctx_info: 'Informazioni',
     ctx_arrange: 'Ordina per',
     ctx_change_wallpaper: 'Cambia sfondo…',
     ctx_paste: 'Incolla',
 
-    /* ── Login page ── */
+    /* ── Anmeldeseite ── */
     login_password: 'Password',
     login_hint: '(o scorri il dito sul lettore)',
     login_wrong_password: 'Password errata',
     login_accept_cookies: 'Sarebbe utile accettare i cookie',
 
-    /* ── Desktop / Mobile ── */
+    /* ── Desktop / Mobil ── */
     desktop_only: 'Solo desktop',
     mobile_not_optimized: 'Questa pagina non è ottimizzata per dispositivi mobili!',
     mobile_open_desktop: 'Apri questa pagina su un computer desktop.',
 
-    /* ── Last Opened ── */
+    /* ── Zuletzt geöffnet ── */
     recently_opened: 'Aperto di recente',
     no_recently_opened: 'Nessuna app aperta di recente',
     time_just_now: 'Proprio ora',
@@ -1178,7 +1181,7 @@ const T = {
     browser_wip: 'WIP',
     browser_wip_sub: 'Lavori in corso',
 
-    /* ── Cookies banner ── */
+    /* ── Cookie-Banner ── */
     cookies_title: 'Cookie e Privacy',
     cookies_text: 'Utilizziamo cookie per offrirti la migliore esperienza sul nostro sito. Puoi scegliere di accettare tutti i cookie o di consentire solo quelli necessari.',
     cookies_decline: 'Rifiuta',
@@ -1186,12 +1189,12 @@ const T = {
     cookies_learn_more: 'Scopri di più',
     cookies_privacy_policy: 'Informativa privacy',
 
-    /* ── Error page ── */
+    /* ── Fehlerseite ── */
     error_message: 'Si è verificato un errore, per continuare:',
     error_return: '* Torna alla nostra homepage.',
     error_email: '* Inviaci un\'e-mail su questo errore e riprova più tardi.',
 
-    /* ── App Store – Metadati app ── */
+    /* ── App Store – App-Metadaten ── */
     app_category_system: 'Sistema',
     app_info_sub: 'Informazioni sul prodotto',
     app_info_desc: 'Informazioni sul prodotto StreamDeck e le sue funzioni.',
@@ -1225,76 +1228,76 @@ const T = {
     app_description_desc: 'Domande e risposte sul progetto DIY Stream Deck.',
 
     dq1_name: 'Perché questo progetto?',
-    dq1_text: 'Il progetto "DIY Stream Deck con Arduino e Nextion" è bello perché non compri un prodotto finito. Lo costruisci tu e impari come funziona. Fai un dispositivo con pulsanti touch per aprire programmi e fare azioni veloci. È diverso da mouse e tastiera perché ha pulsanti che puoi vedere e cambiare. Imparare è importante come il risultato.',
+    dq1_text: 'Questo progetto è bello perché non compri un prodotto finito. Lo costruisci tu e impari come funziona. Fai un dispositivo con pulsanti touch. Con i pulsanti puoi aprire programmi e fare azioni veloci. È diverso da mouse e tastiera perché i pulsanti si vedono e si cambiano. Quello che impari è importante come il risultato.',
 
     dq2_name: 'Perché costruirlo da solo?',
     dq2_text: 'Puoi comprare uno Stream Deck pronto, ma costruirlo ha vantaggi. Hai il controllo totale e capisci come funziona tutto. Non hai bisogno di software speciale. Puoi cambiare tutto quando vuoi. Un Elgato costa molto di più dei pezzi Arduino. E se si rompe qualcosa, puoi ripararlo tu.',
 
     dq3_name: 'Perché Arduino?',
-    dq3_text: 'Arduino è perfetto per questo progetto perché è facile da programmare e ha molte librerie pronte. La cosa più importante: l\'Arduino Pro Micro funziona come una tastiera (dispositivo HID). Il computer lo vede come una tastiera normale. Non servono driver. Quando premi un pulsante, l\'Arduino manda un tasto che il computer capisce subito.',
+    dq3_text: 'Arduino è perfetto per questo progetto. È facile da programmare e ha molte librerie pronte. La cosa più importante: l\'Arduino Pro Micro funziona come una tastiera. Il computer lo vede come una tastiera normale e non servono driver. Quando premi un pulsante, l\'Arduino manda un tasto al computer.',
 
     dq4_name: 'Perché un display Nextion?',
-    dq4_text: 'Puoi usare pulsanti semplici, ma un touchscreen è molto più flessibile. Puoi cambiare il design sempre, fare molte pagine e creare il tuo stile. Il display Nextion ha il suo processore che mostra l\'interfaccia. Il display sa esattamente quale pulsante hai premuto e la reazione è molto veloce.',
+    dq4_text: 'Puoi usare pulsanti semplici, ma un touchscreen è molto meglio. Puoi cambiare il design sempre e fare molte pagine. Il display Nextion ha il suo processore e mostra i pulsanti. Il display sa quale pulsante hai toccato e reagisce molto veloce.',
 
     dq5_name: 'Come si fa l\'interfaccia?',
-    dq5_text: 'C\'è un programma gratis che si chiama Nextion Editor. Puoi fare pagine, mettere pulsanti, aggiungere icone e testo con drag and drop. Il design finito si salva come file .TFT su una scheda SD e poi va sul display. Non serve esperienza di design. Puoi fare i tuoi layout e cambiarli sempre senza toccare il codice Arduino.',
+    dq5_text: 'C\'è un programma gratis che si chiama Nextion Editor. Con questo programma puoi fare pagine e mettere pulsanti, icone e testo. Usi drag and drop, è molto facile. Il design finito si salva come file .TFT su una scheda SD. Poi il file va sul display. Non serve esperienza di design. Puoi cambiare i pulsanti sempre senza toccare il codice Arduino.',
 
     dq6_name: 'Perché C/C++ e non un altro linguaggio?',
-    dq6_text: 'Arduino usa C/C++, un linguaggio fatto per lavorare con l\'hardware. Puoi controllare i pin, usare la comunicazione seriale e reagire veloce. Puoi anche usare un Raspberry Pi con Python, ma è più complicato e più lento. Per un progetto che deve reagire veloce, Arduino è più semplice. Aggiungere nuove funzioni è facile.',
+    dq6_text: 'Arduino usa C/C++. Questo linguaggio è fatto per lavorare con l\'hardware. Puoi controllare i pin e usare la porta seriale. Arduino reagisce molto veloce. Puoi anche usare un Raspberry Pi con Python, ma è più difficile e più lento. Per questo progetto, Arduino è più semplice. Aggiungere nuove funzioni è facile.',
 
     dq7_name: 'Come comunicano display e Arduino?',
-    dq7_text: 'Il display e l\'Arduino parlano con UART — una connessione seriale. Quando premi un pulsante, il Nextion manda un numero (l\'ID del pulsante) all\'Arduino attraverso i fili TX/RX. L\'Arduino legge questo numero e sa cosa fare. Se la connessione non funziona, non succede niente. Per questo devi testare con un programma semplice prima.',
+    dq7_text: 'Il display e l\'Arduino parlano con UART. UART è una connessione seriale con fili TX e RX. Quando premi un pulsante, il Nextion manda un numero all\'Arduino. Questo numero è l\'ID del pulsante. L\'Arduino legge il numero e sa cosa fare. Se la connessione non funziona, non succede niente. Per questo devi testare prima con un programma semplice.',
 
     dq8_name: 'Cosa succede quando premi un pulsante?',
-    dq8_text: 'Quando premi un pulsante sul touchscreen succede questo: il display Nextion trova l\'area toccata, la collega a un pulsante e manda il suo ID all\'Arduino. L\'Arduino prende il numero, cerca nel suo codice quale tasto corrisponde e manda un tasto con la libreria Keyboard.h. Usa i tasti F13 fino a F24 — tasti che nessun sistema usa normalmente. Così non ci sono problemi.',
+    dq8_text: 'Quando premi un pulsante sul touchscreen succede questo: il display trova l\'area che hai toccato. Poi manda l\'ID del pulsante all\'Arduino. L\'Arduino legge il numero e cerca nel codice cosa deve fare. Poi manda un tasto con la libreria Keyboard.h. Usa i tasti F13 fino a F24. Questi tasti non li usa nessun programma, così non ci sono problemi.',
 
     dq9_name: 'Come funziona il touchscreen?',
-    dq9_text: 'Il display Nextion lavora con aree touch fisse. Questo vuol dire: se tocchi l\'area giusta, il pulsante funziona sempre. Se premi molti pulsanti veloce, il sistema li gestisce uno alla volta. Non c\'è elaborazione parallela, ma è abbastanza veloce per l\'uso normale. Puoi fare più pulsanti aggiungendo più pagine.',
+    dq9_text: 'Il display Nextion lavora con aree touch fisse. Questo vuol dire: se tocchi l\'area giusta, il pulsante funziona sempre. Se premi molti pulsanti veloce, il sistema li fa uno alla volta. Non fa due cose insieme, ma è abbastanza veloce per l\'uso normale. Puoi fare più pulsanti e aggiungere più pagine.',
 
     dq10_name: 'Quali pezzi servono?',
-    dq10_text: 'Servono: un Arduino Pro Micro (ATmega32U4), un display Nextion (3.2 pollici), fili e un cavo USB. Opzionali sono: pulsanti fisici, un Arduino Nano per i LED RGB e una striscia LED WS2812B. Puoi costruirlo anche più economico — per esempio con un display più piccolo o senza LED. Il costo totale è circa 25-40 euro.',
+    dq10_text: 'Servono: un Arduino Pro Micro, un display Nextion (3.2 pollici), fili e un cavo USB. Non servono ma sono belli da avere: pulsanti fisici, un Arduino Nano per i LED RGB e una striscia LED. Puoi costruirlo anche più economico. Per esempio con un display più piccolo o senza LED. Il costo totale è circa 25-40 euro.',
 
     dq11_name: 'Alimentazione, memoria e limiti',
-    dq11_text: 'Il dispositivo prende la corrente dall\'USB — normalmente non serve altra corrente. Ma se usi molti LED, devono avere la loro corrente perché il Pro Micro può dare solo 500 mA. L\'ATmega32U4 ha 32 KB di memoria flash — abbastanza per il programma. Se il programma diventa troppo grande, puoi ottimizzare il codice o usare un controller più grande.',
+    dq11_text: 'Il dispositivo prende la corrente dall\'USB. Normalmente non serve altra corrente. Ma se usi molti LED, i LED devono avere la loro corrente. Il Pro Micro può dare solo 500 mA. L\'Arduino ha 32 KB di memoria — abbastanza per il programma. Se il programma diventa troppo grande, puoi rendere il codice più corto o usare un controller più grande.',
 
     dq12_name: 'È sicuro il dispositivo?',
-    dq12_text: 'Il dispositivo funziona come una tastiera USB e manda solo tasti locali. Non c\'è connessione internet e nessun dato che qualcuno può rubare. Qualcuno con accesso al dispositivo potrebbe cambiare il firmware, ma per un progetto DIY privato questo non è un problema vero. Per l\'uso a casa, la sicurezza è buona.',
+    dq12_text: 'Il dispositivo funziona come una tastiera USB e manda solo tasti. Non c\'è connessione internet e nessuno può rubare dati. Una persona con il dispositivo può cambiare il programma, ma per un progetto DIY a casa questo non è un problema. Per l\'uso a casa, la sicurezza è buona.',
 
     dq13_name: 'Trovare e risolvere errori',
-    dq13_text: 'Quando qualcosa non funziona, il Serial Monitor dell\'Arduino IDE aiuta di più. Puoi vedere quali dati arrivano con UART e se i valori giusti vengono mandati. Un buon primo test: scrivi un programma semplice che mostra i valori ricevuti nel Serial Monitor. Così trovi veloce se il problema è nel display, nei fili o nel codice. Spesso è un errore piccolo come fili TX/RX scambiati.',
+    dq13_text: 'Quando qualcosa non funziona, il Serial Monitor dell\'Arduino IDE aiuta molto. Puoi vedere quali dati arrivano e se i valori sono giusti. Un buon primo test: scrivi un programma semplice che mostra i valori nel Serial Monitor. Così trovi veloce dove è il problema: nel display, nei fili o nel codice. Spesso è un errore piccolo, come fili TX/RX scambiati.',
 
     dq14_name: 'Quanto dura?',
-    dq14_text: 'Le schede Arduino e i display Nextion sono fatti per durare molto. Il touchscreen non si consuma con l\'uso normale. La parte più debole sono le saldature e i fili — quindi saldare bene è importante. Rispetto a un Elgato professionale, il dispositivo DIY sembra più semplice, ma funziona ugualmente bene. E se si rompe qualcosa, puoi ripararlo tu.',
+    dq14_text: 'Le schede Arduino e i display Nextion durano molto. Il touchscreen non si rovina con l\'uso normale. La parte più debole sono i fili e le saldature. Per questo saldare bene è importante. Il dispositivo DIY sembra più semplice di un Elgato, ma funziona bene. E se si rompe qualcosa, puoi ripararlo tu.',
 
     dq15_name: 'Si può portare ovunque?',
-    dq15_text: 'Perché il dispositivo funziona come una tastiera USB normale, funziona su ogni computer senza installare software o driver. Basta collegarlo e funziona — su Windows, macOS e Linux. Puoi passare facilmente tra computer diversi. Il dispositivo è abbastanza piccolo da portare, specialmente con una buona custodia.',
+    dq15_text: 'Il dispositivo funziona come una tastiera USB normale. Per questo funziona su ogni computer senza installare software o driver. Basta collegarlo e funziona su Windows, macOS e Linux. Puoi usarlo con computer diversi. Il dispositivo è piccolo e facile da portare, specialmente con una buona custodia.',
 
     dq16_name: 'DIY contro prodotti commerciali',
-    dq16_text: 'Un vero Elgato Stream Deck ha tasti LCD con piccoli schermi su ogni pulsante, bel software e custodia professionale. Il dispositivo DIY non ha questo. Ma ha altri vantaggi: completamente personalizzabile, nessun software in abbonamento, capisci la tecnologia e puoi aggiungere quello che vuoi. Costa anche molto meno. Funzioni come luci RGB e più pagine sono facili da aggiungere.',
+    dq16_text: 'Un vero Elgato Stream Deck ha piccoli schermi su ogni pulsante, bel software e una bella custodia. Il dispositivo DIY non ha questo. Ma ha altri vantaggi: puoi cambiare tutto come vuoi. Non devi pagare per il software ogni mese. Capisci come funziona e puoi aggiungere quello che vuoi. Costa anche molto meno. Luci RGB e più pagine sono facili da aggiungere.',
 
     dq17_name: 'Custodia e stampa 3D',
-    dq17_text: 'Una custodia stampata in 3D in PLA rende il dispositivo più stabile e più bello. Si stampa in circa 4 ore con 30% di riempimento. Devi tagliare i fori M3 per le viti dopo la stampa. Puoi disegnare la custodia come vuoi — colore, forma, buchi per cavi e display. L\'aspetto non è importante come la funzione, ma una bella custodia fa la differenza.',
+    dq17_text: 'Una custodia stampata in 3D in PLA rende il dispositivo più stabile e più bello. Si stampa in circa 4 ore con 30% di riempimento. Dopo la stampa devi fare i fori M3 per le viti. Puoi disegnare la custodia come vuoi: colore, forma e buchi per cavi e display. La custodia non è la cosa più importante, ma fa una bella differenza.',
 
     dq18_name: 'Aggiornamenti e nuove funzioni',
     dq18_text: 'Puoi cambiare il software sempre — basta collegare l\'Arduino con USB e caricare nuovo codice. Non devi ricominciare da zero, aggiungi solo al codice esistente. Possibili miglioramenti: più pagine sul display, animazioni, pulsanti fisici extra o anche un secondo display. Se l\'Arduino non basta più, puoi passare a un ESP32 o Raspberry Pi Pico.',
 
     dq19_name: 'Perché è utile uno Stream Deck?',
-    dq19_text: 'Al computer fai sempre le stesse cose: aprire programmi, fare screenshot, cambiare finestra. Normalmente servono scorciatoie da tastiera che devi ricordare. Uno Stream Deck rende tutto semplice — un clic su un pulsante e l\'azione parte. Questo risparmia molto tempo, specialmente per streaming, programmazione o editing video. Non è solo comodità, è lavorare più veloce.',
+    dq19_text: 'Al computer fai sempre le stesse cose: aprire programmi, fare screenshot, cambiare finestra. Di solito servono scorciatoie da tastiera che devi ricordare. Uno Stream Deck rende tutto semplice. Premi un pulsante e l\'azione parte. Questo risparmia molto tempo. È molto utile per streaming, programmazione o video. Non è solo comodo, è lavorare più veloce.',
 
     dq20_name: 'Cosa impari con questo progetto?',
-    dq20_text: 'Con questo progetto impari programmazione ed elettronica insieme. Capisci come hardware e software lavorano insieme. Impari a trovare errori e risolvere problemi. Impari anche cose pratiche come saldare, modellare in 3D e comunicazione seriale. Il progetto migliora la tua programmazione perché scrivi codice vero per un dispositivo vero.',
+    dq20_text: 'Con questo progetto impari programmazione e elettronica insieme. Capisci come hardware e software lavorano insieme. Impari a trovare errori e risolvere problemi. Impari anche cose pratiche: saldare, fare modelli 3D e usare la porta seriale. Il progetto migliora la tua programmazione perché scrivi codice vero per un dispositivo vero.',
 
     dq21_name: 'È difficile?',
-    dq21_text: 'Il progetto va bene per chi sa un po\' di basi — devi sapere cosa sono variabili e cicli. Senza esperienza serve più tempo, ma ci sono molte guide. La costruzione base prende circa 1-2 giorni. All\'inizio sembra difficile perché cavi, codice e design vengono insieme, ma passo dopo passo si può fare.',
+    dq21_text: 'Il progetto va bene per chi sa un po\' le basi. Devi sapere cosa sono variabili e cicli. Senza esperienza serve più tempo, ma ci sono molte guide. La costruzione base prende circa 1-2 giorni. All\'inizio sembra difficile perché cavi, codice e design vengono insieme. Ma passo dopo passo si può fare.',
 
     dq22_name: 'Documentazione e presentazione',
-    dq22_text: 'Scrivere quello che hai fatto è importante perché puoi guardare indietro quando hai problemi. Foto della costruzione, commenti nel codice e una breve descrizione dei passi sono abbastanza. Per una presentazione, un breve video o demo dal vivo funziona meglio — le persone vedono direttamente cosa fa il dispositivo.',
+    dq22_text: 'Scrivere quello che hai fatto è importante. Così puoi guardare indietro quando hai problemi. Foto della costruzione, commenti nel codice e una breve lista dei passi sono abbastanza. Per una presentazione, un breve video funziona meglio. Le persone vedono cosa fa il dispositivo.',
 
     dq23_name: 'Futuro e lavoro',
-    dq23_text: 'Le competenze che impari — programmazione, conoscenza hardware, risolvere problemi — sono utili anche per il lavoro, specialmente nello sviluppo embedded o IoT. Lo sforzo vale la pena perché costruisci una buona base di elettronica e codice. Costruire qualcosa di tuo è anche più motivante che solo leggere teoria.',
+    dq23_text: 'Le cose che impari — programmazione, hardware, risolvere problemi — sono utili anche per il lavoro. Sono molto utili per lavorare con elettronica o IoT. Il lavoro vale la pena perché impari bene elettronica e codice. Costruire qualcosa di tuo è anche più bello che solo leggere teoria.',
 
     dq24_name: 'Riassunto',
-    dq24_text: 'Questo progetto è molto di più di uno "Stream Deck". Mostra come costruire il tuo dispositivo tecnico con pezzi semplici e imparare vere competenze. Impari programmazione, pensiero logico e risolvere problemi. Le molte domande che ti fai — "Perché funziona così?" e "Come posso migliorarlo?" — questo è quello che rende bello imparare. Per me la risposta è chiara: costruire qualcosa di tuo è meglio che comprarlo pronto.',
+    dq24_text: 'Questo progetto è molto di più di uno "Stream Deck". Impari a costruire un dispositivo con pezzi semplici. Impari programmazione, pensiero logico e a risolvere problemi. Le domande che ti fai — "Perché funziona così?" e "Come posso farlo meglio?" — queste domande rendono bello imparare. La risposta è chiara: costruire qualcosa di tuo è meglio che comprarlo pronto.',
 
     /* ── Tutorial ── */
     app_tutorial_sub: 'Guida alla costruzione',
@@ -1404,7 +1407,7 @@ const T = {
     tut_s9_tip: 'Se un pulsante non funziona, controlla prima il Serial Monitor. Se la lettera giusta arriva, il problema è nel codice HID. Se non arriva niente, controlla i fili TX/RX e le impostazioni Nextion.',
     tut_s9_text2: '<strong>Fatto!</strong> Il tuo DIY Stream Deck è pronto. Collegalo al PC con USB e avvia programmi, siti web e scorciatoie con un tocco.<br/><br/><strong>Prossimi passi:</strong><br/>• Fai più pagine sul display Nextion per profili diversi<br/>• Aggiungi LED RGB (WS2812B con Arduino Nano e FastLED)<br/>• Cambia i pulsanti per i tuoi programmi<br/>• Condividi il tuo progetto!',
 
-    /* ── Contatto ── */
+    /* ── Kontakt ── */
     contact_title: 'Contatto',
     contact_available: 'Disponibile',
     contact_info: 'Dati di contatto',
@@ -1441,12 +1444,12 @@ const T = {
     finder_no_results: 'Nessun risultato',
     finder_gallery_hint: "Seleziona un elemento per l'anteprima",
 
-    /* ── Cestino ── */
+    /* ── Papierkorb ── */
     trash_title: 'Cestino',
     trash_empty: 'Il cestino è vuoto',
     trash_zero_items: '0 elementi',
 
-    /* ── Music Menu ── */
+    /* ── Musikmenü ── */
     music_playlist: 'Playlist',
 
     /* ── Galerie ── */
@@ -1471,7 +1474,7 @@ const T = {
     github_no_bio: 'Nessuna bio',
     github_loading: 'Caricamento…',
 
-    /* ── 3D Model Viewer ── */
+    /* ── 3D-Modellviewer ── */
     model_auto_rotate: 'Rotazione automatica',
     model_reset_view: 'Ripristina vista',
     model_zoom_in: 'Ingrandisci',
@@ -1486,7 +1489,7 @@ const T = {
     model_front: 'DAVANTI',
     model_back: 'DIETRO',
 
-    /* ── Dock Context Menu ── */
+    /* ── Dock Kontextmenü ── */
     dock_open: 'Apri',
     dock_close: 'Chiudi',
     dock_minimize: 'Minimizza',
@@ -1496,5 +1499,5 @@ const T = {
   },
 };
 
-// we export the whole dictionary so other files can import it
+// Gesamtes Wörterbuch exportieren, damit andere Dateien darauf zugreifen können
 export default T;

@@ -140,9 +140,10 @@
 # 04.04.2026
 - made everything work locally (without api calls)
 
+# 05.04.2026
+- Fixed 3D model switch (old model no longer stays visible)
+- Added Changelog translations (German, Italian)
+- Added live toggle button to switch between original and translated text
 
 ## TO DO
 - Bilder erstellen für Galerie
-- 3D model (switch)
-- Translate Changelog
-- - like a live button with original text and ttandlatet

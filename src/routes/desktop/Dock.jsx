@@ -40,6 +40,8 @@ const COMPONENT_MAP = {
 
 // localStorage-Key für gepinnte Dock-Apps
 const DOCK_STORAGE_KEY = 'dock_pinned_apps_v1';
+// sessionStorage-Key für den Fenster-Zustand (offene Tabs, Position, etc.)
+const WINDOW_STATE_KEY = 'dock_window_state_v1';
 
 // Gepinnte Apps aus localStorage laden
 function loadPinnedApps() {
@@ -66,6 +68,33 @@ function savePinnedApps(apps) {
   localStorage.setItem(DOCK_STORAGE_KEY, JSON.stringify(pinned));
 }
 
+// Fenster-Zustand in sessionStorage speichern (überlebt Remounts, nicht Tab-Schließen)
+function saveWindowState(apps) {
+  try {
+    const state = apps.map((a) => ({
+      id: a.id,
+      open: a.open,
+      minimized: a.minimized,
+      maximized: a.maximized,
+      x: a.x,
+      y: a.y,
+      width: a.width,
+      height: a.height,
+      zIndex: a.zIndex,
+    }));
+    sessionStorage.setItem(WINDOW_STATE_KEY, JSON.stringify(state));
+  } catch { }
+}
+
+// Fenster-Zustand aus sessionStorage wiederherstellen
+function loadWindowState() {
+  try {
+    const raw = sessionStorage.getItem(WINDOW_STATE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { }
+  return null;
+}
+
 // Apps die immer im Dock sind — mit Standardgröße, Position und Komponente
 const defaultApps = [
   { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 640, height: 400, zIndex: 0 },
@@ -78,8 +107,10 @@ const defaultApps = [
 ];
 
 // Standard-Apps mit gepinnten Apps zusammenbauen
+// stellt auch den Fenster-Zustand (offen, Position, etc.) wieder her
 function buildInitialApps() {
   const pinned = loadPinnedApps();
+  const windowState = loadWindowState();
   const base = defaultApps.map((a) => ({ ...a })); // Kopie damit wir das Original nicht ändern
 
   // gepinnte Apps nach Terminal einfügen
@@ -109,6 +140,24 @@ function buildInitialApps() {
 
   // wiederhergestellte Apps an der richtigen Position einfügen
   base.splice(insertIdx, 0, ...restoredApps);
+
+  // Fenster-Zustand wiederherstellen (offene Tabs, Position, Größe)
+  if (windowState) {
+    for (const app of base) {
+      const saved = windowState.find((s) => s.id === app.id);
+      if (saved) {
+        app.open = saved.open;
+        app.minimized = saved.minimized;
+        app.maximized = saved.maximized;
+        app.x = saved.x;
+        app.y = saved.y;
+        app.width = saved.width;
+        app.height = saved.height;
+        app.zIndex = saved.zIndex;
+      }
+    }
+  }
+
   return base;
 }
 
@@ -128,9 +177,16 @@ export default function Dock({ onOpenApp }) {
   const [minimizingIds, setMinimizingIds] = useState(new Set()); // Fenster die minimiert werden
   const [restoringIds, setRestoringIds] = useState(new Set()); // Fenster die wiederhergestellt werden
 
-  // gepinnte Apps speichern wenn sich die Liste ändert
+  // zIndex-Zähler auf höchsten bestehenden Wert setzen (nach Wiederherstellung)
+  useEffect(() => {
+    const maxZ = Math.max(10, ...apps.map((a) => a.zIndex || 0));
+    if (maxZ >= nextZIndex.current) nextZIndex.current = maxZ + 1;
+  }, []); // nur beim ersten Render
+
+  // gepinnte Apps und Fenster-Zustand speichern wenn sich die Liste ändert
   useEffect(() => {
     savePinnedApps(apps);
+    saveWindowState(apps);
   }, [apps]);
 
   // Refs für den Glaseffekt am Dock
