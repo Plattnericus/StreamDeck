@@ -7,7 +7,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cookies from './apps/Cookies';
 import './LoginPage.css';
 import { useSEO } from '../hooks/useSEO';
-import { useTranslation } from '../i18n/LanguageContext';
+import { useTranslation, useLanguage } from '../i18n/LanguageContext';
 
 // Wichtige Assets die schon während der Boot-Animation geladen werden (sofort sichtbar)
 const PRELOAD_ASSETS = [
@@ -78,6 +78,17 @@ const DEFERRED_ASSETS = [
 
 export default function LoginPage() {
   const t = useTranslation();
+  const currentLang = useLanguage();
+
+  function changeLanguage(lang) {
+    try {
+      const raw = localStorage.getItem('streamdeck_settings_v2');
+      const settings = raw ? JSON.parse(raw) : {};
+      settings.language = lang;
+      localStorage.setItem('streamdeck_settings_v2', JSON.stringify(settings));
+      window.dispatchEvent(new Event('streamdeck-settings-sync'));
+    } catch {}
+  }
     useSEO({
       title: 'MacOS Tahoe Desktop',
       description: 'Erlebe das macOS Tahoe Liquid Glass Interface auf deinem Stream Deck DIY. Voll funktionsfähig, mit Echtzeit-Updates und anpassbaren Widgets.  ',
@@ -283,10 +294,15 @@ export default function LoginPage() {
         >
           <div className="wallpaper-sheen" />
           <div className="status-icons">
-            <span>U.S.</span>
-            <span>⌁</span>
-            <span>◔</span>
-            <span>◔</span>
+            <select
+              className="lang-select"
+              value={currentLang}
+              onChange={(e) => changeLanguage(e.target.value)}
+            >
+              <option value="de">DE</option>
+              <option value="en">EN</option>
+              <option value="it">IT</option>
+            </select>
           </div>
           <div className="clock">
             <div className="date">{dateText}</div>

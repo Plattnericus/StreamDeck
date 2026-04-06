@@ -95,7 +95,28 @@ body { margin: 0; padding: 0; background: #000; overflow: hidden; }
   gap: 10px;
   font-size: 12px;
   opacity: 0.85;
-  text-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.lang-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  outline: none;
+}
+
+.lang-select option {
+  background: #1c1c1e;
+  color: #fff;
 }
 
 .clock {
