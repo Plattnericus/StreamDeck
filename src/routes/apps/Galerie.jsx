@@ -8,17 +8,11 @@ import "./galerie.css";
 
 // Fallback-Daten, falls die JSON-Datei nicht geladen werden kann
 const DEMO = {
-  titel: "Stream Deck",
+  titel: { de: "Stream Deck", en: "Stream Deck", it: "Stream Deck" },
   eintraege: [
-    { id: 1,  bild: "/galerie/streamdeck-setup.jpg",   titel: "Setup",              text: "Das perfekte Streaming-Setup mit Stream Deck XL. Szenen, OBS und Audio auf einen Blick.", datum: "2024-11-03", kategorie: "Setup" },
-    { id: 2,  bild: "/galerie/streamdeck-profile.jpg", titel: "Profile & Ordner",   text: "Für jede App ein eigenes Layout. Ordner sparen Platz für komplexe Workflows.", datum: "2024-10-18", kategorie: "Profile" },
-    { id: 3,  bild: "/galerie/streamdeck-obs.jpg",     titel: "OBS Integration",    text: "Szenen, Quellen und Aufnahme direkt über das Deck steuern.", datum: "2024-09-25", kategorie: "Plugins" },
-    { id: 4,  bild: "/galerie/streamdeck-audio.jpg",   titel: "Audio-Steuerung",    text: "Wave Link macht das XL zur idealen Mixer-Oberfläche.", datum: "2024-08-14", kategorie: "Audio" },
-    { id: 5,  bild: "/galerie/streamdeck-icons.jpg",   titel: "Custom Icons",       text: "72×72 px Icons per Drag & Drop in die Stream Deck Software.", datum: "2024-07-30", kategorie: "Design" },
-    { id: 6,  bild: "/galerie/streamdeck-macro.jpg",   titel: "Makros",             text: "Multi-Aktionen: Website, Hotkey, Verzögerung – alles in einer Taste.", datum: "2024-06-05", kategorie: "Makros" },
-    { id: 7,  bild: "/galerie/streamdeck-desk.jpg",    titel: "Desk Setup",         text: "Clean Desk mit Stream Deck Mini als zentralem Steuerelement.", kategorie: "Setup" },
-    { id: 8,  bild: "/galerie/streamdeck-mobile.jpg",  titel: "Mobile Companion",   text: "Die Stream Deck Mobile App erweitert das Deck auf dem iPhone.", datum: "2024-05-12", kategorie: "Plugins" },
-    { id: 9,  bild: "/galerie/streamdeck-color.jpg",   titel: "Farbiges Layout",    text: "Leuchtende Icons machen jede Aktion sofort erkennbar.", datum: "2024-04-08", kategorie: "Design" },
+    { id: 1,  bild: "/galerie/streamdeck-setup.jpg",   titel: { de: "Setup", en: "Setup", it: "Setup" },              text: { de: "Das perfekte Streaming-Setup.", en: "The perfect streaming setup.", it: "Il setup perfetto per lo streaming." }, datum: "2024-11-03", kategorie: { de: "Setup", en: "Setup", it: "Setup" } },
+    { id: 2,  bild: "/galerie/streamdeck-profile.jpg", titel: { de: "Profile & Ordner", en: "Profiles & Folders", it: "Profili e cartelle" },   text: { de: "Für jede App ein eigenes Layout.", en: "A unique layout for every app.", it: "Un layout per ogni app." }, datum: "2024-10-18", kategorie: { de: "Profile", en: "Profiles", it: "Profili" } },
+    { id: 3,  bild: "/galerie/streamdeck-obs.jpg",     titel: { de: "OBS Integration", en: "OBS Integration", it: "Integrazione OBS" },    text: { de: "Szenen und Aufnahme direkt steuern.", en: "Control scenes and recording directly.", it: "Controlla le scene direttamente." }, datum: "2024-09-25", kategorie: { de: "Plugins", en: "Plugins", it: "Plugin" } },
   ],
 };
 
@@ -67,6 +61,10 @@ const IcoWarn = () => (
   </svg>
 );
 
+// Hilfsfunktion: Übersetzten Wert aus einem Objekt oder String holen
+const loc = (val, lang) =>
+  val == null ? '' : typeof val === 'object' ? (val[lang] ?? val.de ?? '') : val;
+
 const LOCALE_MAP = { de: 'de-DE', en: 'en-US', it: 'it-IT' };
 
 const datumFormatieren = (s, lang = false, locale = 'de') =>
@@ -100,7 +98,7 @@ function exifAuslesen(imgEl) {
 }
 
 // Eine einzelne Foto-Kachel im Raster
-function Kachel({ eintrag, index, onClick }) {
+function Kachel({ eintrag, index, onClick, locale }) {
   const [geladen, setGeladen] = useState(false);
   const [fehler,  setFehler]  = useState(false);
 
@@ -117,7 +115,7 @@ function Kachel({ eintrag, index, onClick }) {
           {!geladen && <div className="galerie-kachel-ladebalken" />}
           <img
             src={eintrag.bild}
-            alt={eintrag.titel}
+            alt={loc(eintrag.titel, locale)}
             className={`galerie-kachel-foto${geladen ? " galerie-kachel-foto-geladen" : ""}`}
             onLoad={() => setGeladen(true)}
             onError={() => setFehler(true)}
@@ -231,7 +229,7 @@ function FotoViewer({ eintraege, startIndex, onClose, t, locale }) {
             ref={imgRef}
             key={eintrag.bild}
             src={eintrag.bild}
-            alt={eintrag.titel}
+            alt={loc(eintrag.titel, locale)}
             className={`foto-viewer-bild${geladen ? " foto-viewer-bild-geladen" : ""}`}
             onLoad={() => setGeladen(true)}
             onError={() => { setFehler(true); setGeladen(true); }}
@@ -258,19 +256,19 @@ function FotoViewer({ eintraege, startIndex, onClose, t, locale }) {
       </div>
 
       <div className={`foto-viewer-fuss${versteckt ? " foto-viewer-fuss-versteckt" : ""}`}>
-        <span className="foto-viewer-name">{eintrag.titel}</span>
+        <span className="foto-viewer-name">{loc(eintrag.titel, locale)}</span>
         <div className="foto-viewer-meta-zeile">
           {anzeigedatum && (
             <time className={istExif ? "foto-viewer-datum-exif" : "foto-viewer-datum"}>
               {datumFormatieren(anzeigedatum, true, locale)}{istExif ? " (EXIF)" : ""}
             </time>
           )}
-          {eintrag.kategorie && (
-            <span className="foto-viewer-kategorie">{eintrag.kategorie}</span>
+          {loc(eintrag.kategorie, locale) && (
+            <span className="foto-viewer-kategorie">{loc(eintrag.kategorie, locale)}</span>
           )}
         </div>
-        {eintrag.text && (
-          <p className="foto-viewer-text">{eintrag.text}</p>
+        {loc(eintrag.text, locale) && (
+          <p className="foto-viewer-text">{loc(eintrag.text, locale)}</p>
         )}
       </div>
     </div>
@@ -299,14 +297,14 @@ export default function GaleriePage() {
   }, []);
 
   const kategorien = daten
-    ? [t('galerie_all'), ...new Set(daten.eintraege.map(e => e.kategorie).filter(Boolean))]
+    ? [t('galerie_all'), ...new Set(daten.eintraege.map(e => loc(e.kategorie, locale)).filter(Boolean))]
     : [t('galerie_all')];
 
   const activeFilter = filter ?? t('galerie_all');
 
   const gefiltert = (daten?.eintraege ?? []).filter(e =>
-    (activeFilter === t('galerie_all') || e.kategorie === activeFilter) &&
-    (!suche || [e.titel, e.text].some(t => t?.toLowerCase().includes(suche.toLowerCase())))
+    (activeFilter === t('galerie_all') || loc(e.kategorie, locale) === activeFilter) &&
+    (!suche || [loc(e.titel, locale), loc(e.text, locale)].some(t => t?.toLowerCase().includes(suche.toLowerCase())))
   );
 
   const oeffnen = (eintrag) => {
@@ -319,7 +317,7 @@ export default function GaleriePage() {
       <header className="galerie-kopf">
         <div className="galerie-kopf-oben">
           <h1 className="galerie-kopf-titel">
-            {laedt ? t('galerie_title') : (daten?.titel ?? t('galerie_title'))}
+            {laedt ? t('galerie_title') : (loc(daten?.titel, locale) || t('galerie_title'))}
           </h1>
           {!laedt && (
             <span className="galerie-kopf-anzahl">
@@ -384,7 +382,7 @@ export default function GaleriePage() {
           </div>
         ) : (
           gefiltert.map((e, i) => (
-            <Kachel key={e.id ?? i} eintrag={e} index={i} onClick={oeffnen} />
+            <Kachel key={e.id ?? i} eintrag={e} index={i} onClick={oeffnen} locale={locale} />
           ))
         )}
       </main>

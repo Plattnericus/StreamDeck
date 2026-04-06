@@ -145,9 +145,11 @@
 - Added Changelog translations (German, Italian)
 - Added live toggle button to switch between original and translated text
 
+# 06.04.2026
+- Added gallery images (25 photos: showcase, parts, wiring, software, 3D print)
+- Added translated gallery JSON with German, English (B2), and Italian (A2) support
+- Updated gallery component to support multilingual JSON format
+- Updated all Changelog translations (German, Italian)
+
 ## TO DO
-- Bilder erstellen für Galerie
-    - In den Order /static/galerie dort habe ich bilder drienne, schau sie alle an (auch alle dateein) und erstelle dort die json MIT übersetzungenb. Italeinisch a2 lvl und english B2 level und mach auch dasss alles mit translatnons funtkionieren und mit json dasss die bilder in der galerie sind. Vermeide bugs!!
-
-
-    Update uach alle Sprachen von den Changelogs!!
+- Add more gallery images as the project evolves

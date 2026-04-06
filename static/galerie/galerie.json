@@ -1,36 +1,205 @@
 {
-  "titel": "Stream Deck",
+  "titel": { "de": "Stream Deck DIY", "en": "Stream Deck DIY", "it": "Stream Deck DIY" },
   "eintraege": [
     {
       "id": 1,
-      "bild": "/galerie/setup.jpg",
-      "titel": "Das perfekte Setup",
-      "text": "Stream Deck XL mit OBS, Audio-Mixer und Szenen-Steuerung auf einen Blick.",
-      "datum": "2024-11-03",
-      "kategorie": "Setup"
+      "bild": "/galerie/tut-cover.png",
+      "titel": { "de": "Stream Deck DIY", "en": "DIY Stream Deck", "it": "Stream Deck fai da te" },
+      "text": { "de": "Das Titelbild des Projekts – ein selbstgebautes Stream Deck mit Touchscreen.", "en": "The project's cover image — a handmade Stream Deck featuring a touchscreen display.", "it": "L'immagine del progetto: uno Stream Deck fatto a mano con il touchscreen." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Vorstellung", "en": "Showcase", "it": "Presentazione" }
     },
     {
       "id": 2,
-      "bild": "/galerie/profile.jpg",
-      "titel": "Profile & Ordner",
-      "text": "Für jede App ein eigenes Layout – Ordner sparen Platz für komplexe Workflows.",
-      "datum": "2024-10-18",
-      "kategorie": "Profile"
+      "bild": "/galerie/streamdeck.png",
+      "titel": { "de": "Das fertige Gerät", "en": "The Finished Device", "it": "Il dispositivo finito" },
+      "text": { "de": "Das DIY Stream Deck in der Hand – mit 12 App-Icons auf dem Nextion-Display.", "en": "The DIY Stream Deck held in hand, showing 12 app icons on the Nextion touchscreen display.", "it": "Lo Stream Deck in mano con 12 icone di app sul display." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Vorstellung", "en": "Showcase", "it": "Presentazione" }
     },
     {
       "id": 3,
-      "bild": "/galerie/obs.jpg",
-      "titel": "OBS Integration",
-      "text": "Szenen, Quellen und Aufnahme-Status direkt über das Deck steuern.",
-      "kategorie": "Plugins"
+      "bild": "/galerie/StreamDeck-Hochformat.jpeg",
+      "titel": { "de": "Hochformat-Ansicht", "en": "Portrait View", "it": "Vista verticale" },
+      "text": { "de": "Das Stream Deck im Hochformat mit Mediensteuerung, Lautstärke und App-Shortcuts.", "en": "The Stream Deck in portrait orientation with media controls, volume buttons, and app shortcuts.", "it": "Lo Stream Deck in verticale con i controlli per la musica e le app." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Vorstellung", "en": "Showcase", "it": "Presentazione" }
     },
     {
       "id": 4,
-      "bild": "/galerie/audio.jpg",
-      "titel": "Audio-Mixer",
-      "text": "Wave Link macht das XL zur idealen Mixer-Oberfläche für jeden Kanal.",
-      "datum": "2024-08-14",
-      "kategorie": "Audio"
+      "bild": "/galerie/StreamDeck-Querformat.jpeg",
+      "titel": { "de": "Querformat-Ansicht", "en": "Landscape View", "it": "Vista orizzontale" },
+      "text": { "de": "Das gleiche Layout im Querformat – ideal auf dem Schreibtisch.", "en": "The same layout in landscape mode — perfect for desktop use alongside your workstation.", "it": "Lo stesso layout in orizzontale, perfetto sulla scrivania." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Vorstellung", "en": "Showcase", "it": "Presentazione" }
+    },
+    {
+      "id": 5,
+      "bild": "/galerie/tut-parts-arduino.png",
+      "titel": { "de": "Arduino Pro Micro", "en": "Arduino Pro Micro", "it": "Arduino Pro Micro" },
+      "text": { "de": "Der Arduino Pro Micro (32U4) – das Herzstück des Stream Decks mit USB-HID-Unterstützung.", "en": "The Arduino Pro Micro (32U4) serves as the brain of the Stream Deck, providing native USB HID support.", "it": "L'Arduino Pro Micro (32U4): il cuore dello Stream Deck con supporto USB." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Bauteile", "en": "Parts", "it": "Componenti" }
+    },
+    {
+      "id": 6,
+      "bild": "/galerie/tut-parts-nextion.png",
+      "titel": { "de": "Nextion Display 2.8\"", "en": "Nextion 2.8\" Display", "it": "Display Nextion 2.8\"" },
+      "text": { "de": "Das Nextion 2.8\" Touchdisplay mit Anschlusskabeln – zeigt die Buttons an.", "en": "The Nextion 2.8\" touchscreen display with connection cables — responsible for rendering all the buttons.", "it": "Il display touch Nextion 2.8\" con i cavi: mostra i pulsanti." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Bauteile", "en": "Parts", "it": "Componenti" }
+    },
+    {
+      "id": 7,
+      "bild": "/galerie/tut-parts-usb-mini.png",
+      "titel": { "de": "USB-Mini-Kabel", "en": "USB Mini Cable", "it": "Cavo USB Mini" },
+      "text": { "de": "Ein USB-Mini-Kabel für die Verbindung zwischen Arduino und Computer.", "en": "A USB Mini cable used to connect the Arduino Pro Micro to your computer.", "it": "Un cavo USB Mini per collegare l'Arduino al computer." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Bauteile", "en": "Parts", "it": "Componenti" }
+    },
+    {
+      "id": 8,
+      "bild": "/galerie/tut-parts-wires.png",
+      "titel": { "de": "Kabelset", "en": "Wire Set", "it": "Set di cavi" },
+      "text": { "de": "Farbige Kabel zum Verlöten der Verbindungen zwischen Arduino und Display.", "en": "A set of colored wires for soldering the connections between the Arduino and the Nextion display.", "it": "Cavi colorati per collegare l'Arduino al display." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Bauteile", "en": "Parts", "it": "Componenti" }
+    },
+    {
+      "id": 9,
+      "bild": "/galerie/tut-ftdi.png",
+      "titel": { "de": "FT782 USB-Seriell-Adapter", "en": "FT782 USB-to-Serial Adapter", "it": "Adattatore FT782 USB-seriale" },
+      "text": { "de": "Der FT782 Adapter wird zum Programmieren des Nextion-Displays über USB benötigt.", "en": "The FT782 adapter is required for programming the Nextion display via USB from your computer.", "it": "L'adattatore FT782 serve per programmare il display Nextion via USB." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Bauteile", "en": "Parts", "it": "Componenti" }
+    },
+    {
+      "id": 10,
+      "bild": "/galerie/tut-wiring.png",
+      "titel": { "de": "Schaltplan", "en": "Wiring Diagram", "it": "Schema elettrico" },
+      "text": { "de": "Der komplette Schaltplan: Arduino Pro Micro verbunden mit dem Nextion 2.8\" Display.", "en": "The complete wiring diagram showing all connections between the Arduino Pro Micro and the Nextion display.", "it": "Lo schema completo: Arduino Pro Micro collegato al display Nextion." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Verkabelung", "en": "Wiring", "it": "Cablaggio" }
+    },
+    {
+      "id": 11,
+      "bild": "/galerie/tut-wiring-detail.png",
+      "titel": { "de": "Löten am Arduino", "en": "Soldering the Arduino", "it": "Saldatura sull'Arduino" },
+      "text": { "de": "Kabel werden direkt an den Arduino Pro Micro gelötet.", "en": "Wires being carefully soldered directly onto the Arduino Pro Micro board.", "it": "I cavi vengono saldati sull'Arduino Pro Micro." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Verkabelung", "en": "Wiring", "it": "Cablaggio" }
+    },
+    {
+      "id": 12,
+      "bild": "/galerie/tut-wiring-photo.png",
+      "titel": { "de": "Innenansicht", "en": "Inside View", "it": "Vista interna" },
+      "text": { "de": "Blick ins Innere des Gehäuses – Arduino und Display sind verkabelt und eingebaut.", "en": "A look inside the assembled case, with the Arduino and Nextion display wired up and mounted.", "it": "Dentro il dispositivo: Arduino e display collegati e montati." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Verkabelung", "en": "Wiring", "it": "Cablaggio" }
+    },
+    {
+      "id": 13,
+      "bild": "/galerie/tut-stl-base.png",
+      "titel": { "de": "3D-Druck Gehäuse", "en": "3D Printed Case", "it": "Custodia stampata in 3D" },
+      "text": { "de": "Das 3D-gedruckte Gehäuse (Unterteil) für das Stream Deck.", "en": "The 3D printed base enclosure that houses the Arduino and display.", "it": "La base stampata in 3D per lo Stream Deck." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "3D-Druck", "en": "3D Print", "it": "Stampa 3D" }
+    },
+    {
+      "id": 14,
+      "bild": "/galerie/tut-stl-lid.png",
+      "titel": { "de": "3D-Druck Deckel", "en": "3D Printed Lid", "it": "Coperchio stampato in 3D" },
+      "text": { "de": "Der Deckel mit Ausschnitt für das Display – wird mit Schrauben befestigt.", "en": "The lid frame with a cutout for the display, secured with screws.", "it": "Il coperchio con lo spazio per il display, fissato con le viti." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "3D-Druck", "en": "3D Print", "it": "Stampa 3D" }
+    },
+    {
+      "id": 15,
+      "bild": "/galerie/tut-arduino-ide.png",
+      "titel": { "de": "USB anschließen", "en": "Connecting USB", "it": "Collegare il cavo USB" },
+      "text": { "de": "Das USB-Kabel wird an den Laptop angeschlossen, um den Arduino zu programmieren.", "en": "Plugging the USB cable into the laptop to start programming the Arduino.", "it": "Il cavo USB viene collegato al computer per programmare l'Arduino." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 16,
+      "bild": "/galerie/tut-code.png",
+      "titel": { "de": "Arduino-Code", "en": "Arduino Code", "it": "Codice Arduino" },
+      "text": { "de": "Der Arduino-Sketch in der IDE – steuert die Kommunikation mit dem Nextion-Display.", "en": "The Arduino sketch loaded in the IDE, handling serial communication with the Nextion display.", "it": "Il codice Arduino nella IDE per comunicare con il display Nextion." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 17,
+      "bild": "/galerie/tut-board-select.png",
+      "titel": { "de": "Board angeschlossen", "en": "Board Connected", "it": "Scheda collegata" },
+      "text": { "de": "Das Stream Deck ist per USB-C angeschlossen und bereit zur Programmierung.", "en": "The Stream Deck connected via USB-C, ready to be programmed.", "it": "Lo Stream Deck collegato via USB-C, pronto per la programmazione." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 18,
+      "bild": "/galerie/tut-nextion-editor.png",
+      "titel": { "de": "Nextion Editor", "en": "Nextion Editor", "it": "Nextion Editor" },
+      "text": { "de": "Die Nextion-Editor-Webseite – hier wird die Software für das Display heruntergeladen.", "en": "The Nextion Editor website where you download the GUI development software for the display.", "it": "Il sito del Nextion Editor per scaricare il software del display." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 19,
+      "bild": "/galerie/tut-nextion-install.png",
+      "titel": { "de": "Display-Modell wählen", "en": "Select Display Model", "it": "Scegliere il modello" },
+      "text": { "de": "Im Nextion Editor wird das passende Display-Modell ausgewählt (NX3224K028).", "en": "Selecting the correct display model (NX3224K028) in the Nextion Editor to match the hardware.", "it": "Nel Nextion Editor si sceglie il modello del display (NX3224K028)." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 20,
+      "bild": "/galerie/tut-buttons.png",
+      "titel": { "de": "Button-Layout", "en": "Button Layout", "it": "Layout dei pulsanti" },
+      "text": { "de": "Das Button-Layout im Nextion Editor – jeder Button löst eine Aktion aus.", "en": "The button layout designed in the Nextion Editor — each button triggers a specific action on your PC.", "it": "Il layout dei pulsanti nel Nextion Editor: ogni pulsante fa un'azione." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 21,
+      "bild": "/galerie/tut-serial-cmd.png",
+      "titel": { "de": "Serielle Befehle", "en": "Serial Commands", "it": "Comandi seriali" },
+      "text": { "de": "Der Nextion-Simulator sendet serielle Befehle bei Tastendruck.", "en": "The Nextion simulator sending serial commands when buttons are pressed during testing.", "it": "Il simulatore Nextion invia comandi seriali quando si preme un pulsante." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 22,
+      "bild": "/galerie/tut-upload-diagram.png",
+      "titel": { "de": "Upload-Verbindung", "en": "Upload Connection", "it": "Collegamento per l'upload" },
+      "text": { "de": "Schema zum Upload: Nextion Display über FT782 an den PC angeschlossen.", "en": "The connection diagram for uploading firmware to the Nextion display via the FT782 adapter.", "it": "Lo schema per il caricamento: display Nextion collegato al PC con l'FT782." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 23,
+      "bild": "/galerie/tut-upload-settings.png",
+      "titel": { "de": "Display-Upload", "en": "Display Upload", "it": "Caricamento sul display" },
+      "text": { "de": "Die Oberfläche wird auf das Nextion-Display hochgeladen.", "en": "The GUI interface being uploaded to the Nextion display through the editor.", "it": "L'interfaccia viene caricata sul display Nextion." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 24,
+      "bild": "/galerie/tut-upload-done.png",
+      "titel": { "de": "Display fertig", "en": "Display Ready", "it": "Display pronto" },
+      "text": { "de": "Das Display zeigt nach dem Upload alle App-Icons – bereit zum Einbau!", "en": "The display showing all app icons after a successful upload — ready for assembly!", "it": "Il display mostra tutte le icone dopo il caricamento. Pronto!" },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Software", "en": "Software", "it": "Software" }
+    },
+    {
+      "id": 25,
+      "bild": "/galerie/tut-upload-final.png",
+      "titel": { "de": "Fertiges Ergebnis", "en": "Final Result", "it": "Risultato finale" },
+      "text": { "de": "Das fertige DIY Stream Deck in der Hand – einsatzbereit am Laptop.", "en": "The completed DIY Stream Deck held in hand, fully functional and ready to use with any laptop.", "it": "Lo Stream Deck finito, in mano e pronto per l'uso con il computer." },
+      "datum": "2026-04-06",
+      "kategorie": { "de": "Vorstellung", "en": "Showcase", "it": "Presentazione" }
     }
   ]
 }

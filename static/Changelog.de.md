@@ -144,3 +144,9 @@
 - 3D-Modell-Wechsel behoben (altes Modell bleibt nicht mehr sichtbar)
 - Changelog-Übersetzungen hinzugefügt (Deutsch, Italienisch)
 - Live-Umschaltknopf hinzugefügt um zwischen Original und übersetztem Text zu wechseln
+
+# 06.04.2026
+- Galerie-Bilder hinzugefügt (25 Fotos: Vorstellung, Bauteile, Verkabelung, Software, 3D-Druck)
+- Übersetzte Galerie-JSON erstellt mit Deutsch, Englisch (B2) und Italienisch (A2)
+- Galerie-Komponente aktualisiert für mehrsprachiges JSON-Format
+- Alle Changelog-Übersetzungen aktualisiert (Deutsch, Italienisch)

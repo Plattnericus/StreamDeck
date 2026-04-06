@@ -144,3 +144,9 @@
 - Risolto il cambio modello 3D (il vecchio modello non resta più visibile)
 - Aggiunte traduzioni del Changelog (tedesco, italiano)
 - Aggiunto pulsante per passare tra testo originale e tradotto
+
+# 06.04.2026
+- Aggiunte foto alla galleria (25 foto: presentazione, componenti, cablaggio, software, stampa 3D)
+- Creato file JSON della galleria con tedesco, inglese (B2) e italiano (A2)
+- Aggiornata la galleria per il formato JSON multilingue
+- Aggiornate tutte le traduzioni del Changelog (tedesco, italiano)
