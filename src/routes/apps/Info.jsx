@@ -2,28 +2,32 @@
 // Ausführliche Dokumentation zum StreamDeck-Projekt.
 // Tabs: Übersicht, Hardware, Verkabelung, Software, 3D-Druck, Bauanleitung, Features, Inspiration.
 import { useState } from "react";
+import { useLanguage } from "../../i18n/LanguageContext";
+import infoContent from "../../i18n/info-content";
 import "./Info.css";
-
-const navItems = [
-  { icon: "◎", label: "Overview" },
-  { icon: "⬡", label: "Hardware" },
-  { icon: "⌁", label: "Wiring" },
-  { icon: "◈", label: "Software" },
-  { icon: "◻", label: "3D Print" },
-  { icon: "⟳", label: "Build Steps" },
-  { icon: "✦", label: "Features" },
-  { icon: "↗", label: "Inspiration" },
-];
 
 export default function Info() {
   const [active, setActive] = useState(0);
+  const lang = useLanguage();
+  const c = infoContent[lang] || infoContent.de;
+
+  const navItems = [
+    { icon: "◎", label: c.nav_overview },
+    { icon: "⬡", label: c.nav_hardware },
+    { icon: "⌁", label: c.nav_wiring },
+    { icon: "◈", label: c.nav_software },
+    { icon: "◻", label: c.nav_3dprint },
+    { icon: "⟳", label: c.nav_buildsteps },
+    { icon: "✦", label: c.nav_features },
+    { icon: "↗", label: c.nav_inspiration },
+  ];
 
   return (
     <div className="info">
 
       {/* ── Sidebar ── */}
       <div className="info-sidebar">
-        <div className="info-sidebar-section">Navigation</div>
+        <div className="info-sidebar-section">{c.nav_title}</div>
 
         {navItems.map((n, i) => (
           <button
@@ -39,7 +43,7 @@ export default function Info() {
         <div className="info-sidebar-divider" />
 
         <div className="info-source-box">
-          <div className="info-source-heading">Source</div>
+          <div className="info-source-heading">{c.source_heading}</div>
           <a
             className="info-source-link"
             href="https://www.instructables.com/DIY-Stream-Deck-With-Arduino-Nextion-Customize-You/"
@@ -49,7 +53,7 @@ export default function Info() {
             ↗ Instructables
           </a>
           <div className="info-source-note">
-            Original by Giuseppe Romano. Adapted and rebuilt for this custom setup.
+            {c.source_note}
           </div>
         </div>
       </div>
@@ -62,40 +66,40 @@ export default function Info() {
           {active === 0 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">Overview</span>
+              <span className="section-label">{c.overview_title}</span>
               <div className="section-line" />
             </div>
             <div className="info-card">
               <div className="kv-row">
-                <span className="kv-key">Project name</span>
+                <span className="kv-key">{c.overview_project_name}</span>
                 <span className="kv-val">DIY Macro Touch Deck</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Category</span>
-                <span className="kv-val">Electronics / Embedded</span>
+                <span className="kv-key">{c.overview_category}</span>
+                <span className="kv-val">{c.overview_category_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Skill level</span>
-                <span className="kv-val orange">Intermediate</span>
+                <span className="kv-key">{c.overview_skill}</span>
+                <span className="kv-val orange">{c.overview_skill_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Estimated cost</span>
+                <span className="kv-key">{c.overview_cost}</span>
                 <span className="kv-val green">€ 25 – 40</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Build time</span>
-                <span className="kv-val">1 – 2 days</span>
+                <span className="kv-key">{c.overview_time}</span>
+                <span className="kv-val">{c.overview_time_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Status</span>
-                <span className="kv-val green">Fully operational</span>
+                <span className="kv-key">{c.overview_status}</span>
+                <span className="kv-val green">{c.overview_status_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Open source</span>
-                <span className="kv-val green">Yes — MIT</span>
+                <span className="kv-key">{c.overview_opensource}</span>
+                <span className="kv-val green">{c.overview_opensource_val}</span>
               </div>
               <div className="info-prose">
-                A fully handmade macro device with a capacitive touchscreen, physical buttons, and RGB lighting. Every key is programmable — launch apps, trigger OBS scenes, send keyboard shortcuts, control audio — all with a single tap. <strong>No subscription. No cloud. Fully local.</strong>
+                {c.overview_prose} <strong>{c.overview_prose_strong}</strong>
               </div>
             </div>
           </div>
@@ -105,7 +109,7 @@ export default function Info() {
           {active === 1 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">Hardware</span>
+              <span className="section-label">{c.hardware_title}</span>
               <div className="section-line" />
             </div>
 
@@ -167,45 +171,45 @@ export default function Info() {
 
             <div className="info-card">
               <div className="kv-row">
-                <span className="kv-key">Physical buttons</span>
-                <span className="kv-val">2 – 5 × tactile push</span>
+                <span className="kv-key">{c.hw_physical_buttons}</span>
+                <span className="kv-val">{c.hw_physical_buttons_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Pull mode</span>
+                <span className="kv-key">{c.hw_pull_mode}</span>
                 <span className="kv-val mono">INPUT_PULLUP</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Case material</span>
-                <span className="kv-val">PLA — 3D Printed</span>
+                <span className="kv-key">{c.hw_case_material}</span>
+                <span className="kv-val">{c.hw_case_material_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Fasteners</span>
+                <span className="kv-key">{c.hw_fasteners}</span>
                 <span className="kv-val mono">M3 screws & hex nuts</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Infill</span>
+                <span className="kv-key">{c.print_infill}</span>
                 <span className="kv-val mono">30 %</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Perimeters</span>
+                <span className="kv-key">{c.print_perimeters}</span>
                 <span className="kv-val mono">2</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Power draw</span>
+                <span className="kv-key">{c.hw_power_draw}</span>
                 <span className="kv-val mono">~480 mA peak</span>
               </div>
             </div>
 
             <div className="info-card">
               <div className="section-header" style={{ padding: "8px 14px 0", margin: 0 }}>
-                <span className="kv-key" style={{ fontSize: 10 }}>Complexity ratings</span>
+                <span className="kv-key" style={{ fontSize: 10 }}>{c.hw_complexity}</span>
               </div>
               {[
-                { label: "Wiring",      pct: 60 },
-                { label: "Firmware",    pct: 45 },
-                { label: "3D Print",    pct: 30 },
-                { label: "UI Design",   pct: 55 },
-                { label: "Calibration", pct: 25 },
+                { label: c.hw_bar_wiring,      pct: 60 },
+                { label: c.hw_bar_firmware,    pct: 45 },
+                { label: c.hw_bar_3dprint,    pct: 30 },
+                { label: c.hw_bar_uidesign,   pct: 55 },
+                { label: c.hw_bar_calibration, pct: 25 },
               ].map((s, i) => (
                 <div key={i} className="spec-bar-row">
                   <span className="spec-bar-label">{s.label}</span>
@@ -223,20 +227,20 @@ export default function Info() {
           {active === 2 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">Wiring Diagram</span>
+              <span className="section-label">{c.wiring_title}</span>
               <div className="section-line" />
             </div>
             <div className="info-card">
               {[
-                { from: "Nextion TX",  to: "Pro Micro RX (D0)",  note: "Display → MCU" },
-                { from: "Nextion RX",  to: "Pro Micro TX (D1)",  note: "MCU → Display" },
-                { from: "Nextion VCC", to: "5 V rail",            note: "Power" },
-                { from: "Nextion GND", to: "GND rail",            note: "Common ground" },
-                { from: "Button 1",    to: "Pro Micro D4",        note: "PULLUP active low" },
-                { from: "Button 2",    to: "Pro Micro D5",        note: "PULLUP active low" },
-                { from: "WS2812B DIN", to: "Nano D6",             note: "Data signal" },
-                { from: "LED VCC",     to: "5 V rail",            note: "Separate power" },
-                { from: "Nano GND",    to: "GND rail",            note: "Common ground" },
+                { from: "Nextion TX",  to: "Pro Micro RX (D0)",  note: c.wire_note_display_to_mcu },
+                { from: "Nextion RX",  to: "Pro Micro TX (D1)",  note: c.wire_note_mcu_to_display },
+                { from: "Nextion VCC", to: "5 V rail",            note: c.wire_note_power },
+                { from: "Nextion GND", to: "GND rail",            note: c.wire_note_common_ground },
+                { from: "Button 1",    to: "Pro Micro D4",        note: c.wire_note_pullup },
+                { from: "Button 2",    to: "Pro Micro D5",        note: c.wire_note_pullup },
+                { from: "WS2812B DIN", to: "Nano D6",             note: c.wire_note_data },
+                { from: "LED VCC",     to: "5 V rail",            note: c.wire_note_separate_power },
+                { from: "Nano GND",    to: "GND rail",            note: c.wire_note_common_ground },
               ].map((w, i) => (
                 <div key={i} className="wire-row">
                   <span className="wire-from">{w.from}</span>
@@ -253,7 +257,7 @@ export default function Info() {
           {active === 3 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">Software & Firmware</span>
+              <span className="section-label">{c.software_title}</span>
               <div className="section-line" />
             </div>
             <div className="info-grid">
@@ -296,20 +300,18 @@ export default function Info() {
             </div>
             <div className="info-card">
               <div className="kv-row">
-                <span className="kv-key">Protocol</span>
-                <span className="kv-val">Nextion sends button ID via UART; Arduino maps ID → F-key press</span>
+                <span className="kv-key">{c.sw_protocol}</span>
+                <span className="kv-val">{c.sw_protocol_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Conflict avoidance</span>
-                <span className="kv-val">F13–F24 unused by OS → zero shortcut conflicts</span>
+                <span className="kv-key">{c.sw_conflict}</span>
+                <span className="kv-val">{c.sw_conflict_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">App binding</span>
-                <span className="kv-val">OBS hotkeys, Filmora shortcuts, Windows bindings</span>
+                <span className="kv-key">{c.sw_binding}</span>
+                <span className="kv-val">{c.sw_binding_val}</span>
               </div>
-              <div className="info-prose">
-                Each touchscreen button sends a numeric ID over UART. The Pro Micro receives it, then uses <strong>Keyboard.h</strong> to emit a keystroke — chosen from the rarely-used F13–F24 range to avoid conflicts with system shortcuts. This makes binding to any app completely frictionless.
-              </div>
+              <div className="info-prose" dangerouslySetInnerHTML={{ __html: c.sw_prose }} />
             </div>
           </div>
           )}
@@ -318,40 +320,40 @@ export default function Info() {
           {active === 4 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">3D Print Specs</span>
+              <span className="section-label">{c.print_title}</span>
               <div className="section-line" />
             </div>
             <div className="info-card">
               <div className="kv-row">
-                <span className="kv-key">Material</span>
+                <span className="kv-key">{c.print_material}</span>
                 <span className="kv-val">PLA</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Layer height</span>
+                <span className="kv-key">{c.print_layer}</span>
                 <span className="kv-val mono">0.2 mm</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Infill</span>
+                <span className="kv-key">{c.print_infill}</span>
                 <span className="kv-val mono">30 %</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Perimeters</span>
+                <span className="kv-key">{c.print_perimeters}</span>
                 <span className="kv-val mono">2</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Supports</span>
-                <span className="kv-val orange">Yes — display cutout</span>
+                <span className="kv-key">{c.print_supports}</span>
+                <span className="kv-val orange">{c.print_supports_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Print time</span>
+                <span className="kv-key">{c.print_time}</span>
                 <span className="kv-val">~4 h</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Post-process</span>
-                <span className="kv-val">Tap M3 holes, sand edges</span>
+                <span className="kv-key">{c.print_postprocess}</span>
+                <span className="kv-val">{c.print_postprocess_val}</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">File format</span>
+                <span className="kv-key">{c.print_format}</span>
                 <span className="kv-val mono">.STL / .STEP</span>
               </div>
             </div>
@@ -362,39 +364,18 @@ export default function Info() {
           {active === 5 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">Build Steps</span>
+              <span className="section-label">{c.build_title}</span>
               <div className="section-line" />
             </div>
             <div className="info-card">
               {[
-                {
-                  n: "01", title: "Design the UI",
-                  desc: "Open Nextion Editor. Create pages, place buttons, add icons and labels. Export as .TFT, copy to FAT32 SD, insert into display to flash."
-                },
-                {
-                  n: "02", title: "Wire Pro Micro ↔ Nextion",
-                  desc: "Connect TX/RX cross-wired. Share 5 V and GND. Verify with a simple echo sketch before writing final firmware."
-                },
-                {
-                  n: "03", title: "Wire buttons",
-                  desc: "Solder push buttons between signal pin and GND. Enable INPUT_PULLUP in firmware — no external resistors needed."
-                },
-                {
-                  n: "04", title: "Flash firmware",
-                  desc: "Upload main sketch: read UART byte from Nextion, press matching F-key via Keyboard.h. Test each button in a text editor first."
-                },
-                {
-                  n: "05", title: "Set up RGB (optional)",
-                  desc: "Flash Nano with FastLED sketch. Wire DIN of WS2812B strip to D6. Power strip separately to avoid brownouts on the Pro Micro."
-                },
-                {
-                  n: "06", title: "3D print the case",
-                  desc: "Print enclosure with supports for the display cutout. Tap M3 holes. Mount boards with standoffs, route USB cable through rear slot."
-                },
-                {
-                  n: "07", title: "Bind shortcuts",
-                  desc: "Open OBS → Settings → Hotkeys. Assign each F-key (F13–F24) to a scene, source mute, recording toggle, etc. Repeat for other apps."
-                },
+                { n: "01", title: c.build_step1_title, desc: c.build_step1_desc },
+                { n: "02", title: c.build_step2_title, desc: c.build_step2_desc },
+                { n: "03", title: c.build_step3_title, desc: c.build_step3_desc },
+                { n: "04", title: c.build_step4_title, desc: c.build_step4_desc },
+                { n: "05", title: c.build_step5_title, desc: c.build_step5_desc },
+                { n: "06", title: c.build_step6_title, desc: c.build_step6_desc },
+                { n: "07", title: c.build_step7_title, desc: c.build_step7_desc },
               ].map((s, i) => (
                 <div key={i} className="step-row">
                   <div className="step-num">{s.n}</div>
@@ -412,28 +393,26 @@ export default function Info() {
           {active === 6 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">Features & Capabilities</span>
+              <span className="section-label">{c.features_title}</span>
               <div className="section-line" />
             </div>
             <div className="info-card">
               <div className="tag-cloud">
                 {[
-                  ["OBS scene switch", true], ["Start / stop recording", true],
-                  ["Launch any app", true],  ["Open folder / URL", true],
-                  ["Screenshot", true],      ["Media play / pause", true],
-                  ["Volume control", true],  ["Mute microphone", true],
-                  ["Multi-page UI", false],  ["Custom icons", false],
-                  ["RGB ambient light", false], ["Physical encoder", false],
-                  ["HID keyboard spoof", false], ["F13–F24 range", false],
-                  ["Zero driver install", false], ["Works on Windows & macOS", false],
-                  ["Filmora shortcuts", false], ["Unlimited profiles", false],
+                  [c.feat_obs, true], [c.feat_record, true],
+                  [c.feat_launch, true],  [c.feat_folder, true],
+                  [c.feat_screenshot, true],      [c.feat_media, true],
+                  [c.feat_volume, true],  [c.feat_mute, true],
+                  [c.feat_multipage, false],  [c.feat_icons, false],
+                  [c.feat_rgb, false], [c.feat_encoder, false],
+                  [c.feat_hid, false], [c.feat_fkeys, false],
+                  [c.feat_nodrivers, false], [c.feat_crossplatform, false],
+                  [c.feat_filmora, false], [c.feat_profiles, false],
                 ].map(([tag, hl], i) => (
                   <span key={i} className={`info-tag ${hl ? "hl" : ""}`}>{tag}</span>
                 ))}
               </div>
-              <div className="info-prose">
-                Because the device emulates a standard USB keyboard, <strong>no drivers are required</strong>. It works out of the box on Windows, macOS, and Linux — any application that accepts keyboard shortcuts can be controlled.
-              </div>
+              <div className="info-prose" dangerouslySetInnerHTML={{ __html: c.features_prose }} />
             </div>
           </div>
           )}
@@ -442,16 +421,16 @@ export default function Info() {
           {active === 7 && (
           <div className="info-section">
             <div className="section-header">
-              <span className="section-label">Inspiration & Credits</span>
+              <span className="section-label">{c.inspiration_title}</span>
               <div className="section-line" />
             </div>
             <div className="info-card">
               <div className="kv-row">
-                <span className="kv-key">Original author</span>
+                <span className="kv-key">{c.insp_author}</span>
                 <span className="kv-val">Giuseppe Romano</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Platform</span>
+                <span className="kv-key">{c.insp_platform}</span>
                 <span className="kv-val">
                   <a href="https://www.instructables.com/DIY-Stream-Deck-With-Arduino-Nextion-Customize-You/" target="_blank" rel="noreferrer">
                     Instructables ↗
@@ -459,15 +438,15 @@ export default function Info() {
                 </span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Published</span>
+                <span className="kv-key">{c.insp_published}</span>
                 <span className="kv-val">2023</span>
               </div>
               <div className="kv-row">
-                <span className="kv-key">Relation</span>
-                <span className="kv-val orange">Inspiration — not a copy</span>
+                <span className="kv-key">{c.insp_relation}</span>
+                <span className="kv-val orange">{c.insp_relation_val}</span>
               </div>
               <div className="info-prose">
-                This build was sparked by Giuseppe Romano's Instructables guide, which proved that a full-featured macro deck could be built for a fraction of the official Elgato price. The core idea — UART + HID keyboard — was kept. Everything else: the enclosure, wiring, UI layout, firmware architecture, and feature set was designed and built from scratch. <strong>The result is a device that fits exactly how I work.</strong>
+                <span dangerouslySetInnerHTML={{ __html: c.insp_prose }} /> <strong>{c.insp_prose_strong}</strong>
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@
 // Befehlshistorie (Pfeiltasten), Tab-Vervollständigung und Aliase.
 // Dateisystem und Historie werden in localStorage gespeichert und überleben einen Reload.
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation, useLanguage } from '../../i18n/LanguageContext';
 import './Terminal.css';
 
 // Farbpalette für den "color"-Befehl (0–f als Hex-Codes)
@@ -49,12 +50,15 @@ function getCommonPrefix(strs) {
 }
 
 export default function Terminal() {
+  const t = useTranslation();
+  const { lang } = useLanguage();
+  const dateLoc = lang === 'it' ? 'it-IT' : lang === 'en' ? 'en-GB' : 'de-DE';
   const user = 'nexor';
   const hostname = 'MacOS';
 
   const [lines, setLines] = useState([
     { text: `${hostname} Terminal`, color: '#4ec9b0' },
-    { text: 'Type "help" for a list of commands.', color: '#666' },
+    { text: t('term_welcome'), color: '#666' },
     { text: '' },
   ]);
   const [input, setInput] = useState('');
@@ -128,41 +132,41 @@ export default function Terminal() {
     const fs = fsRef.current;
     const commands = {
       help: () => [
-        '', '   BEFEHLE                 BESCHREIBUNG', '',
-        '  help                     Zeigt diese Hilfe an',
-        '  clear                    Leert das Terminal',
-        '  echo [text]              Gibt Text aus',
-        '  echo [text] > [f]        Schreibt Text in Datei',
-        '  echo [text] >> [f]       Hängt Text an Datei an',
-        '  date                     Zeigt Datum und Uhrzeit',
-        '  whoami                   Zeigt den aktuellen Benutzer',
-        '  hostname                 Zeigt den Hostnamen',
-        '  pwd                      Zeigt das aktuelle Verzeichnis',
-        '  cd [pfad]                Wechselt das Verzeichnis',
-        '  ls [pfad]                Listet Dateien und Ordner auf',
-        '  cat [datei]              Zeigt den Inhalt einer Datei',
-        '  mkdir [name]             Erstellt ein neues Verzeichnis',
-        '  touch [name]             Erstellt eine leere Datei',
-        '  rm [name]                Löscht eine Datei oder Ordner',
-        '  mv [a] [b]               Benennt Datei/Ordner um',
-        '  cp [a] [b]               Kopiert eine Datei',
-        '  find [name]              Sucht Dateien im Dateisystem',
-        '  grep [s] [f]             Sucht Text in einer Datei',
-        '  head [datei]             Erste Zeile einer Datei',
-        '  tail [datei]             Letzte Zeile einer Datei',
-        '  uptime                   Laufzeit des Terminals',
-        '  uname [-a/-s/-o/-m/-b]   Systeminformationen',
-        '  unalias [k]              Entfernt einen Alias',
-        '  history                  Befehlshistorie',
-        '  rev [text]               Text umkehren',
-        '  calc [expr]              Rechner (+, -, *, /)',
-        '  color [xy]               Terminal-Farbe ändern (0-f)',
-        '  color list               Zeigt alle Farben',
-        '  color reset              Setzt Farben zurück',
-        '  cowsay [text]            Kuh sagt etwas',
-        '  neofetch                 System-Info stylisch',
-        '  sudo apt install         Paket installieren',
-        '  shutdown                 Terminal beenden',
+        '', t('term_help_header'), '',
+        t('term_help_help'),
+        t('term_help_clear'),
+        t('term_help_echo'),
+        t('term_help_echo_write'),
+        t('term_help_echo_append'),
+        t('term_help_date'),
+        t('term_help_whoami'),
+        t('term_help_hostname'),
+        t('term_help_pwd'),
+        t('term_help_cd'),
+        t('term_help_ls'),
+        t('term_help_cat'),
+        t('term_help_mkdir'),
+        t('term_help_touch'),
+        t('term_help_rm'),
+        t('term_help_mv'),
+        t('term_help_cp'),
+        t('term_help_find'),
+        t('term_help_grep'),
+        t('term_help_head'),
+        t('term_help_tail'),
+        t('term_help_uptime'),
+        t('term_help_uname'),
+        t('term_help_unalias'),
+        t('term_help_history'),
+        t('term_help_rev'),
+        t('term_help_calc'),
+        t('term_help_color'),
+        t('term_help_color_list'),
+        t('term_help_color_reset'),
+        t('term_help_cowsay'),
+        t('term_help_neofetch'),
+        t('term_help_sudo'),
+        t('term_help_shutdown'),
         '',
       ],
       clear: () => { setLines([]); },
@@ -186,10 +190,10 @@ export default function Terminal() {
           const parent = getParent(resolved);
           const baseName = getBaseName(resolved);
 
-          if (!isDir(parent)) return `echo: ${fileName}: Verzeichnis existiert nicht`;
+          if (!isDir(parent)) return `echo: ${fileName}: ${t('term_err_dir_not_exist')}`;
 
           const existing = fs[resolved];
-          if (Array.isArray(existing)) return `echo: ${fileName}: Ist ein Verzeichnis`;
+          if (Array.isArray(existing)) return `echo: ${fileName}: ${t('term_err_is_dir')}`;
 
           if (isAppend) {
             fs[resolved] = typeof existing === 'string' ? existing + '\n' + text : text;
@@ -212,7 +216,7 @@ export default function Terminal() {
       },
       date: () => {
         const d = new Date();
-        return d.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ' ' + d.toLocaleTimeString('de-DE');
+        return d.toLocaleDateString(dateLoc, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ' ' + d.toLocaleTimeString(dateLoc);
       },
       whoami: () => user,
       hostname: () => hostname,
@@ -222,12 +226,12 @@ export default function Terminal() {
         if (!target || target === '~') { pathRef.current = '~'; return; }
         const resolved = normalizePath(target);
         if (isDir(resolved)) { pathRef.current = resolved; return; }
-        return `cd: ${target}: Kein solches Verzeichnis`;
+        return `cd: ${target}: ${t('term_err_no_such_dir')}`;
       },
       ls: (args) => {
         const target = args[0] ? normalizePath(args[0]) : pathRef.current;
         const dir = fs[target];
-        if (!dir || !Array.isArray(dir)) return `ls: ${args[0] || target}: Kein Verzeichnis`;
+        if (!dir || !Array.isArray(dir)) return `ls: ${args[0] || target}: ${t('term_err_not_dir')}`;
         if (dir.length === 0) return '';
         return dir.map((item) => {
           const full = target === '~' ? `~/${item}` : `${target}/${item}`;
@@ -235,40 +239,40 @@ export default function Terminal() {
         }).join('  ');
       },
       cat: (args) => {
-        if (!args[0]) return 'cat: Dateiname fehlt';
+        if (!args[0]) return `cat: ${t('term_err_filename_missing')}`;
         const resolved = normalizePath(args[0]);
         const content = fs[resolved];
         if (typeof content === 'string') return content;
-        if (Array.isArray(content)) return `cat: ${args[0]}: Ist ein Verzeichnis`;
-        return `cat: ${args[0]}: Datei nicht gefunden`;
+        if (Array.isArray(content)) return `cat: ${args[0]}: ${t('term_err_is_dir')}`;
+        return `cat: ${args[0]}: ${t('term_err_file_not_found')}`;
       },
       mkdir: (args) => {
-        if (!args[0]) return 'mkdir: Name fehlt';
+        if (!args[0]) return `mkdir: ${t('term_err_name_missing')}`;
         const resolved = normalizePath(args[0]);
-        if (fs[resolved] !== undefined) return `mkdir: ${args[0]}: Existiert bereits`;
+        if (fs[resolved] !== undefined) return `mkdir: ${args[0]}: ${t('term_err_already_exists')}`;
         const parent = getParent(resolved);
-        if (!isDir(parent)) return `mkdir: ${getBaseName(parent)}: Übergeordnetes Verzeichnis existiert nicht`;
+        if (!isDir(parent)) return `mkdir: ${getBaseName(parent)}: ${t('term_err_parent_not_exist')}`;
         fs[resolved] = [];
         fs[parent].push(getBaseName(resolved));
         saveFs();
         return '';
       },
       touch: (args) => {
-        if (!args[0]) return 'touch: Name fehlt';
+        if (!args[0]) return `touch: ${t('term_err_name_missing')}`;
         const resolved = normalizePath(args[0]);
         if (fs[resolved] !== undefined) return '';
         const parent = getParent(resolved);
-        if (!isDir(parent)) return `touch: ${getBaseName(parent)}: Verzeichnis existiert nicht`;
+        if (!isDir(parent)) return `touch: ${getBaseName(parent)}: ${t('term_err_dir_not_exist')}`;
         fs[resolved] = '';
         fs[parent].push(getBaseName(resolved));
         saveFs();
         return '';
       },
       rm: (args) => {
-        if (!args[0]) return 'rm: Name fehlt';
+        if (!args[0]) return `rm: ${t('term_err_name_missing')}`;
         const resolved = normalizePath(args[0]);
-        if (fs[resolved] === undefined) return `rm: ${args[0]}: Nicht gefunden`;
-        if (Array.isArray(fs[resolved]) && fs[resolved].length > 0) return `rm: ${args[0]}: Verzeichnis ist nicht leer (nutze rm -r)`;
+        if (fs[resolved] === undefined) return `rm: ${args[0]}: ${t('term_err_not_found')}`;
+        if (Array.isArray(fs[resolved]) && fs[resolved].length > 0) return `rm: ${args[0]}: ${t('term_err_dir_not_empty')}`;
         delete fs[resolved];
         const parent = getParent(resolved);
         const name = getBaseName(resolved);
@@ -277,10 +281,10 @@ export default function Terminal() {
         return '';
       },
       mv: (args) => {
-        if (args.length < 2) return 'mv: Zwei Argumente nötig (mv [quelle] [ziel])';
+        if (args.length < 2) return `mv: ${t('term_err_two_args_mv')}`;
         const src = normalizePath(args[0]);
         const dest = normalizePath(args[1]);
-        if (fs[src] === undefined) return `mv: ${args[0]}: Nicht gefunden`;
+        if (fs[src] === undefined) return `mv: ${args[0]}: ${t('term_err_not_found')}`;
         fs[dest] = fs[src]; delete fs[src];
         const srcParent = getParent(src); const srcName = getBaseName(src);
         const destParent = getParent(dest); const destName = getBaseName(dest);
@@ -290,10 +294,10 @@ export default function Terminal() {
         return '';
       },
       cp: (args) => {
-        if (args.length < 2) return 'cp: Zwei Argumente nötig (cp [quelle] [ziel])';
+        if (args.length < 2) return `cp: ${t('term_err_two_args_cp')}`;
         const src = normalizePath(args[0]);
         const dest = normalizePath(args[1]);
-        if (fs[src] === undefined) return `cp: ${args[0]}: Nicht gefunden`;
+        if (fs[src] === undefined) return `cp: ${args[0]}: ${t('term_err_not_found')}`;
         fs[dest] = typeof fs[src] === 'string' ? fs[src] : [...fs[src]];
         const destParent = getParent(dest); const destName = getBaseName(dest);
         if (isDir(destParent) && !fs[destParent].includes(destName)) fs[destParent].push(destName);
@@ -301,37 +305,37 @@ export default function Terminal() {
         return '';
       },
       find: (args) => {
-        if (!args[0]) return 'find: Suchbegriff fehlt';
+        if (!args[0]) return `find: ${t('term_err_search_missing')}`;
         const term = args[0].toLowerCase();
         const results = Object.keys(fs).filter((k) => k.toLowerCase().includes(term));
-        return results.length > 0 ? results : [`find: '${args[0]}' nicht gefunden`];
+        return results.length > 0 ? results : [`find: '${args[0]}' ${t('term_err_not_found_search')}`];
       },
       grep: (args) => {
-        if (args.length < 2) return 'grep: Verwendung: grep [suche] [datei]';
+        if (args.length < 2) return `grep: ${t('term_err_grep_usage')}`;
         const term = args[0].toLowerCase();
         const resolved = normalizePath(args[1]);
         const content = fs[resolved];
-        if (typeof content !== 'string') return `grep: ${args[1]}: Keine Textdatei`;
+        if (typeof content !== 'string') return `grep: ${args[1]}: ${t('term_err_not_text_file')}`;
         const matching = content.split('\n').filter((l) => l.toLowerCase().includes(term));
-        return matching.length > 0 ? matching : [`grep: '${args[0]}' nicht gefunden in ${args[1]}`];
+        return matching.length > 0 ? matching : [`grep: '${args[0]}' ${t('term_err_not_found_in')} ${args[1]}`];
       },
       head: (args) => {
-        if (!args[0]) return 'head: Dateiname fehlt';
+        if (!args[0]) return `head: ${t('term_err_filename_missing')}`;
         const content = fs[normalizePath(args[0])];
-        if (typeof content !== 'string') return `head: ${args[0]}: Keine Textdatei`;
+        if (typeof content !== 'string') return `head: ${args[0]}: ${t('term_err_not_text_file')}`;
         return content.split('\n')[0] || '';
       },
       tail: (args) => {
-        if (!args[0]) return 'tail: Dateiname fehlt';
+        if (!args[0]) return `tail: ${t('term_err_filename_missing')}`;
         const content = fs[normalizePath(args[0])];
-        if (typeof content !== 'string') return `tail: ${args[0]}: Keine Textdatei`;
+        if (typeof content !== 'string') return `tail: ${args[0]}: ${t('term_err_not_text_file')}`;
         const lns = content.split('\n');
         return lns[lns.length - 1] || '';
       },
       wc: (args) => {
-        if (!args[0]) return 'wc: Dateiname fehlt';
+        if (!args[0]) return `wc: ${t('term_err_filename_missing')}`;
         const content = fs[normalizePath(args[0])];
-        if (typeof content !== 'string') return `wc: ${args[0]}: Keine Textdatei`;
+        if (typeof content !== 'string') return `wc: ${args[0]}: ${t('term_err_not_text_file')}`;
         const l = content.split('\n').length;
         const w = content.split(/\s+/).filter(Boolean).length;
         const c = content.length;
@@ -402,40 +406,40 @@ export default function Terminal() {
       },
       export: (_args, full) => {
         const match = full.match(/^export\s+(\w+)=(.*)$/);
-        if (!match) return 'export: Verwendung: export KEY=VALUE';
+        if (!match) return `export: ${t('term_err_export_usage')}`;
         envRef.current[match[1]] = match[2];
         return '';
       },
       env: () => {
         const entries = Object.entries(envRef.current);
-        if (entries.length === 0) return 'Keine Umgebungsvariablen gesetzt.';
+        if (entries.length === 0) return t('term_no_env_vars');
         return entries.map(([k, v]) => `${k}=${v}`);
       },
       alias: (_args, full) => {
         const match = full.match(/^alias\s+(\w+)=["']?(.+?)["']?$/);
         if (!match) {
           const entries = Object.entries(aliasRef.current);
-          if (entries.length === 0) return 'Keine Aliase gesetzt.';
+          if (entries.length === 0) return t('term_no_aliases');
           return entries.map(([k, v]) => `alias ${k}='${v}'`);
         }
         aliasRef.current[match[1]] = match[2];
         return '';
       },
       unalias: (args) => {
-        if (!args[0]) return 'unalias: Name fehlt';
-        if (!aliasRef.current[args[0]]) return `unalias: ${args[0]}: Nicht gefunden`;
+        if (!args[0]) return `unalias: ${t('term_err_name_missing')}`;
+        if (!aliasRef.current[args[0]]) return `unalias: ${args[0]}: ${t('term_err_not_found')}`;
         delete aliasRef.current[args[0]];
         return '';
       },
-      history: () => historyRef.current.length === 0 ? 'Keine Historie.' : historyRef.current.map((h, i) => `  ${i + 1}  ${h}`),
-      rev: (args) => args.length === 0 ? 'rev: Text fehlt' : args.join(' ').split('').reverse().join(''),
-      base64: (args) => args.length === 0 ? 'base64: Text fehlt' : btoa(args.join(' ')),
+      history: () => historyRef.current.length === 0 ? t('term_no_history') : historyRef.current.map((h, i) => `  ${i + 1}  ${h}`),
+      rev: (args) => args.length === 0 ? `rev: ${t('term_err_text_missing')}` : args.join(' ').split('').reverse().join(''),
+      base64: (args) => args.length === 0 ? `base64: ${t('term_err_text_missing')}` : btoa(args.join(' ')),
       calc: (args) => {
-        if (args.length === 0) return 'calc: Ausdruck fehlt (z.B. calc 2 + 3)';
+        if (args.length === 0) return `calc: ${t('term_err_expr_missing')}`;
         const expr = args.join(' ');
-        if (!/^[\d\s+\-*/().]+$/.test(expr)) return 'calc: Ungültiger Ausdruck';
+        if (!/^[\d\s+\-*/().]+$/.test(expr)) return `calc: ${t('term_err_invalid_expr')}`;
         try { return String(Function(`"use strict"; return (${expr})`)()); }
-        catch { return 'calc: Fehler beim Berechnen'; }
+        catch { return `calc: ${t('term_err_calc_error')}`; }
       },
       cowsay: (args) => {
         const text = args.length > 0 ? args.join(' ') : 'Moo!';
@@ -447,7 +451,7 @@ export default function Terminal() {
         ];
       },
       color: (args) => {
-        if (!args[0]) return 'color: Verwendung: color [bg][fg] oder color list / color reset';
+        if (!args[0]) return `color: ${t('term_err_color_usage')}`;
         if (args[0] === 'list') {
           Object.entries(colorMap).forEach(([k, v]) => {
             addJsxLine(
@@ -472,20 +476,20 @@ export default function Terminal() {
           setBgColor('rgba(18, 18, 22, 0.95)');
           setTermColor('#e2e2e2');
           setPromptColor('#4ec9b0');
-          return 'Farben zurückgesetzt.';
+          return t('term_color_reset');
         }
         const code = args[0].toLowerCase();
         if (code.length === 1) {
           const fg = colorMap[code];
           if (fg) { setTermColor(fg); setPromptColor(fg); return ''; }
-          return `color: '${code}' ist keine gültige Farbe (0-f)`;
+          return `color: '${code}' ${t('term_err_invalid_color')}`;
         }
         if (code.length === 2) {
           const bg = colorMap[code[0]]; const fg = colorMap[code[1]];
           if (bg && fg) { setBgColor(bg); setTermColor(fg); setPromptColor(fg); return ''; }
-          return `color: '${code}' ist keine gültige Kombination (0-f)`;
+          return `color: '${code}' ${t('term_err_invalid_combo')}`;
         }
-        return 'color: Verwende 1 oder 2 Zeichen (0-f). Beispiel: color a, color 0a';
+        return `color: ${t('term_err_color_hint')}`;
       },
       neofetch: () => {
         const green = '#4ade80';
@@ -581,11 +585,11 @@ export default function Terminal() {
       sudo: (args, full) => {
         if (args[0] === 'apt' && args[1] === 'install') {
           const pkg = args[2];
-          if (!pkg) return 'E: Kein Paketname angegeben';
+          if (!pkg) return `E: ${t('term_err_no_pkg')}`;
           runAptInstall(pkg);
           return;
         }
-        if (args.length === 0) return 'sudo: Befehl fehlt';
+        if (args.length === 0) return `sudo: ${t('term_err_cmd_missing')}`;
         const subCmd = args[0].toLowerCase();
         const subArgs = args.slice(1);
         const fn = commands[subCmd];
@@ -595,22 +599,22 @@ export default function Terminal() {
       apt: (args) => {
         if (args[0] === 'install') {
           const pkg = args[1];
-          if (!pkg) return 'E: Kein Paketname angegeben';
+          if (!pkg) return `E: ${t('term_err_no_pkg')}`;
           runAptInstall(pkg);
           return;
         }
         if (args[0] === 'update') return 'Hit:1 https://archive.ubuntu.com focal InRelease\nReading package lists... Done';
         if (args[0] === 'list') return 'opsec/stable 1.0.0 arm64';
-        return 'apt: Verwendung: apt [install|update|list] [paket]';
+        return `apt: ${t('term_err_apt_usage')}`;
       },
     };
     return commands;
-  }, [addLine, addJsxLine, scrollDown]);
+  }, [addLine, addJsxLine, scrollDown, t]);
 
   // apt install simulieren — nur "opsec" ist verfügbar
   const runAptInstall = useCallback((pkg) => {
     if (pkg !== 'opsec') {
-      addLine(`E: Paket '${pkg}' nicht gefunden`);
+      addLine(`E: '${pkg}' ${t('term_err_pkg_not_found')}`);
       return;
     }
     setInputDisabled(true);
@@ -628,7 +632,7 @@ export default function Terminal() {
       addImageLine('/opsec.png');
       setInputDisabled(false);
     }, 2800);
-  }, [addLine, addImageLine]);
+  }, [addLine, addImageLine, t]);
 
   // Befehl parsen und ausführen — unterstützt Aliase und Pipes
   const runCommand = useCallback((raw) => {
