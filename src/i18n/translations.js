@@ -497,6 +497,18 @@ const T = {
     dock_maximize: 'Maximieren',
     dock_restore: 'Wiederherstellen',
 
+    /* ── App-Namen (Dock-Tooltips & Titelleiste) ── */
+    app_name_finder: 'Finder', app_name_appstore: 'App Store',
+    app_name_settings: 'Einstellungen', app_name_safari: 'Safari',
+    app_name_terminal: 'Terminal', app_name_github: 'Github',
+    app_name_trash: 'Papierkorb',
+    app_name_info: 'Info', app_name_about: 'Über',
+    app_name_model: '3D-Modell', app_name_docker: 'Docker',
+    app_name_galerie: 'Galerie', app_name_tutorial: 'Anleitung',
+    app_name_changelog: 'Changelog', app_name_contact: 'Kontakt',
+    app_name_datenschutz: 'Datenschutz', app_name_impressum: 'Impressum',
+    app_name_agb: 'AGB', app_name_cookies: 'Cookies',
+
     /* ── Terminal ── */
     term_welcome: 'Tippe "help" für eine Liste der Befehle.',
     term_help_header: '   BEFEHLE                 BESCHREIBUNG',
@@ -1070,6 +1082,18 @@ const T = {
     dock_maximize: 'Maximize',
     dock_restore: 'Restore',
 
+    /* ── App names (Dock tooltips & title bar) ── */
+    app_name_finder: 'Finder', app_name_appstore: 'App Store',
+    app_name_settings: 'Settings', app_name_safari: 'Safari',
+    app_name_terminal: 'Terminal', app_name_github: 'Github',
+    app_name_trash: 'Trash',
+    app_name_info: 'Info', app_name_about: 'About',
+    app_name_model: '3D Model', app_name_docker: 'Docker',
+    app_name_galerie: 'Gallery', app_name_tutorial: 'Tutorial',
+    app_name_changelog: 'Changelog', app_name_contact: 'Contact',
+    app_name_datenschutz: 'Privacy Policy', app_name_impressum: 'Legal Notice',
+    app_name_agb: 'Terms & Conditions', app_name_cookies: 'Cookies',
+
     /* ── Terminal ── */
     term_welcome: 'Type "help" for a list of commands.',
     term_help_header: '   COMMANDS                DESCRIPTION',
@@ -1642,6 +1666,18 @@ const T = {
     dock_show: 'Mostra',
     dock_maximize: 'Massimizza',
     dock_restore: 'Ripristina',
+
+    /* ── Nomi app (Dock tooltip e barra titolo) ── */
+    app_name_finder: 'Finder', app_name_appstore: 'App Store',
+    app_name_settings: 'Impostazioni', app_name_safari: 'Safari',
+    app_name_terminal: 'Terminale', app_name_github: 'Github',
+    app_name_trash: 'Cestino',
+    app_name_info: 'Info', app_name_about: 'Informazioni',
+    app_name_model: 'Modello 3D', app_name_docker: 'Docker',
+    app_name_galerie: 'Galleria', app_name_tutorial: 'Guida',
+    app_name_changelog: 'Changelog', app_name_contact: 'Contatto',
+    app_name_datenschutz: 'Privacy', app_name_impressum: 'Note legali',
+    app_name_agb: 'Termini e condizioni', app_name_cookies: 'Cookie',
 
     /* ── Terminal ── */
     term_welcome: 'Scrivi "help" per la lista dei comandi.',

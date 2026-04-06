@@ -2,9 +2,14 @@
 // zeigt die Allgemeinen Geschäftsbedingungen des StreamDeck-Projekts
 // kann als eigenständige Seite oder als schließbares Popup angezeigt werden
 import React, { useEffect } from 'react';
+import { useLanguage } from '../../i18n/LanguageContext';
+import agbContent from '../../i18n/agb-content';
 import './legal-shared.css';
 
 export default function AGB({ popup = false, onClose }) {
+  const lang = useLanguage();
+  const c = agbContent[lang] || agbContent.de;
+
   // Popup bei Escape-Taste schließen
   useEffect(() => {
     if (!popup) return;
@@ -22,219 +27,149 @@ export default function AGB({ popup = false, onClose }) {
         <div className="legal-glass-shine" />
         <div className="legal-glass-caustic" />
         <div className="legal-popup-header">
-          <h2>Allgemeine Geschäftsbedingungen</h2>
+          <h2>{c.title}</h2>
           {popup && <button className="legal-close-btn" onClick={() => onClose?.()}>✕</button>}
         </div>
         <div className="legal-popup-body">
 
           <section>
             <p className="intro-text">
-              Allgemeine Geschäftsbedingungen für die Nutzung der Website von Felix Plattner.
+              {c.intro}
             </p>
           </section>
 
           <div className="legal-major-divider" />
 
           <section className="section-hero">
-            <h3>§ 1 Allgemeines</h3>
-            <p>
-              1.1 Diese Allgemeinen Geschäftsbedingungen (nachfolgend „AGB") regeln die Nutzung der Website von Felix Plattner (nachfolgend „Betreiber"). Die Website ist unter der Domain streamdeck.plattnericus.dev erreichbar.
-            </p>
-            <p>
-              1.2 Die Website ist ein privates, nicht-kommerzielles Portfolio- und Showcase-Projekt. Sie dient ausschließlich der Präsentation persönlicher Arbeiten, dem Experimentieren mit Webtechnologien sowie zu Lern- und Demonstrationszwecken.
-            </p>
-            <p>
-              1.3 Mit der Nutzung dieser Website erklären Sie sich mit diesen AGB einverstanden. Sofern Sie mit einzelnen Regelungen nicht einverstanden sind, bitten wir Sie, die Website nicht zu nutzen.
-            </p>
-            <p>
-              1.4 Der Betreiber behält sich das Recht vor, diese AGB jederzeit ohne gesonderte Benachrichtigung zu ändern. Es gilt jeweils die zum Zeitpunkt der Nutzung aktuelle Fassung.
-            </p>
+            <h3>{c.s1_title}</h3>
+            <p>{c.s1_p1}</p>
+            <p>{c.s1_p2}</p>
+            <p>{c.s1_p3}</p>
+            <p>{c.s1_p4}</p>
           </section>
 
           <div className="legal-major-divider" />
 
           <section className="section-hero">
-            <h3>§ 2 Leistungsbeschreibung</h3>
-            <p>
-              2.1 Die Website stellt eine interaktive Webplattform dar, die eine grafische Benutzeroberfläche im Stil eines Desktop-Betriebssystems (angelehnt an macOS von Apple) simuliert. Sie umfasst unter anderem simulierte Anwendungen, Fenster, einen Dock-Bereich sowie interaktive Elemente.
-            </p>
-            <p>
-              2.2 Der Umfang der bereitgestellten Funktionen kann jederzeit verändert, erweitert oder eingeschränkt werden, ohne dass hieraus Ansprüche der Nutzer entstehen.
-            </p>
-            <p>
-              2.3 Der Betreiber ist bemüht, die Website möglichst unterbrechungsfrei zur Verfügung zu stellen. Es besteht jedoch kein Anspruch auf ständige Verfügbarkeit. Wartungsarbeiten, technische Störungen oder höhere Gewalt können zu vorübergehenden Einschränkungen führen.
-            </p>
-            <p>
-              2.4 Die auf der Website dargestellten Inhalte, Designs und Funktionen dienen ausschließlich Demonstrations- und Showcasezwecken. Sie begründen keinerlei Rechtsansprüche, Lizenzen oder exklusive Nutzungsrechte.
-            </p>
+            <h3>{c.s2_title}</h3>
+            <p>{c.s2_p1}</p>
+            <p>{c.s2_p2}</p>
+            <p>{c.s2_p3}</p>
+            <p>{c.s2_p4}</p>
           </section>
 
           <div className="legal-section-divider" />
 
           <section>
-            <h3>§ 3 Zugang und Nutzerkonto</h3>
-            <p>
-              3.1 Die Website enthält einen simulierten Login-Bereich. Dieser dient ausschließlich der Demonstration und hat keine tatsächliche Authentifizierungsfunktion. Es werden dabei keine echten Benutzerkonten erstellt oder verwaltet.
-            </p>
-            <p>
-              3.2 Sollten im Rahmen der Simulation Zugangsdaten angezeigt oder eingegeben werden, handelt es sich um rein fiktive Daten ohne jegliche reale Funktion.
-            </p>
-            <p>
-              3.3 Der Nutzer ist dafür verantwortlich, dass er keine personenbezogenen oder sensiblen Daten in Eingabefelder eingibt, die über die simulierte Funktionalität hinausgehen.
-            </p>
+            <h3>{c.s3_title}</h3>
+            <p>{c.s3_p1}</p>
+            <p>{c.s3_p2}</p>
+            <p>{c.s3_p3}</p>
           </section>
 
           <div className="legal-section-divider" />
 
           <section>
-            <h3>§ 4 Pflichten des Nutzers</h3>
-            <p>
-              4.1 Der Nutzer verpflichtet sich, die Website nur im Rahmen der geltenden Gesetze und dieser AGB zu nutzen. Insbesondere ist es untersagt:
-            </p>
+            <h3>{c.s4_title}</h3>
+            <p>{c.s4_intro}</p>
             <ul>
-              <li>Die Website oder Teile davon ohne Zustimmung des Betreibers zu kopieren, zu vervielfältigen oder weiterzuverbreiten</li>
-              <li>Automatisierte Zugriffe (z. B. durch Bots, Scraper oder Crawler) durchzuführen, sofern diese nicht ausdrücklich erlaubt sind</li>
-              <li>Sicherheitsmechanismen der Website zu umgehen oder zu manipulieren</li>
-              <li>Inhalte der Website für kommerzielle Zwecke zu verwenden</li>
-              <li>Die Website in einer Weise zu nutzen, die den Betrieb beeinträchtigt oder andere Nutzer stört</li>
-              <li>Schadsoftware oder andere schädliche Inhalte über die Website einzuschleusen</li>
+              <li>{c.s4_li1}</li>
+              <li>{c.s4_li2}</li>
+              <li>{c.s4_li3}</li>
+              <li>{c.s4_li4}</li>
+              <li>{c.s4_li5}</li>
+              <li>{c.s4_li6}</li>
             </ul>
-            <p>
-              4.2 Bei Verstößen gegen diese Pflichten behält sich der Betreiber das Recht vor, den Zugang zur Website zu beschränken oder zu sperren.
-            </p>
+            <p>{c.s4_p2}</p>
           </section>
 
           <div className="legal-major-divider" />
 
           <section className="section-hero">
-            <h3>§ 5 Geistiges Eigentum und Urheberrecht</h3>
-            <p>
-              5.1 Alle auf dieser Website veröffentlichten Inhalte (Texte, Grafiken, Bilder, Animationen, Code, Design, Layouts) sind urheberrechtlich geschützt und unterliegen dem italienischen Urheberrecht (Legge 22 aprile 1941, n. 633) sowie den einschlägigen EU-Richtlinien.
-            </p>
-            <p>
-              5.2 Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der vorherigen schriftlichen Zustimmung des Betreibers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht-kommerziellen Gebrauch gestattet.
-            </p>
-            <p>
-              5.3 Das Design der Website ist von der Benutzeroberfläche von macOS von Apple inspiriert. Alle Marken, Logos und Produktnamen von Apple sind Eigentum von Apple Inc. Diese Website steht in keiner Verbindung zu Apple Inc. und wird von Apple weder unterstützt noch autorisiert.
-            </p>
-            <p>
-              5.4 Soweit Inhalte Dritter auf dieser Website verwendet werden, werden die jeweiligen Urheberrechte und Lizenzbestimmungen beachtet. Sollte dennoch eine Urheberrechtsverletzung vorliegen, bitten wir um einen entsprechenden Hinweis, damit wir die betreffenden Inhalte umgehend entfernen können.
-            </p>
+            <h3>{c.s5_title}</h3>
+            <p>{c.s5_p1}</p>
+            <p>{c.s5_p2}</p>
+            <p>{c.s5_p3}</p>
+            <p>{c.s5_p4}</p>
           </section>
 
           <div className="legal-major-divider" />
 
           <section className="section-hero">
-            <h3>§ 6 Haftungsbeschränkung</h3>
-            <p>
-              6.1 Die Inhalte dieser Website werden mit größtmöglicher Sorgfalt erstellt. Der Betreiber übernimmt jedoch keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der bereitgestellten Inhalte.
-            </p>
-            <p>
-              6.2 Die Nutzung der Website erfolgt auf eigene Gefahr des Nutzers. Der Betreiber haftet nicht für Schäden, die durch die Nutzung oder Nichtnutzung der Website entstehen, es sei denn, diese beruhen auf vorsätzlichem oder grob fahrlässigem Verhalten des Betreibers.
-            </p>
-            <p>
-              6.3 Insbesondere haftet der Betreiber nicht für Schäden, die durch technische Störungen, Datenverlust, Viren oder sonstige schädliche Komponenten entstehen.
-            </p>
-            <p>
-              6.4 Die Haftungsbeschränkung gilt nicht, soweit zwingende gesetzliche Regelungen (insbesondere nach dem italienischen Codice Civile oder dem Produkthaftungsgesetz) eine weitergehende Haftung vorsehen.
-            </p>
+            <h3>{c.s6_title}</h3>
+            <p>{c.s6_p1}</p>
+            <p>{c.s6_p2}</p>
+            <p>{c.s6_p3}</p>
+            <p>{c.s6_p4}</p>
           </section>
 
           <div className="legal-section-divider" />
 
           <section>
-            <h3>§ 7 Verfügbarkeit</h3>
-            <p>
-              7.1 Der Betreiber ist bemüht, die Website dauerhaft zugänglich zu halten. Es besteht jedoch kein Anspruch auf ununterbrochene Verfügbarkeit. Wartungsarbeiten, Updates, technische Probleme oder äußere Umstände können zu vorübergehenden Unterbrechungen führen.
-            </p>
-            <p>
-              7.2 Der Betreiber haftet nicht für Ausfälle oder Einschränkungen der Erreichbarkeit, die außerhalb seines Einflussbereichs liegen.
-            </p>
+            <h3>{c.s7_title}</h3>
+            <p>{c.s7_p1}</p>
+            <p>{c.s7_p2}</p>
           </section>
 
           <div className="legal-section-divider" />
 
           <section>
-            <h3>§ 8 Links zu externen Websites</h3>
-            <p>
-              8.1 Diese Website kann Links zu externen Websites Dritter enthalten. Auf die Inhalte dieser Seiten hat der Betreiber keinen Einfluss und übernimmt daher keine Verantwortung oder Gewähr für deren Richtigkeit, Vollständigkeit oder Aktualität.
-            </p>
-            <p>
-              8.2 Zum Zeitpunkt der Verlinkung wurden die externen Seiten auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zu diesem Zeitpunkt nicht erkennbar. Eine permanente Kontrolle ist ohne konkrete Hinweise auf eine Rechtsverletzung nicht zumutbar.
-            </p>
-            <p>
-              8.3 Bei Bekanntwerden von Rechtsverletzungen auf verlinkten Seiten werden die betreffenden Links unverzüglich entfernt.
-            </p>
+            <h3>{c.s8_title}</h3>
+            <p>{c.s8_p1}</p>
+            <p>{c.s8_p2}</p>
+            <p>{c.s8_p3}</p>
           </section>
 
           <div className="legal-major-divider" />
 
           <section>
-            <h3>§ 9 Datenschutz</h3>
-            <p>
-              9.1 Der Schutz Ihrer personenbezogenen Daten ist dem Betreiber ein besonderes Anliegen. Weitere Informationen zur Erhebung, Verarbeitung und Nutzung Ihrer Daten finden Sie in der gesonderten Datenschutzerklärung.
-            </p>
-            <p>
-              9.2 Die Datenschutzerklärung ist Bestandteil dieser AGB und kann jederzeit über die Website eingesehen werden.
-            </p>
+            <h3>{c.s9_title}</h3>
+            <p>{c.s9_p1}</p>
+            <p>{c.s9_p2}</p>
           </section>
 
           <div className="legal-section-divider" />
 
           <section>
-            <h3>§ 10 Änderung der AGB</h3>
-            <p>
-              10.1 Der Betreiber behält sich das Recht vor, diese AGB jederzeit und ohne Vorankündigung zu ändern. Die jeweils aktuelle Fassung ist auf der Website einsehbar.
-            </p>
-            <p>
-              10.2 Durch die fortgesetzte Nutzung der Website nach Änderung der AGB erklärt sich der Nutzer mit den geänderten Bedingungen einverstanden.
-            </p>
+            <h3>{c.s10_title}</h3>
+            <p>{c.s10_p1}</p>
+            <p>{c.s10_p2}</p>
           </section>
 
           <div className="legal-major-divider" />
 
           <section className="section-hero">
-            <h3>§ 11 Anwendbares Recht und Gerichtsstand</h3>
-            <p>
-              11.1 Es gilt das Recht der Italienischen Republik unter Ausschluss des UN-Kaufrechts (CISG). Ergänzend finden die Bestimmungen der EU-Verordnungen, insbesondere der Datenschutz-Grundverordnung (DSGVO), Anwendung.
-            </p>
-            <p>
-              11.2 Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit der Nutzung dieser Website ist, soweit gesetzlich zulässig, Bozen (Bolzano), Italien.
-            </p>
-            <p>
-              11.3 Sollte der Nutzer Verbraucher im Sinne des Codice del Consumo (D.Lgs. 206/2005) sein, gelten die zwingenden Verbraucherschutzvorschriften des Staates, in dem der Nutzer seinen gewöhnlichen Aufenthalt hat, soweit diese einen weitergehenden Schutz bieten.
-            </p>
+            <h3>{c.s11_title}</h3>
+            <p>{c.s11_p1}</p>
+            <p>{c.s11_p2}</p>
+            <p>{c.s11_p3}</p>
           </section>
 
           <div className="legal-section-divider" />
 
           <section>
-            <h3>§ 12 EU-Streitschlichtung</h3>
+            <h3>{c.s12_title}</h3>
             <p>
-              Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
+              {c.s12_p1}{' '}
               <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer">
                 https://ec.europa.eu/consumers/odr
               </a>
             </p>
-            <p>
-              Da es sich bei dieser Website um ein privates, nicht-kommerzielles Projekt handelt, besteht keine Verpflichtung und keine Bereitschaft, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
-            </p>
+            <p>{c.s12_p2}</p>
           </section>
 
           <div className="legal-section-divider" />
 
           <section>
-            <h3>§ 13 Salvatorische Klausel</h3>
-            <p>
-              Sollten einzelne Bestimmungen dieser AGB unwirksam oder undurchführbar sein oder nach Veröffentlichung unwirksam oder undurchführbar werden, so wird dadurch die Wirksamkeit der übrigen Bestimmungen nicht berührt. An die Stelle der unwirksamen oder undurchführbaren Bestimmung soll diejenige wirksame und durchführbare Regelung treten, deren Wirkungen der Zielsetzung am nächsten kommen, die mit der unwirksamen oder undurchführbaren Bestimmung verfolgt wurde.
-            </p>
+            <h3>{c.s13_title}</h3>
+            <p>{c.s13_p1}</p>
           </section>
 
           <div className="legal-major-divider" />
 
           <section>
-            <h3>§ 14 Kontakt</h3>
-            <p>Bei Fragen zu diesen AGB können Sie sich an den Betreiber wenden:</p>
+            <h3>{c.s14_title}</h3>
+            <p>{c.s14_intro}</p>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
               <p>Tschuggmallstraße 12</p>
@@ -245,7 +180,7 @@ export default function AGB({ popup = false, onClose }) {
             </div>
           </section>
 
-          <p className="legal-last-updated">Stand: März 2026</p>
+          <p className="legal-last-updated">{c.last_updated}</p>
 
         </div>
       </div>

@@ -96,6 +96,17 @@ function loadWindowState() {
 }
 
 // Apps die immer im Dock sind — mit Standardgröße, Position und Komponente
+// Mapping von App-ID auf Übersetzungs-Key für den Tooltip/Titel
+const APP_NAME_KEYS = {
+  1: 'app_name_finder', 2: 'app_name_appstore', 3: 'app_name_settings',
+  4: 'app_name_safari', 5: 'app_name_terminal', 6: 'app_name_github',
+  10: 'app_name_trash',
+  101: 'app_name_info', 102: 'app_name_about', 103: 'app_name_model',
+  104: 'app_name_docker', 105: 'app_name_galerie', 106: 'app_name_tutorial',
+  107: 'app_name_changelog', 108: 'app_name_contact', 109: 'app_name_datenschutz',
+  110: 'app_name_impressum', 111: 'app_name_agb', 112: 'app_name_cookies',
+};
+
 const defaultApps = [
   { id: 1, name: 'Finder', icon: '/icons/finder.webp', open: false, minimized: false, maximized: false, component: Finder, default: true, x: 0, y: 0, width: 640, height: 400, zIndex: 0 },
   { id: 2, name: 'App Store', icon: '/icons/app-store.webp', open: false, minimized: false, maximized: false, component: Apps, default: true, x: 0, y: 0, width: 720, height: 480, zIndex: 0 },
@@ -589,7 +600,7 @@ export default function Dock({ onOpenApp }) {
                     aria-label="Maximize"
                   />
                 </div>
-                <span className="title-text">{app.name}</span>
+                <span className="title-text">{APP_NAME_KEYS[app.id] ? t(APP_NAME_KEYS[app.id]) : app.name}</span>
               </div>
 
               {/* der eigentliche App-Inhalt */}
@@ -641,7 +652,7 @@ export default function Dock({ onOpenApp }) {
               <DockItemMagnified
                 key={app.id}
                 app_id={app.id}
-                name={app.name}
+                name={APP_NAME_KEYS[app.id] ? t(APP_NAME_KEYS[app.id]) : app.name}
                 icon={app.icon}
                 is_open={app.open}
                 entering={enteringIds.has(app.id)}
