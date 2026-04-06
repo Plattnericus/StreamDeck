@@ -147,3 +147,4 @@
 
 ## TO DO
 - Bilder erstellen für Galerie
+    - In den Order /static/galerie dort habe ich bilder drienne, schau sie alle an (auch alle dateein) und erstelle dort die json MIT übersetzungenb. Italeinisch a2 lvl und english B2 level und mach auch dasss alles mit translatnons funtkionieren und mit json dasss die bilder in der galerie sind. Vermeide bugs!!
