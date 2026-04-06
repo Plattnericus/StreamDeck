@@ -151,6 +151,7 @@
 - Updated gallery component to support multilingual JSON format
 - Updated all Changelog translations (German, Italian)
 - Fixed homepage
+- Translations
 
 ## TO DO
 - Add more gallery images as the project evolves

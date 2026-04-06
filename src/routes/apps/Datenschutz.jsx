@@ -43,8 +43,8 @@ export default function Datenschutz({ popup = false, onClose }) {
             <h3>1.1 Kontaktdaten des Verantwortlichen</h3>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Strange 12</p>
-              <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
+              <p>Tschuggmallstraße 12</p>
+              <p>39042 Brixen (Bressanone), Südtirol – Italien</p>
               <p>E-Mail: <a href="mailto:felix.plattner89@plattnericus.dev">felix.plattner89@plattnericus.dev</a></p>
             </div>
           </section>

@@ -42,8 +42,8 @@ export default function Impressum({ popup = false, onClose }) {
             </p>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Strange 12</p>
-              <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
+              <p>Tschuggmallstraße 12</p>
+              <p>39042 Brixen (Bressanone), Südtirol – Italien</p>
             </div>
             <p>
               Diese Website ist ein privates, nicht-kommerzielles Projekt. Es handelt sich weder um ein Gewerbe noch um eine freiberufliche Tätigkeit. Eine Umsatzsteuer-Identifikationsnummer ist daher nicht vorhanden.
@@ -83,8 +83,8 @@ export default function Impressum({ popup = false, onClose }) {
             </p>
             <div className="legal-contact-card">
               <p><strong>Felix Plattner</strong></p>
-              <p>Strange 12</p>
-              <p>39041 Gossensaß (Gossensass), Südtirol – Italien</p>
+              <p>Tschuggmallstraße 12</p>
+              <p>39042 Brixen (Bressanone), Südtirol – Italien</p>
             </div>
           </section>
 
