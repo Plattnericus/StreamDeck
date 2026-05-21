@@ -413,80 +413,6 @@ export default function Header({ onOpenApp }) {
         { label: t('menu_apple_logout'), action: () => { window.location.href = '/'; } },
       ],
     },
-    {
-      id: 'finder', label: t('menu_finder'),
-      items: [
-        { label: t('menu_finder_about'), action: () => { onOpenApp?.('Finder'); closeMenu(); } },
-        { divider: true },
-        { label: t('menu_finder_prefs') },
-        { label: t('menu_finder_emptytrash') },
-      ],
-    },
-    {
-      id: 'file', label: t('menu_file'),
-      items: [
-        { label: t('menu_file_newwindow'), shortcut: '⌘N' },
-        { label: t('menu_file_newtab'), shortcut: '⌘T' },
-        { divider: true },
-        { label: t('menu_file_open'), shortcut: '⌘O' },
-        { label: t('menu_file_close'), shortcut: '⌘W' },
-      ],
-    },
-    {
-      id: 'edit', label: t('menu_edit'),
-      items: [
-        { label: t('menu_edit_undo'), shortcut: '⌘Z' },
-        { label: t('menu_edit_redo'), shortcut: '⇧⌘Z' },
-        { divider: true },
-        { label: t('menu_edit_cut'), shortcut: '⌘X' },
-        { label: t('menu_edit_copy'), shortcut: '⌘C' },
-        { label: t('menu_edit_paste'), shortcut: '⌘V' },
-        { label: t('menu_edit_selectall'), shortcut: '⌘A' },
-      ],
-    },
-    {
-      id: 'view', label: t('menu_view'),
-      items: [
-        { label: t('menu_view_icons') },
-        { label: t('menu_view_list') },
-        { label: t('menu_view_columns') },
-        { label: t('menu_view_gallery') },
-        { divider: true },
-        { label: t('menu_view_hidetoolbar') },
-        { label: t('menu_view_pathbar') },
-        { label: t('menu_view_statusbar') },
-      ],
-    },
-    {
-      id: 'go', label: t('menu_go'),
-      items: [
-        { label: t('menu_go_recent') },
-        { label: t('menu_go_documents') },
-        { label: t('menu_go_desktop') },
-        { label: t('menu_go_downloads') },
-        { label: t('menu_go_private') },
-        { label: t('menu_go_computer') },
-        { divider: true },
-        { label: t('menu_go_airdrop') },
-        { label: t('menu_go_network') },
-      ],
-    },
-    {
-      id: 'window', label: t('menu_window'),
-      items: [
-        { label: t('menu_window_minimize'), shortcut: '⌘M' },
-        { label: t('menu_window_zoom') },
-        { divider: true },
-        { label: t('menu_window_allfront') },
-      ],
-    },
-    {
-      id: 'help', label: t('menu_help'),
-      items: [
-        { label: t('menu_help_macos') },
-        { label: t('menu_help_tips') },
-      ],
-    },
   ], [t, onOpenApp, closeMenu]);
 
   // Shortcut-Icons im Control Center
@@ -543,6 +469,7 @@ export default function Header({ onOpenApp }) {
               </div>
             );
           })}
+          <span className="header-app-name">StreamDeck</span>
         </div>
 
         {/* rechts: Batterie, WLAN, Control Center, Datum/Uhrzeit */}

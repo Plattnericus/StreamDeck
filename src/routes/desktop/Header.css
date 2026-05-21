@@ -175,6 +175,15 @@
   filter: brightness(10);
 }
 
+.header-app-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  padding: 0 10px 0 18px;
+  letter-spacing: 0.2px;
+  opacity: 0.9;
+}
+
 .header-datetime {
   font-size: 12px;
   font-weight: 500;
